@@ -1,0 +1,72 @@
+/* Local LXGW WenKai font - no CDN dependency */
+@font-face {
+    font-family: "LXGW WenKai";
+    font-style: normal;
+    font-weight: 400;
+    src: url("../fonts/LXGWWenKaiLite-Regular.woff2") format("woff2");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "LXGW WenKai";
+    font-style: normal;
+    font-weight: 700;
+    src: url("../fonts/LXGWWenKaiLite-Bold.woff2") format("woff2");
+    font-display: swap;
+}
+
+/* Override A4's generated inline font stack so the local WenKai files are used. */
+html,
+body,
+.paper,
+.paper-main,
+.index-main,
+.post-md,
+.archive,
+.footer,
+.footer-last,
+.index-logo,
+.logo,
+.nav,
+button,
+input,
+textarea {
+    font-family: "LXGW WenKai", "Noto Serif SC", "Songti SC", "STSong", "Microsoft YaHei", "Hiragino Sans GB", "WenQuanYi Micro Hei", serif !important;
+}
+
+/* Code block improvements */
+pre,
+code {
+    font-family: "JetBrains Mono", "Fira Code", "Cascadia Code", "SF Mono", "Menlo", "Monaco", "Consolas", "LXGW WenKai", monospace;
+}
+
+pre {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 16px;
+    border-radius: 4px;
+    font-size: 14px;
+    line-height: 1.6;
+    word-wrap: normal;
+    white-space: pre;
+}
+
+code {
+    font-size: 0.9em;
+    padding: 2px 5px;
+    border-radius: 3px;
+}
+
+pre code {
+    padding: 0;
+    font-size: inherit;
+    border-radius: 0;
+}
+
+/* Mobile: ensure code blocks don't overflow */
+@media (max-width: 768px) {
+    pre {
+        font-size: 13px;
+        padding: 12px;
+    }
+}
