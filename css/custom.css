@@ -34,6 +34,13 @@ textarea {
     font-family: "LXGW WenKai", "Noto Serif SC", "Songti SC", "STSong", "Microsoft YaHei", "Hiragino Sans GB", "WenQuanYi Micro Hei", serif !important;
 }
 
+/* Make Markdown **emphasis** clear without turning it into a highlight. */
+.post-md strong {
+    font-family: inherit;
+    font-weight: 700;
+    color: var(--font-color-0);
+}
+
 /* Code block improvements */
 pre,
 code {
