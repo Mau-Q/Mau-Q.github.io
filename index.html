@@ -10,11 +10,24 @@
     </style>
 
     <head>
+    
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport" />
-    <meta name="description" content="" />
     <meta name="hexo-theme-A4" content="v2.0.1" />
     <link rel="alternate icon" type="image/webp" href="/img/favicon.svg">
+    <link rel="canonical" href="https://mau-q.github.io/">
+    <meta name="description" content="计算机学习、算法、C&#x2F;C++、课程项目与排错复盘。">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Mau-Q">
+<meta property="og:url" content="https://mau-q.github.io/">
+<meta property="og:site_name" content="Mau-Q">
+<meta property="og:description" content="计算机学习、算法、C&#x2F;C++、课程项目与排错复盘。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://mau-q.github.io/img/favicon.svg">
+<meta property="article:author" content="Mau-Q">
+<meta property="article:tag" content="博客,技术,学习,算法,计算机基础,Mau-Q">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://mau-q.github.io/img/favicon.svg">
     <title>Mau-Q | 学习 · 记录 · 成长</title>
 
     
@@ -50,11 +63,6 @@
 
         
         
-            <!--目录-->
-            
-<link rel="stylesheet" href="/css/toc.css">
-
-        
     
 
     
@@ -64,8 +72,6 @@
     
 
     
-<link rel="stylesheet" href="/css/lightgallery-bundle.min.css">
-
 
     
         
@@ -154,6 +160,9 @@
             window.addEventListener('DOMContentLoaded', () => {
                 const btn = document.createElement('button');
                 btn.innerText = '🌓';
+                btn.type = 'button';
+                btn.setAttribute('aria-label', '切换深色模式');
+                btn.title = '切换深色模式';
                 // 按钮样式：仿照你之前的布局，放在右下角
                 btn.style.cssText = `
                     position: fixed; 
@@ -263,6 +272,9 @@
        
        
        
+       
+       
+       
             <div class="post-md">
                 <div class=".article-gallery"><p>项目：</p>
 <ul>
@@ -315,7 +327,7 @@
         <script>
           // 浏览器严格模式
           if (typeof window !== 'undefined') {
-            window.themeConfig = {"menu":{"首页":"/","文章":"/list/","分类":"/categories/","关于":"/about/","Now":"/now/","标签":"/tags/"},"showInMenu":["文章","分类","关于","Now","标签"],"index":{"header":["行到水穷处，坐看云起时。"],"hitokoto":false,"footer":"Mau-Q","titlePosition":"left","width":"small","list":true},"footerLink":{"info":"© 2026 Mau-Q"},"post":{"footer":"看过大海的人不会忘记海的广阔","themeInfo":true,"width":"middle","titlePosition":"center"},"favicon":"/img/favicon.svg","isRoundedAvatar":false,"isAvatarRotating":false,"displayTitleInTab":true,"tool":{"darkMode":true,"returnToTop":true,"returnToLast":true,"topToc":true,"leftToc":true,"recentUpdatePost":false},"indexInfo":{"allWordCount":true,"allViewCount":false},"postInfo":{"updateDate":true,"wordCount":true,"readTime":true,"viewCount":false,"prevAndNextLink":{"status":true,"prevInfo":"上一篇","nextInfo":"下一篇"},"endContent":"以上"},"listInfo":{"enable":true,"hoverStyle":"underline","hoverColor":"#4f7dde","animationDuration":800},"cdn":{"enable":false,"choose":"jsdelivr"},"color":{"enable":false,"font":"#9e5345","background":"#e8e0c9","indexBackGround":"#efeae2","postBackGround":"#efeae2","codeBackGround":"#e8e0c9","codeFont":"#2e5041","linkBeforeClick":"#2e5041","linkAfterClick":"#9c9caf"},"imageShow":{"enable":false,"background":"/img/favicon.webp"},"font":{"enable":true,"LXGWWenKai":true},"lightgallery":{"thumbnail":true,"zoom":true,"rotate":true,"autoplay":true,"fullScreen":true,"pager":false},"comment":{"enable":false,"use":"waline","waline":{"serverUrl":null,"lang":"zh-CN","placeholder":"留下你的评论吧。"},"twikoo":{"envId":null,"region":null,"lang":null},"giscus":{"dataRepo":null,"dataRepoId":null,"dataCategory":null,"dataCategoryId":null,"dataMapping":"pathname","dataTerm":null,"dataStrict":"0","dataReactionsEnabled":"1","dataEmitMetadata":"0","dataInputPosition":"bottom","dataTheme":"preferred_color_scheme","dataLang":"zh-CN","dataLoading":null,"crossorigin":"anonymous","async":true},"artalk":{"server":null}},"inject":{"css":"css/custom.css"},"baseElement":{"href":null,"target":null},"version":"v2.0.1"};
+            window.themeConfig = {"menu":{"首页":"/","文章":"/list/","分类":"/categories/","关于":"/about/","Now":"/now/","标签":"/tags/"},"showInMenu":["文章","分类","关于","Now","标签"],"index":{"header":["行到水穷处，坐看云起时。"],"hitokoto":false,"footer":"Mau-Q","titlePosition":"left","width":"small","list":true},"footerLink":{"info":"© 2026 Mau-Q"},"post":{"footer":null,"themeInfo":true,"width":"middle","titlePosition":"center"},"favicon":"/img/favicon.svg","isRoundedAvatar":false,"isAvatarRotating":false,"displayTitleInTab":true,"tool":{"darkMode":true,"returnToTop":true,"returnToLast":true,"topToc":true,"leftToc":true,"recentUpdatePost":false},"indexInfo":{"allWordCount":true,"allViewCount":false},"postInfo":{"updateDate":true,"wordCount":true,"readTime":true,"viewCount":false,"prevAndNextLink":{"status":true,"prevInfo":"上一篇","nextInfo":"下一篇"},"endContent":"以上"},"listInfo":{"enable":true,"hoverStyle":"underline","hoverColor":"#4f7dde","animationDuration":800},"cdn":{"enable":false,"choose":"jsdelivr"},"color":{"enable":false,"font":"#9e5345","background":"#e8e0c9","indexBackGround":"#efeae2","postBackGround":"#efeae2","codeBackGround":"#e8e0c9","codeFont":"#2e5041","linkBeforeClick":"#2e5041","linkAfterClick":"#9c9caf"},"imageShow":{"enable":false,"background":"/img/favicon.webp"},"font":{"enable":true,"LXGWWenKai":true},"lightgallery":{"thumbnail":true,"zoom":true,"rotate":true,"autoplay":true,"fullScreen":true,"pager":false},"comment":{"enable":false,"use":"waline","waline":{"serverUrl":null,"lang":"zh-CN","placeholder":"留下你的评论吧。"},"twikoo":{"envId":null,"region":null,"lang":null},"giscus":{"dataRepo":null,"dataRepoId":null,"dataCategory":null,"dataCategoryId":null,"dataMapping":"pathname","dataTerm":null,"dataStrict":"0","dataReactionsEnabled":"1","dataEmitMetadata":"0","dataInputPosition":"bottom","dataTheme":"preferred_color_scheme","dataLang":"zh-CN","dataLoading":null,"crossorigin":"anonymous","async":true},"artalk":{"server":null}},"inject":{"css":"css/custom.css"},"baseElement":{"href":null,"target":null},"version":"v2.0.1"};
           }
           document.addEventListener('DOMContentLoaded', () => {
             document.querySelectorAll('.archive-title').forEach(el => {
@@ -347,11 +359,25 @@
       
         
         <li>
-          <span class="year-font-color">2026[1]
+          <span class="year-font-color">2026[2]
              <span class="darkmode-ignore">🍃</span> 
           </span>
         </li>
         
+        
+          
+          <li>
+            <span class="archive-date">&nbsp;&nbsp;&nbsp;07/19 
+            </span>
+            <div class="archive-main">
+              
+                <a class="archive-title"  href="/categories/技术/">
+                  技术 
+                </a> | 
+              
+                <a class="archive-title" href="/posts/post-20260719-01d8e3/">合适 &gt; 优秀</a>
+            </div>
+          </li>
         
           
           <li>
@@ -402,7 +428,7 @@
 
     <div class="footer-last-without-line">
         
-        <span>本站总字数：23</span>
+        <span>本站总字数：397</span>
         
         
         
@@ -425,7 +451,9 @@
 
 
 
+    
 <script src="/js/randomPoem.js"></script>
+
 
 <!--回到顶部按钮-->
 
@@ -442,51 +470,7 @@
 
 
 
-<script src="/js/lightgallery/lightgallery.umd.min.js"></script>
 
-
-
-<script src="/js/lightgallery/plugins/lg-thumbnail.umd.min.js"></script>
-
-
-
-<script src="/js/lightgallery/plugins/lg-fullscreen.umd.min.js"></script>
-
-
-<script src="/js/lightgallery/plugins/lg-autoplay.umd.min.js"></script>
-
-
-<script src="/js/lightgallery/plugins/lg-zoom.umd.min.js"></script>
-
-
-<script src="/js/lightgallery/plugins/lg-rotate.umd.min.js"></script>
-
-
-<script src="/js/lightgallery/plugins/lg-paper.umd.min.js"></script>
-
-
-
-
-<script type="text/javascript">
-     
-    if (typeof lightGallery !== "undefined") {
-        var options1 = {
-            selector: '.gallery-item',
-            plugins: [lgThumbnail, lgFullscreen, lgAutoplay, lgZoom, lgRotate, lgPager], // 启用插件
-            thumbnail: true,          // 显示缩略图
-            zoom: true,               // 启用缩放功
-            rotate: true,             // 启用旋转功能能
-            autoplay: true,        // 启用自动播放功能
-            fullScreen: true,      // 启用全屏功能
-            pager: false, //页码,
-            zoomFromOrigin: true,   // 从原始位置缩放
-            actualSize: true,       // 启用查看实际大小的功能
-            enableZoomAfter: 300,    // 延迟缩放，确保图片加载完成后可缩放
-        };
-        lightGallery(document.getElementsByClassName('.article-gallery')[0], options1); // 修复选择器
-    }
-    
-</script>
 
 
 

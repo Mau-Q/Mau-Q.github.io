@@ -10,11 +10,24 @@
     </style>
 
     <head>
+    
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport" />
-    <meta name="description" content="Page Not Found" />
     <meta name="hexo-theme-A4" content="v2.0.1" />
     <link rel="alternate icon" type="image/webp" href="/img/favicon.svg">
+    <link rel="canonical" href="https://mau-q.github.io/404">
+    <meta name="description" content="计算机学习、算法、C&#x2F;C++、课程项目与排错复盘。">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Page Not Found">
+<meta property="og:url" content="https://mau-q.github.io/404">
+<meta property="og:site_name" content="Mau-Q">
+<meta property="og:description" content="计算机学习、算法、C&#x2F;C++、课程项目与排错复盘。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://mau-q.github.io/img/favicon.svg">
+<meta property="article:author" content="Mau-Q">
+<meta property="article:tag" content="博客,技术,学习,算法,计算机基础,Mau-Q">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://mau-q.github.io/img/favicon.svg">
     <title>Page Not Found | Mau-Q | 学习 · 记录 · 成长</title>
 
     
@@ -50,11 +63,6 @@
 
         
         
-            <!--目录-->
-            
-<link rel="stylesheet" href="/css/toc.css">
-
-        
     
 
     
@@ -64,8 +72,6 @@
     
 
     
-<link rel="stylesheet" href="/css/lightgallery-bundle.min.css">
-
 
     
         
@@ -154,6 +160,9 @@
             window.addEventListener('DOMContentLoaded', () => {
                 const btn = document.createElement('button');
                 btn.innerText = '🌓';
+                btn.type = 'button';
+                btn.setAttribute('aria-label', '切换深色模式');
+                btn.title = '切换深色模式';
                 // 按钮样式：仿照你之前的布局，放在右下角
                 btn.style.cssText = `
                     position: fixed; 
@@ -249,7 +258,7 @@
 <!--这是指一条线往下的内容-->
 <div class="footer-last">
     
-            <span>看过大海的人不会忘记海的广阔</span>
+            <span></span>
             
                 <span class="footer-last-span-right"><i>本站由<a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/index.html">Hexo</a>驱动｜使用<a target="_blank" rel="noopener" href="https://github.com/HiNinoJay/hexo-theme-A4">Hexo-theme-A4</a>主题</i></span>
             
@@ -260,8 +269,6 @@
 <!--目录-->
 
 
-
-<script src="/js/randomPoem.js"></script>
 
 <!--回到顶部按钮-->
 
@@ -278,51 +285,7 @@
 
 
 
-<script src="/js/lightgallery/lightgallery.umd.min.js"></script>
 
-
-
-<script src="/js/lightgallery/plugins/lg-thumbnail.umd.min.js"></script>
-
-
-
-<script src="/js/lightgallery/plugins/lg-fullscreen.umd.min.js"></script>
-
-
-<script src="/js/lightgallery/plugins/lg-autoplay.umd.min.js"></script>
-
-
-<script src="/js/lightgallery/plugins/lg-zoom.umd.min.js"></script>
-
-
-<script src="/js/lightgallery/plugins/lg-rotate.umd.min.js"></script>
-
-
-<script src="/js/lightgallery/plugins/lg-paper.umd.min.js"></script>
-
-
-
-
-<script type="text/javascript">
-     
-    if (typeof lightGallery !== "undefined") {
-        var options1 = {
-            selector: '.gallery-item',
-            plugins: [lgThumbnail, lgFullscreen, lgAutoplay, lgZoom, lgRotate, lgPager], // 启用插件
-            thumbnail: true,          // 显示缩略图
-            zoom: true,               // 启用缩放功
-            rotate: true,             // 启用旋转功能能
-            autoplay: true,        // 启用自动播放功能
-            fullScreen: true,      // 启用全屏功能
-            pager: false, //页码,
-            zoomFromOrigin: true,   // 从原始位置缩放
-            actualSize: true,       // 启用查看实际大小的功能
-            enableZoomAfter: 300,    // 延迟缩放，确保图片加载完成后可缩放
-        };
-        lightGallery(document.getElementsByClassName('.article-gallery')[0], options1); // 修复选择器
-    }
-    
-</script>
 
 
 

@@ -10,7 +10,28 @@
   <rights>All rights reserved 2026, Mau-Q</rights>
   <subtitle>学习 · 记录 · 成长</subtitle>
   <title>Mau-Q</title>
-  <updated>2026-07-18T14:48:50.871Z</updated>
+  <updated>2026-07-19T14:47:53.000Z</updated>
+  <entry>
+    <author>
+      <name>Mau-Q</name>
+    </author>
+    <category term="技术" scheme="https://mau-q.github.io/categories/%E6%8A%80%E6%9C%AF/"/>
+    <content>
+      <![CDATA[<div class=".article-gallery"><!-- Generated from Obsidian: Blogs/合适 > 优秀.md. Edit the source note, then run npm run blog:sync. --><p>最近在高强度 vibe coding 一周后，我越来越觉得虽然 Codex 功能强大，但是它无法把握什么是<strong>合适</strong>的。</p><p>在我们不需要动手写一行代码，甚至不需要怎么思考（这一周我尝试过让 GPT 规划路线，写提示词，理解 Codex 结果，形成了构建项目的闭环）时，我们不需要懂代码，但是我们必须懂怎么让 Codex 实施是合适的。</p><p>在这一周，我发现一个问题，Codex 和 GPT 经常把任务做的复杂化，虽然可能是正确的，但是对于项目可能不合适：在技术上过于困难，Codex 可能也无法有效完成；在时间上也做了比较多无用功。</p><p>虽然我也做了一些努力：用 harness 约束 Codex，用提示词规则约束 GPT，但是效果还是不怎么理想。客观上 harness 和提示词规则可以继续完善，但是我必须参与到这个项目中来，阅读 Codex 每行的思考，并且在GPT 辅助规划路线时也要进行理解学习。这样才能总体把握，避免 GPT 和 Codex 因为某个问题而过于纠结而浪费时间，甚至最后项目都不是很完整。导致虽然在某些功能上很强大，但是基础的流程都没有实现。</p><p>所以我认为在 vibe coding时，项目的流程完整性优先，质量优化其次。</p></div>]]>
+    </content>
+    <id>https://mau-q.github.io/posts/post-20260719-01d8e3/</id>
+    <link href="https://mau-q.github.io/posts/post-20260719-01d8e3/"/>
+    <published>2026-07-19T14:47:53.000Z</published>
+    <summary>
+      <![CDATA[<div class=".article-gallery"><!-- Generated from Obsidian: Blogs/合适 > 优秀.md. Edit the source note, then run npm run blog:sync. -->
+
+<p>最近在高]]>
+    </summary>
+    <title>
+      <![CDATA[合适 > 优秀]]>
+    </title>
+    <updated>2026-07-19T14:47:53.000Z</updated>
+  </entry>
   <entry>
     <author>
       <name>Mau-Q</name>
@@ -28,7 +49,7 @@
 </div>]]>
     </summary>
     <title>2026</title>
-    <updated>2026-07-18T14:48:50.871Z</updated>
+    <updated>2026-06-30T04:00:00.000Z</updated>
   </entry>
   <entry>
     <author>
@@ -46,6 +67,6 @@
 </div>]]>
     </summary>
     <title>Hello World</title>
-    <updated>2026-07-18T14:48:50.871Z</updated>
+    <updated>2026-06-30T04:00:00.000Z</updated>
   </entry>
 </feed>

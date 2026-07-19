@@ -2,45 +2,9 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://mau-q.github.io/list/index.html</loc>
+    <loc>https://mau-q.github.io/posts/post-20260719-01d8e3/</loc>
     
-    <lastmod>2026-07-18</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://mau-q.github.io/now/index.html</loc>
-    
-    <lastmod>2026-07-18</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://mau-q.github.io/tags/index.html</loc>
-    
-    <lastmod>2026-07-18</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://mau-q.github.io/index/index.html</loc>
-    
-    <lastmod>2026-07-18</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://mau-q.github.io/data/poems.json</loc>
-    
-    <lastmod>2026-07-18</lastmod>
+    <lastmod>2026-07-19</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -49,7 +13,7 @@
   <url>
     <loc>https://mau-q.github.io/posts/2026/</loc>
     
-    <lastmod>2026-07-18</lastmod>
+    <lastmod>2026-06-30</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -58,25 +22,52 @@
   <url>
     <loc>https://mau-q.github.io/posts/hello-world/</loc>
     
-    <lastmod>2026-07-18</lastmod>
+    <lastmod>2026-06-30</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://mau-q.github.io/about/index.html</loc>
+    <loc>https://mau-q.github.io/categories/</loc>
     
-    <lastmod>2026-07-18</lastmod>
+    <lastmod>2026-06-30</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://mau-q.github.io/categories/index.html</loc>
+    <loc>https://mau-q.github.io/tags/</loc>
     
-    <lastmod>2026-07-18</lastmod>
+    <lastmod>2026-06-19</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mau-q.github.io/now/</loc>
+    
+    <lastmod>2026-06-19</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mau-q.github.io/about/</loc>
+    
+    <lastmod>2026-06-19</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://mau-q.github.io/list/</loc>
+    
+    <lastmod>2026-06-19</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -85,7 +76,7 @@
 
   <url>
     <loc>https://mau-q.github.io/</loc>
-    <lastmod>2026-07-18</lastmod>
+    <lastmod>2026-07-19</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>

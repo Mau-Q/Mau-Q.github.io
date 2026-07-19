@@ -10,12 +10,27 @@
     </style>
 
     <head>
+    
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport" />
-    <meta name="description" content="首页" />
     <meta name="hexo-theme-A4" content="v2.0.1" />
     <link rel="alternate icon" type="image/webp" href="/img/favicon.svg">
-    <title>首页 | Mau-Q | 学习 · 记录 · 成长</title>
+    <link rel="canonical" href="https://mau-q.github.io/posts/post-20260719-01d8e3/">
+    <meta name="description" content="最近在高强度 vibe coding 一周后，我越来越觉得虽然 Codex 功能强大，但是它无法把握什么是合适的。 在我们不需要动手写一行代码，甚至不需要怎么思考（这一周我尝试过让 GPT 规划路线，写提示词，理解 Codex 结果，形成了构建项目的闭环）时，我们不需要懂代码，但是我们必须懂怎么让 Codex 实施是合">
+<meta property="og:type" content="article">
+<meta property="og:title" content="合适 &gt; 优秀">
+<meta property="og:url" content="https://mau-q.github.io/posts/post-20260719-01d8e3/">
+<meta property="og:site_name" content="Mau-Q">
+<meta property="og:description" content="最近在高强度 vibe coding 一周后，我越来越觉得虽然 Codex 功能强大，但是它无法把握什么是合适的。 在我们不需要动手写一行代码，甚至不需要怎么思考（这一周我尝试过让 GPT 规划路线，写提示词，理解 Codex 结果，形成了构建项目的闭环）时，我们不需要懂代码，但是我们必须懂怎么让 Codex 实施是合">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://mau-q.github.io/img/favicon.svg">
+<meta property="article:published_time" content="2026-07-19T14:47:53.000Z">
+<meta property="article:modified_time" content="2026-07-19T14:47:53.000Z">
+<meta property="article:author" content="Mau-Q">
+<meta property="article:tag" content="博客,技术,学习,算法,计算机基础,Mau-Q">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://mau-q.github.io/img/favicon.svg">
+    <title>合适 &gt; 优秀 | Mau-Q | 学习 · 记录 · 成长</title>
 
     
         
@@ -64,8 +79,6 @@
     
 
     
-<link rel="stylesheet" href="/css/lightgallery-bundle.min.css">
-
 
     
         
@@ -154,6 +167,9 @@
             window.addEventListener('DOMContentLoaded', () => {
                 const btn = document.createElement('button');
                 btn.innerText = '🌓';
+                btn.type = 'button';
+                btn.setAttribute('aria-label', '切换深色模式');
+                btn.title = '切换深色模式';
                 // 按钮样式：仿照你之前的布局，放在右下角
                 btn.style.cssText = `
                     position: fixed; 
@@ -197,6 +213,10 @@
         </script>
         
         
+            
+                <div class="left-toc-container">
+                    <nav id="toc" class="bs-docs-sidebar"></nav>
+                </div>
             
         
         <div class="paper">
@@ -274,32 +294,79 @@
     
 
     
+        
+            
+                <div class="post-main-title" style="text-align: center;">
+                    合适 &gt; 优秀
+                </div>
+            
+        
+      
+    
 
+    
+
+        
+            <div class="post-head-meta-center">
+        
+                
+                    <span>最近更新：2026-07-19</span> 
+                
+                
+                    
+                        &nbsp; | &nbsp;
+                    
+                     <span>字数总计：374</span>
+                
+                
+                    
+                        &nbsp; | &nbsp;
+                    
+                    <span>阅读估时：1分钟</span>
+                
+                
+            </div>
     
 
     <div class="post-md">
         
             
+                
+            
         
-        <div class=".article-gallery"><p>项目：</p>
-<ul>
-<li>数据结构与算法</li>
-<li>计算机基础</li>
-<li>课程项目与实验</li>
-</ul>
-<p>期待：</p>
-<ul>
-<li>坚持写博客</li>
-<li>把零散笔记整理成可以复习的文章</li>
-<li>记录做项目、排错、读书时真正想明白的部分</li>
-</ul>
-<p><a href="/list/">持续更新汇总</a></p>
-<p>本站所有<a href="/tags/">标签</a>。</p>
+        <div class=".article-gallery"><!-- Generated from Obsidian: Blogs/合适 > 优秀.md. Edit the source note, then run npm run blog:sync. -->
+
+<p>最近在高强度 vibe coding 一周后，我越来越觉得虽然 Codex 功能强大，但是它无法把握什么是<strong>合适</strong>的。</p>
+<p>在我们不需要动手写一行代码，甚至不需要怎么思考（这一周我尝试过让 GPT 规划路线，写提示词，理解 Codex 结果，形成了构建项目的闭环）时，我们不需要懂代码，但是我们必须懂怎么让 Codex 实施是合适的。</p>
+<p>在这一周，我发现一个问题，Codex 和 GPT 经常把任务做的复杂化，虽然可能是正确的，但是对于项目可能不合适：在技术上过于困难，Codex 可能也无法有效完成；在时间上也做了比较多无用功。</p>
+<p>虽然我也做了一些努力：用 harness 约束 Codex，用提示词规则约束 GPT，但是效果还是不怎么理想。客观上 harness 和提示词规则可以继续完善，但是我必须参与到这个项目中来，阅读 Codex 每行的思考，并且在GPT 辅助规划路线时也要进行理解学习。这样才能总体把握，避免 GPT 和 Codex 因为某个问题而过于纠结而浪费时间，甚至最后项目都不是很完整。导致虽然在某些功能上很强大，但是基础的流程都没有实现。</p>
+<p>所以我认为在 vibe coding时，项目的流程完整性优先，质量优化其次。</p>
 </div>
+        <aside class="post-afterword" aria-label="文章余韵">
+  <span class="post-afterword-label">文章余韵</span>
+  <p>长风破浪会有时，直挂云帆济沧海。</p>
+  <cite>—— 李白《行路难·其一》</cite>
+</aside>
     </div>
 
     <div class="post-meta">
         <i>
+        
+            <span>2026-07-19</span>
+            
+                <span>该篇文章被 Mau-Q</span>
+            
+            
+             
+                <span>归为分类:
+                    
+                    
+                        <a href='/categories/%E6%8A%80%E6%9C%AF/'>
+                            技术
+                        </a>
+                    
+                </span>
+            
         
         </i>
     </div>
@@ -312,6 +379,9 @@
             <div class="post-footer-pre-next">
                 
 
+                
+                    <span class="post-footer-pre-next-last-span-right">下一篇：<a href="/posts/2026/">2026</a>
+                    </span>
                 
             </div>
     
@@ -348,7 +418,7 @@
 <!--这是指一条线往下的内容-->
 <div class="footer-last">
     
-            <span>看过大海的人不会忘记海的广阔</span>
+            <span></span>
             
                 <span class="footer-last-span-right"><i>本站由<a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/index.html">Hexo</a>驱动｜使用<a target="_blank" rel="noopener" href="https://github.com/HiNinoJay/hexo-theme-A4">Hexo-theme-A4</a>主题</i></span>
             
@@ -358,9 +428,11 @@
 
 <!--目录-->
 
+    
+<script src="/js/toc.js"></script>
 
 
-<script src="/js/randomPoem.js"></script>
+
 
 <!--回到顶部按钮-->
 
@@ -377,51 +449,7 @@
 
 
 
-<script src="/js/lightgallery/lightgallery.umd.min.js"></script>
 
-
-
-<script src="/js/lightgallery/plugins/lg-thumbnail.umd.min.js"></script>
-
-
-
-<script src="/js/lightgallery/plugins/lg-fullscreen.umd.min.js"></script>
-
-
-<script src="/js/lightgallery/plugins/lg-autoplay.umd.min.js"></script>
-
-
-<script src="/js/lightgallery/plugins/lg-zoom.umd.min.js"></script>
-
-
-<script src="/js/lightgallery/plugins/lg-rotate.umd.min.js"></script>
-
-
-<script src="/js/lightgallery/plugins/lg-paper.umd.min.js"></script>
-
-
-
-
-<script type="text/javascript">
-     
-    if (typeof lightGallery !== "undefined") {
-        var options1 = {
-            selector: '.gallery-item',
-            plugins: [lgThumbnail, lgFullscreen, lgAutoplay, lgZoom, lgRotate, lgPager], // 启用插件
-            thumbnail: true,          // 显示缩略图
-            zoom: true,               // 启用缩放功
-            rotate: true,             // 启用旋转功能能
-            autoplay: true,        // 启用自动播放功能
-            fullScreen: true,      // 启用全屏功能
-            pager: false, //页码,
-            zoomFromOrigin: true,   // 从原始位置缩放
-            actualSize: true,       // 启用查看实际大小的功能
-            enableZoomAfter: 300,    // 延迟缩放，确保图片加载完成后可缩放
-        };
-        lightGallery(document.getElementsByClassName('.article-gallery')[0], options1); // 修复选择器
-    }
-    
-</script>
 
 
 

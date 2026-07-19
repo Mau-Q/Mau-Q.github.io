@@ -63,10 +63,51 @@ pre code {
     border-radius: 0;
 }
 
+/* A quiet closing note selected from the post's category and tags. */
+.post-afterword {
+    margin: 2.8rem auto 0.5rem;
+    padding: 1rem 1.2rem 0.9rem;
+    max-width: 34rem;
+    border-top: 1px solid rgba(79, 125, 222, 0.28);
+    text-align: center;
+}
+
+.post-afterword-label {
+    display: inline-block;
+    margin-bottom: 0.55rem;
+    color: #777;
+    font-size: 0.78rem;
+    letter-spacing: 0.18em;
+}
+
+.post-afterword p {
+    margin: 0;
+    font-size: 1.02rem;
+    line-height: 1.9;
+}
+
+.post-afterword cite {
+    display: block;
+    margin-top: 0.45rem;
+    color: #888;
+    font-size: 0.82rem;
+    font-style: normal;
+}
+
+#targetSpan[data-solar-term] {
+    color: #5f6f8f;
+}
+
 /* Mobile: ensure code blocks don't overflow */
 @media (max-width: 768px) {
     pre {
         font-size: 13px;
         padding: 12px;
+    }
+
+    .post-afterword {
+        margin-top: 2.2rem;
+        padding-right: 0.5rem;
+        padding-left: 0.5rem;
     }
 }
