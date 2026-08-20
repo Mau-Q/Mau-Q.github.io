@@ -11,9 +11,13 @@
     <head>
     
     <meta charset="utf-8">
-    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport" />
+    <meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport" />
+    <meta name="theme-color" content="#f7f5ed" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#1e1e1e" media="(prefers-color-scheme: dark)">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
     <meta name="hexo-theme-A4" content="v2.0.1" />
-    <link rel="alternate icon" type="image/webp" href="/img/favicon.svg">
+    <link rel="icon" href="/img/favicon.svg">
+    <link rel="alternate" type="application/atom+xml" title="Mau-Q" href="https://mau-q.github.io/atom.xml">
     <link rel="canonical" href="https://mau-q.github.io/archives/2026/02/">
     <meta name="description" content="计算机学习、算法、C&#x2F;C++、课程项目与排错复盘。">
 <meta property="og:type" content="website">
@@ -22,12 +26,21 @@
 <meta property="og:site_name" content="Mau-Q">
 <meta property="og:description" content="计算机学习、算法、C&#x2F;C++、课程项目与排错复盘。">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://mau-q.github.io/img/favicon.svg">
+<meta property="og:image" content="https://mau-q.github.io/img/og/archives--2026--02.png">
 <meta property="article:author" content="Mau-Q">
 <meta property="article:tag" content="博客,技术,学习,算法,计算机基础,Mau-Q">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://mau-q.github.io/img/favicon.svg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://mau-q.github.io/img/og/archives--2026--02.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Mau-Q 博客分享卡片">
+    
     <title>Mau-Q | 学习 · 记录 · 成长</title>
+
+    
+    
+        <script src="/js/pagefind-highlight.js" type="module"></script>
+    
 
     
         
@@ -81,7 +94,6 @@
     
 
     <!-- Local LXGW WenKai font, CDN removed for stability -->
-<link rel="alternate" href="/atom.xml" title="Mau-Q" type="application/atom+xml">
 </head>
 
     
@@ -111,6 +123,7 @@
 
 
     <body>
+        <a class="skip-link" href="#main-content">跳到正文</a>
         
         <script>
         (function () {
@@ -207,7 +220,7 @@
         
             
         
-        <div class="paper">
+        <main id="main-content" class="paper" tabindex="-1">
 
             
 
@@ -215,60 +228,63 @@
                 <div class="shadow-drop-2-bottom paper-main">
                     
 
-
-<div class="header">
+<header class="header">
     <div class="header-container">
-        <style>
-            .header-img {
-                width: 56px;
-                height: auto;
-                object-fit: cover; /* 保持图片比例 */
-                transition: transform 0.3s ease-in-out; 
-                border-radius: 0; 
-            }
-            
-        </style>
-        <img 
-            alt="^-^" 
-            cache-control="max-age=86400" 
-            class="header-img" 
-            src="/img/favicon.svg" 
+        <img
+            alt="Mau-Q"
+            class="header-img"
+            src="/img/favicon.svg"
+            width="56"
+            height="56"
         />
         <div class="header-content">
-            <a class="logo" href="/">Mau-Q</a> 
-            <span class="description">计算机学习、算法、C/C++、课程项目与排错复盘。</span> 
+            <a class="logo" href="/">Mau-Q</a>
+            <span class="description">计算机学习、算法、C/C++、课程项目与排错复盘。</span>
         </div>
     </div>
-    
-   
-    <ul class="nav">
-        
+
+    <nav aria-label="主要导航">
+        <ul class="nav">
             
-                <li><a href="/">首页</a></li>
+                
+                <li>
+                    <a href="/">首页</a>
+                </li>
             
-        
+                
+                <li>
+                    <a href="/list/">文章</a>
+                </li>
             
-                <li><a href="/list/">文章</a></li>
+                
+                <li>
+                    <a href="/categories/">分类</a>
+                </li>
             
-        
+                
+                <li>
+                    <a href="/about/">关于</a>
+                </li>
             
-                <li><a href="/categories/">分类</a></li>
+                
+                <li>
+                    <a href="/now/">Now</a>
+                </li>
             
-        
+                
+                <li>
+                    <a href="/tags/">标签</a>
+                </li>
             
-                <li><a href="/about/">关于</a></li>
+                
+                <li>
+                    <a href="/search/">搜索</a>
+                </li>
             
-        
-            
-                <li><a href="/now/">Now</a></li>
-            
-        
-            
-                <li><a href="/tags/">标签</a></li>
-            
-        
-    </ul>
-</div>
+        </ul>
+    </nav>
+</header>
+
 
                     
                     
@@ -290,11 +306,7 @@
             
         
         
-        <aside class="post-afterword" aria-label="文章余韵">
-  <span class="post-afterword-label">文章余韵</span>
-  <p>长风破浪会有时，直挂云帆济沧海。</p>
-  <cite>—— 李白《行路难·其一》</cite>
-</aside>
+        
     </div>
 
     <div class="post-meta">
@@ -387,20 +399,21 @@
             
             
                 <!-- 回到顶部的按钮-->
-                <div class="progress-wrap shadow-drop-2-bottom">
+                <button class="progress-wrap shadow-drop-2-bottom" type="button" aria-label="回到页面顶部">
                     <svg class="progress-circle svg-content" width="100%" height="100%" viewBox="-1 -1 102 102">
                         <path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98"/>
                     </svg>
-                </div>
+                </button>
             
             
                 <!-- 返回的按钮-->
-                <div class="return-to-last-progress-wrap shadow-drop-2-bottom">
+                <button class="return-to-last-progress-wrap shadow-drop-2-bottom" type="button" aria-label="返回上一页">
                     <svg class="progress-circle svg-content" width="100%" height="100%" viewBox="-1 -1 102 102">
                         <path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98"/>
                     </svg>
-                </div>
+                </button>
             
+        </main>
     </body>
 </html>
 <script src="/js/emojiHandler.js"></script>

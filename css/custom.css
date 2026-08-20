@@ -105,6 +105,328 @@ pre code {
     color: #5f6f8f;
 }
 
+/* Accessible navigation and keyboard focus */
+.skip-link {
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    z-index: 10000;
+    padding: 0.55rem 0.85rem;
+    border: 2px solid #315fb5;
+    border-radius: 4px;
+    background: #fff;
+    color: #183b78;
+    transform: translateY(-160%);
+}
+
+.skip-link:focus {
+    transform: translateY(0);
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+[tabindex]:focus-visible {
+    outline: 3px solid rgba(49, 95, 181, 0.72);
+    outline-offset: 3px;
+}
+
+#main-content:focus {
+    outline: none;
+}
+
+.header-img {
+    width: 56px;
+    height: 56px;
+    object-fit: contain;
+}
+
+.nav a.is-active {
+    color: #315fb5;
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.3em;
+}
+
+/* Homepage hierarchy inspired by AstroPaper, while preserving A4's paper feel. */
+.home-hero {
+    padding-bottom: 1.65rem;
+    border-bottom: 1px solid var(--line-1);
+}
+
+.home-eyebrow {
+    margin: 1.25rem 0 0.35rem;
+    color: #5f6f8f;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+}
+
+.home-hero .index-logo {
+    margin: 0;
+    font-size: clamp(2.35rem, 8vw, 3.4rem);
+    line-height: 1.15;
+}
+
+.home-hero .index-logo a {
+    color: var(--font-color-1);
+}
+
+.home-summary {
+    max-width: 34rem;
+    margin: 0.75rem 0 1.2rem;
+    color: var(--font-color-2);
+    line-height: 1.8;
+}
+
+.home-navigation ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem 1.1rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.home-navigation a {
+    color: var(--font-color-1);
+}
+
+.home-navigation a:hover,
+.home-navigation a[aria-current="page"] {
+    color: #315fb5;
+    text-decoration: underline;
+    text-underline-offset: 0.3em;
+}
+
+.home-content {
+    display: block;
+    margin-top: 1.75rem;
+}
+
+.home-introduction,
+.home-section {
+    margin: 0 0 2.4rem;
+}
+
+.home-introduction h2,
+.home-section h2,
+.post-library h1,
+.archive-year h2 {
+    margin: 0;
+    color: var(--font-color-1);
+}
+
+.home-introduction .post-md {
+    margin-top: 0.7rem;
+    color: var(--font-color-2);
+}
+
+.home-introduction .post-md p {
+    margin: 0.35rem 0;
+}
+
+.section-heading {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.9rem;
+}
+
+.section-heading > a,
+.read-post-link {
+    font-size: 0.9rem;
+}
+
+.featured-post-card {
+    padding: 1.15rem 1.2rem;
+    border: 1px solid rgba(79, 125, 222, 0.25);
+    border-radius: 8px;
+    background: rgba(247, 245, 237, 0.64);
+}
+
+.featured-post-card h3,
+.article-card h3,
+.recent-post-list h3 {
+    margin: 0;
+    line-height: 1.45;
+}
+
+.featured-post-card h3 {
+    font-size: 1.32rem;
+}
+
+.featured-post-card h3 a,
+.article-card h3 a,
+.recent-post-list h3 a {
+    color: var(--font-color-1);
+}
+
+.featured-post-card h3 a:hover,
+.article-card h3 a:hover,
+.recent-post-list h3 a:hover {
+    color: #315fb5;
+}
+
+.featured-post-card > p:not(.post-card-meta) {
+    margin: 0.65rem 0;
+    color: var(--font-color-2);
+}
+
+.post-card-meta,
+.article-card-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem 0.6rem;
+    margin: 0 0 0.45rem;
+    color: var(--font-color-3);
+    font-size: 0.82rem;
+}
+
+.recent-post-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.recent-post-list li {
+    border-top: 1px solid var(--line-2);
+}
+
+.recent-post-list li:last-child {
+    border-bottom: 1px solid var(--line-2);
+}
+
+.recent-post-list article {
+    display: grid;
+    grid-template-columns: 4.5rem minmax(0, 1fr);
+    gap: 0.8rem;
+    align-items: baseline;
+    padding: 0.78rem 0;
+}
+
+.recent-post-list time {
+    color: var(--font-color-3);
+    font-size: 0.82rem;
+}
+
+.recent-post-list h3 {
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+/* Scannable article archive */
+.post-library {
+    padding-bottom: 1rem;
+}
+
+.library-heading {
+    margin: 1.4rem 0 2.2rem;
+}
+
+.library-heading h1 {
+    font-size: clamp(2rem, 7vw, 2.8rem);
+}
+
+.library-heading > p:last-child {
+    margin-top: 0.55rem;
+    color: var(--font-color-2);
+}
+
+.archive-year {
+    margin-bottom: 2.5rem;
+}
+
+.archive-year > h2 {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--line-1);
+    font-size: 1.45rem;
+}
+
+.archive-year > h2 span {
+    color: var(--font-color-3);
+    font-size: 0.78rem;
+    font-weight: 400;
+}
+
+.article-card {
+    padding: 1.15rem 0 1.25rem;
+    border-bottom: 1px solid var(--line-2);
+}
+
+.article-card h3 {
+    font-size: 1.2rem;
+}
+
+.article-card > p {
+    margin: 0.55rem 0 0;
+    color: var(--font-color-2);
+    font-size: 0.94rem;
+    line-height: 1.75;
+}
+
+.article-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem 0.75rem;
+    margin: 0.6rem 0 0;
+    padding: 0;
+    list-style: none;
+    font-size: 0.8rem;
+}
+
+.article-tags a {
+    color: #697a9a;
+}
+
+/* Pagefind uses the existing typography and paper palette. */
+.site-search {
+    --pagefind-ui-scale: 0.9;
+    --pagefind-ui-primary: #315fb5;
+    --pagefind-ui-text: var(--font-color-1);
+    --pagefind-ui-background: #fff;
+    --pagefind-ui-border: var(--line-1);
+    --pagefind-ui-tag: #f2efe5;
+    --pagefind-ui-border-width: 1px;
+    --pagefind-ui-border-radius: 5px;
+    --pagefind-ui-font: "LXGW WenKai", "Noto Serif SC", serif;
+    margin: 1.4rem 0 2.4rem;
+}
+
+.site-search mark {
+    padding: 0 0.08em;
+    background: #fff0a8;
+    color: inherit;
+}
+
+.pagefind-highlight {
+    padding: 0 0.08em;
+    border-radius: 2px;
+    background: #fff0a8;
+    color: inherit;
+}
+
+.progress-wrap,
+.return-to-last-progress-wrap {
+    padding: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
 /* Mobile: ensure code blocks don't overflow */
 @media (max-width: 768px) {
     pre {
@@ -116,5 +438,29 @@ pre code {
         margin-top: 2.2rem;
         padding-right: 0.5rem;
         padding-left: 0.5rem;
+    }
+
+    .home-navigation ul {
+        gap: 0.5rem 0.9rem;
+    }
+
+    .recent-post-list article {
+        grid-template-columns: 3.7rem minmax(0, 1fr);
+        gap: 0.55rem;
+    }
+
+    .featured-post-card {
+        padding: 1rem;
+    }
+}
+
+@media print {
+    .skip-link,
+    .home-navigation,
+    .nav,
+    .site-search,
+    .progress-wrap,
+    .return-to-last-progress-wrap {
+        display: none !important;
     }
 }
