@@ -154,6 +154,10 @@ input:focus-visible,
     border-bottom: 1px solid var(--line-1);
 }
 
+.home-hero .index-header-line {
+    font-size: 0.68rem;
+}
+
 .home-eyebrow {
     margin: 1.25rem 0 0.35rem;
     color: #5f6f8f;
