@@ -1,0 +1,31 @@
+/* Stable code colors in both page themes; also passed to DarkReader as custom CSS. */
+.post-md pre,
+.post-md code {
+  font-family: "JetBrains Mono", "Fira Code", "Cascadia Code", "SF Mono", Menlo, Monaco, Consolas, "PingFang SC", "Microsoft YaHei", monospace !important;
+}
+.post-md .highlight,
+.post-md > pre {
+  background: #282c34 !important;
+  color: #abb2bf !important;
+  border: 1px solid #3e4451 !important;
+  border-radius: 6px;
+}
+.post-md .highlight pre,
+.post-md pre code {
+  background: transparent !important;
+  color: #abb2bf !important;
+  border: 0 !important;
+}
+.post-md .highlight .gutter pre { color: #7f8794 !important; }
+.post-md pre .comment { color: #9da5b4 !important; }
+.post-md pre .keyword,
+.post-md pre .selector-tag { color: #c678dd !important; }
+.post-md pre .string,
+.post-md pre .addition { color: #98c379 !important; }
+.post-md pre .number,
+.post-md pre .literal,
+.post-md pre .built_in { color: #d19a66 !important; }
+.post-md pre .title,
+.post-md pre .function { color: #61afef !important; }
+.post-md pre .variable,
+.post-md pre .attribute { color: #e06c75 !important; }

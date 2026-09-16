@@ -99,7 +99,7 @@
     
 
     <!-- Local LXGW WenKai font, CDN removed for stability -->
-</head>
+<link rel="stylesheet" href="/css/code-theme.css?v=2c462ce15246"></head>
 
     
     
@@ -160,7 +160,9 @@
             function enableDark() {
                 document.documentElement.style.backgroundColor = '#1e1e1e';
                 document.documentElement.style.colorScheme = 'dark';
-                return loadDarkReader().then(() => DarkReader.enable(drOptions));
+                return loadDarkReader().then(() => DarkReader.enable(drOptions, {
+                    css: "/* Stable code colors in both page themes; also passed to DarkReader as custom CSS. */\n.post-md pre,\n.post-md code {\n  font-family: \"JetBrains Mono\", \"Fira Code\", \"Cascadia Code\", \"SF Mono\", Menlo, Monaco, Consolas, \"PingFang SC\", \"Microsoft YaHei\", monospace !important;\n}\n.post-md .highlight,\n.post-md > pre {\n  background: #282c34 !important;\n  color: #abb2bf !important;\n  border: 1px solid #3e4451 !important;\n  border-radius: 6px;\n}\n.post-md .highlight pre,\n.post-md pre code {\n  background: transparent !important;\n  color: #abb2bf !important;\n  border: 0 !important;\n}\n.post-md .highlight .gutter pre { color: #7f8794 !important; }\n.post-md pre .comment { color: #9da5b4 !important; }\n.post-md pre .keyword,\n.post-md pre .selector-tag { color: #c678dd !important; }\n.post-md pre .string,\n.post-md pre .addition { color: #98c379 !important; }\n.post-md pre .number,\n.post-md pre .literal,\n.post-md pre .built_in { color: #d19a66 !important; }\n.post-md pre .title,\n.post-md pre .function { color: #61afef !important; }\n.post-md pre .variable,\n.post-md pre .attribute { color: #e06c75 !important; }\n"
+                }));
             }
 
             function disableDark() {
