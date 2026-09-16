@@ -1,0 +1,46 @@
+/* Isolated from the theme's horizontal .nav menu and legacy Tocify styles. */
+.left-toc-container {
+  position: fixed;
+  top: 100px;
+  bottom: 110px;
+  left: 12px;
+  width: max(0px, calc((100vw - 880px) / 2 - 36px));
+  max-width: 280px;
+  overflow: auto;
+  box-sizing: border-box;
+}
+#toc.article-outline { display: block; }
+#toc .article-outline-list {
+  display: block;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+#toc .article-outline-list li {
+  display: block;
+  margin: 0;
+  padding: 0;
+  line-height: 1.6;
+}
+#toc .article-outline-list a {
+  display: block;
+  padding: 7px 10px;
+  border-left: 2px solid transparent;
+  color: #777;
+  font-size: 13px;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  text-decoration: none;
+}
+#toc .article-outline-list .article-outline-list {
+  display: none;
+  margin-left: 10px;
+}
+#toc li.active > .article-outline-list { display: block; }
+#toc li.active > a, #toc a:hover, #toc a:focus-visible {
+  color: #4f7ddf;
+  border-left-color: #4f7ddf;
+}
+@media (max-width: 1199px) {
+  .left-toc-container { display: none; }
+}

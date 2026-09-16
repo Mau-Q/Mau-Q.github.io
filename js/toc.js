@@ -21,10 +21,10 @@
     );
     if (headings.length === 0) return;
 
-    container.classList.add('tocify');
+    container.classList.add('article-outline');
 
     var rootList = document.createElement('ul');
-    rootList.className = 'nav nav-list';
+    rootList.className = 'article-outline-list';
 
     var entries = [];
     var stack = [{ level: 0, list: rootList, item: null }];
@@ -42,7 +42,7 @@
         list = parent.item.querySelector('ul');
         if (!list) {
           list = document.createElement('ul');
-          list.className = 'nav nav-list';
+          list.className = 'article-outline-list';
           parent.item.appendChild(list);
         }
       }
