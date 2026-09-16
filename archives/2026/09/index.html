@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    
+    <style>
+        body {
+            font-family: "LXGW WenKai", "notoserifsc-medium", "Noto Serif SC", "Songti SC", "STSong", "Microsoft YaHei", "Hiragino Sans GB", "WenQuanYi Micro Hei", serif !important;
+        }
+    </style>
+
+
+    <head>
+    
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport" />
+    <meta name="theme-color" content="#f7f5ed" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#1e1e1e" media="(prefers-color-scheme: dark)">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta name="hexo-theme-A4" content="v2.0.1" />
+    <link rel="icon" href="/img/favicon.svg">
+    <link rel="alternate" type="application/atom+xml" title="Mau-Q" href="https://mau-q.github.io/atom.xml">
+    <link rel="canonical" href="https://mau-q.github.io/archives/2026/09/">
+    <meta name="description" content="计算机学习、算法、C&#x2F;C++、课程项目与排错复盘。">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Mau-Q">
+<meta property="og:url" content="https://mau-q.github.io/archives/2026/09/">
+<meta property="og:site_name" content="Mau-Q">
+<meta property="og:description" content="计算机学习、算法、C&#x2F;C++、课程项目与排错复盘。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://mau-q.github.io/img/og/archives--2026--09.png">
+<meta property="article:author" content="Mau-Q">
+<meta property="article:tag" content="博客,技术,学习,算法,计算机基础,Mau-Q">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://mau-q.github.io/img/og/archives--2026--09.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Mau-Q 博客分享卡片">
+    
+    <title>Mau-Q | 学习 · 记录 · 成长</title>
+
+    
+    
+        <script src="/js/pagefind-highlight.js" type="module"></script>
+    
+
+    
+        
+<link rel="stylesheet" href="/css/highlight/style1.css">
+
+        
+<link rel="stylesheet" href="/css/reset.css">
+
+        
+<link rel="stylesheet" href="/css/markdown.css">
+
+        
+<link rel="stylesheet" href="/css/fonts.css">
+
+         <!--注意：首页既不是post也不是page-->
+        
+
+        
+<link rel="stylesheet" href="/css/ui.css">
+
+        
+<link rel="stylesheet" href="/css/style.css">
+
+
+        
+            <!--返回顶部css-->
+            
+<link rel="stylesheet" href="/css/returnToTop.css">
+
+            
+<link rel="stylesheet" href="/css/unicons.css">
+
+        
+        
+    
+
+    
+        
+<link rel="stylesheet" href="/css/returnToLastPage.css">
+
+    
+
+    
+
+    
+        
+<link rel="stylesheet" href="/css/custom.css">
+
+    
+
+    
+
+    <!-- Local LXGW WenKai font, CDN removed for stability -->
+</head>
+
+    
+    
+
+    
+    
+
+
+
+    
+
+    
+    
+
+
+
+
+    <style>
+        .archive-main a:hover {
+            text-decoration: none; 
+        }
+    </style>
+
+    
+    
+
+
+    <body>
+        <a class="skip-link" href="#main-content">跳到正文</a>
+        
+        <script>
+        (function () {
+            // darkreader.min.js（88K）按需加载：浅色模式用户完全不下载
+            const drOptions = {
+                brightness: 100,
+                contrast: 95,
+                sepia: 10,
+                darkSchemeTextColor: '#e0e0e0',  // 粉笔白文字
+                darkSchemeBackgroundColor: '#1e1e1e', // 黑板灰背景
+                scrollbarStyle: 'native'
+            };
+
+            let loading = null;
+            function loadDarkReader() {
+                if (window.DarkReader) return Promise.resolve();
+                if (!loading) {
+                    loading = new Promise((resolve, reject) => {
+                        const script = document.createElement('script');
+                        script.src = '/js/darkreader.min.js';
+                        script.onload = resolve;
+                        script.onerror = reject;
+                        document.head.appendChild(script);
+                    });
+                }
+                return loading;
+            }
+
+            function enableDark() {
+                document.documentElement.style.backgroundColor = '#1e1e1e';
+                document.documentElement.style.colorScheme = 'dark';
+                return loadDarkReader().then(() => DarkReader.enable(drOptions));
+            }
+
+            function disableDark() {
+                document.documentElement.style.backgroundColor = '';
+                document.documentElement.style.colorScheme = '';
+                if (window.DarkReader) DarkReader.disable();
+            }
+
+            const savedTheme = localStorage.getItem('theme');
+            const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const startDark = savedTheme === 'dark' || (!savedTheme && systemDark);
+            if (startDark) enableDark();
+
+            window.addEventListener('DOMContentLoaded', () => {
+                const btn = document.createElement('button');
+                btn.innerText = '🌓';
+                btn.type = 'button';
+                btn.setAttribute('aria-label', '切换深色模式');
+                btn.title = '切换深色模式';
+                // 按钮样式：仿照你之前的布局，放在右下角
+                btn.style.cssText = `
+                    position: fixed; 
+                    bottom: 40px; 
+                    left: 42px; 
+                    z-index: 9999;
+                    width: 44px; 
+                    height: 44px; 
+                    border-radius: 50%; 
+                    border: 1px solid #ccc;
+                    background: #f7f5ed; 
+                    color: #000;
+                    font-size: 22px; 
+                    cursor: pointer;
+                    box-shadow: 0 4px 10px rgba(0,0,0,0.1); 
+                    transition: transform 0.2s, background-color 0.3s;
+                `;
+                let isDark = startDark;
+                function paintButton() {
+                    btn.style.backgroundColor = isDark ? '#1e1e1e' : '#f7f5ed';
+                    btn.style.color = isDark ? '#fff' : '#000';
+                }
+                paintButton();
+                btn.onmouseover = () => btn.style.transform = 'scale(1.1)';
+                btn.onmouseout = () => btn.style.transform = 'scale(1)';
+                document.body.appendChild(btn);
+                // 点击切换逻辑
+                btn.addEventListener('click', () => {
+                    isDark = !isDark;
+                    if (isDark) {
+                        enableDark();
+                        localStorage.setItem('theme', 'dark');
+                    } else {
+                        disableDark();
+                        localStorage.setItem('theme', 'light');
+                    }
+                    paintButton();
+                });
+            });
+        })();
+        </script>
+        
+        
+            
+        
+        <main id="main-content" class="paper" tabindex="-1">
+
+            
+
+            
+                <div class="shadow-drop-2-bottom paper-main">
+                    
+
+<header class="header">
+    <div class="header-container">
+        <img
+            alt="Mau-Q"
+            class="header-img"
+            src="/img/favicon.svg"
+            width="56"
+            height="56"
+        />
+        <div class="header-content">
+            <a class="logo" href="/">Mau-Q</a>
+            <span class="description">计算机学习、算法、C/C++、课程项目与排错复盘。</span>
+        </div>
+    </div>
+
+    <nav aria-label="主要导航">
+        <ul class="nav">
+            
+                
+                <li>
+                    <a href="/">首页</a>
+                </li>
+            
+                
+                <li>
+                    <a href="/list/">文章</a>
+                </li>
+            
+                
+                <li>
+                    <a href="/categories/">分类</a>
+                </li>
+            
+                
+                <li>
+                    <a href="/about/">关于</a>
+                </li>
+            
+                
+                <li>
+                    <a href="/now/">Now</a>
+                </li>
+            
+                
+                <li>
+                    <a href="/tags/">标签</a>
+                </li>
+            
+                
+                <li>
+                    <a href="/search/">搜索</a>
+                </li>
+            
+        </ul>
+    </nav>
+</header>
+
+
+                    
+                    
+
+                    
+                    
+
+                    <!--说明是文章post页面-->
+                    
+                        <div class="post-main">
+    
+
+    
+
+    
+
+    <div class="post-md">
+        
+            
+        
+        
+        
+    </div>
+
+    <div class="post-meta">
+        <i>
+        
+        </i>
+    </div>
+    <br>
+    
+    
+        
+            
+    
+            <div class="post-footer-pre-next">
+                
+                    <span>上一篇：<a href='/'></a></span>
+                
+
+                
+                    <span class="post-footer-pre-next-last-span-right">下一篇：<a href="/"></a>
+                    </span>
+                
+            </div>
+    
+        
+    
+
+    
+        
+
+     
+</div>
+
+
+
+
+                    
+
+                    <div class="footer">
+    
+        <span> 
+            © 2026 Mau-Q 
+
+            
+                
+
+            
+        </span>
+       
+    
+</div>
+
+
+
+<!--这是指一条线往下的内容-->
+<div class="footer-last">
+    
+            <span></span>
+            
+                <span class="footer-last-span-right"><i>本站由<a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/index.html">Hexo</a>驱动｜使用<a target="_blank" rel="noopener" href="https://github.com/HiNinoJay/hexo-theme-A4">Hexo-theme-A4</a>主题</i></span>
+            
+    
+</div>
+
+
+<!--目录-->
+
+
+
+<!--回到顶部按钮-->
+
+    
+<script src="/js/returnToTop.js"></script>
+
+
+
+
+    
+<script src="/js/returnToLastPage.js"></script>
+
+
+
+
+
+
+
+
+
+                </div>
+            
+            
+                <!-- 回到顶部的按钮-->
+                <button class="progress-wrap shadow-drop-2-bottom" type="button" aria-label="回到页面顶部">
+                    <svg class="progress-circle svg-content" width="100%" height="100%" viewBox="-1 -1 102 102">
+                        <path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98"/>
+                    </svg>
+                </button>
+            
+            
+                <!-- 返回的按钮-->
+                <button class="return-to-last-progress-wrap shadow-drop-2-bottom" type="button" aria-label="返回上一页">
+                    <svg class="progress-circle svg-content" width="100%" height="100%" viewBox="-1 -1 102 102">
+                        <path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98"/>
+                    </svg>
+                </button>
+            
+        </main>
+    </body>
+</html>
+<script src="/js/emojiHandler.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        wrapEmojis('.paper');
+    });
+</script>

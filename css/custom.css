@@ -1,3 +1,31 @@
+/* The theme shares .nav with its horizontal menu; keep the reading outline vertical. */
+.left-toc-container {
+    width: max(0px, calc((100vw - 880px) / 2 - 24px));
+    overflow-x: hidden;
+}
+#toc > .nav { display: block; }
+#toc .nav li { width: 100%; margin-right: 0; }
+#toc .nav a { white-space: normal; overflow-wrap: anywhere; }
+@media (max-width: 1199px) {
+    .left-toc-container { display: none; }
+}
+
+/* Keep wide derivations scrollable on narrow screens. */
+.post-md .katex-display {
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 0.5em 0;
+}
+
+/* These exported teaching diagrams use light strokes on transparent canvases. */
+.post-md img[src^="/img/blogs/deep-learning-basics/"],
+.post-md img[src^="/img/blogs/neural-network-training-optimization-generalization/"] {
+    background: #1e1e1e;
+    border-radius: 8px;
+    padding: 12px;
+    box-sizing: border-box;
+}
+
 /* Local LXGW WenKai font - no CDN dependency */
 @font-face {
     font-family: "LXGW WenKai";
