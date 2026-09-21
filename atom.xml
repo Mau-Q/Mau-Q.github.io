@@ -10,7 +10,26 @@
   <rights>All rights reserved 2026, Mau-Q</rights>
   <subtitle>学习 · 记录 · 成长</subtitle>
   <title>Mau-Q</title>
-  <updated>2026-09-17T01:03:02.000Z</updated>
+  <updated>2026-09-21T15:32:20.000Z</updated>
+  <entry>
+    <author>
+      <name>Mau-Q</name>
+    </author>
+    <category term="技术" scheme="https://mau-q.github.io/categories/%E6%8A%80%E6%9C%AF/"/>
+    <content>
+      <![CDATA[<div class=".article-gallery"><!-- Generated from Obsidian: Blogs/不要停止输出.md. Edit the source note, then run npm run blog:sync. --><p>说一个可能不太准确的话：<strong>不要停止输出。</strong></p><p>输出是我们进行重新思考，重新组织已有知识，发现遗漏知识的最佳时机，而如果这个过程由 AI 代替的话，我们就丧失了通过以上努力获得的持久化能力。</p><p>与学长交流的过程中，有一句话我一直在想：</p><blockquote><p><strong>Q：AI 用得好和“过度依赖 AI”的边界在哪里？</strong></p><p><strong>A：边界在你自己有没有动脑子思考。只有多阅读、多输入、多思考，才能驾驭AI，不然就会失控。</strong></p></blockquote><p>在让 AI 做项目，写博客，发邮件时，在必须我进行参与的部分，我反而被 AI 驾驭，牵着鼻子走，最后必然导致失控。</p><p>所以我认为“不要停止输出”，首先肯定针对的是写博客，只有自己把逻辑理清，搞清楚模糊的点，才能将知识内化于心，而不是让 AI 自己生成一整篇看起来逻辑通常的文章，这样读完也不会有成长，因为成长需要打破的那面墙 AI 替我打破了，而讽刺的是我们甚至不知道有这堵墙。</p><p>其实这也符合费曼学习法，要把知识“讲”给人听，才能掌握知识。所以确实要长久维护我的博客，将学习过程中不论是从博客，视频，AI 获取的知识转换为我自己的文字，才能成长。</p><p>对于做项目，开发而言呢。这个问题就比写博客明显多了，因为一旦 AI 的工程能力超过了我的知识水平，我就只能被 AI 牵着走，不知道 AI 为什么这样做，怎么做，会导致什么，而这会严重影响开发的质量和效率。</p><p>所以在做项目，科研中的“输出”指的是“思考”，这确实需要学长所说的多阅读，多输入，多思考。我甚至还觉得还应该：多“输出”。而且如果仅仅是对 AI 生成的内容进行思考，而不了解该内容背后需要的知识，往往会掉入 AI 的“甜蜜的陷阱”：看似每句话都合理，但是如果真正了解这方面的知识，就会发现漏洞百出。</p><p>这就让我又想到了与另一位学长的谈话：</p><blockquote><p><strong>Q：做项目或者科研时哪些细节可以交给 AI 去做？</strong></p><p><strong>A：环境和一些代码可以交给ai写 然后想法最好自己想清楚 也可以跟ai迭代一些想法 辩证地看看</strong></p></blockquote><p>可能不应该将AI当做“指挥家”，而是一个和我们进行想法交流，迭代的“伙伴”，这才能让 AI 发挥出最大的作用，同时让自己有真正的提升。</p><p>举一个简单的例子：在讨论一个 idea 的验证实验时，如果让 AI 做“指挥家”，我们只问怎么做，然后让它执行，必定做的是“slop”，比如我们没有思考为什么 AI 说进行 1 次实验而不是 3 次或者 5 次，没有思考为什么 AI 说看这 3 个指标而不是要把另一个指标也考虑。只有不断的进行想法的“迭代”，我觉得才是一个soild 的科研。</p></div>]]>
+    </content>
+    <id>https://mau-q.github.io/posts/dont-stop-output/</id>
+    <link href="https://mau-q.github.io/posts/dont-stop-output/"/>
+    <published>2026-09-21T00:00:00.000Z</published>
+    <summary>
+      <![CDATA[<div class=".article-gallery"><!-- Generated from Obsidian: Blogs/不要停止输出.md. Edit the source note, then run npm run blog:sync. -->
+
+<p>说一个可能]]>
+    </summary>
+    <title>不要停止输出</title>
+    <updated>2026-09-21T15:32:20.000Z</updated>
+  </entry>
   <entry>
     <author>
       <name>Mau-Q</name>
