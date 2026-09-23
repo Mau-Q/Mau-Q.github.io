@@ -20,6 +20,15 @@
   </url>
   
   <url>
+    <loc>https://mau-q.github.io/posts/prompt-engineering/</loc>
+    
+    <lastmod>2026-09-22</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://mau-q.github.io/posts/dont-stop-output/</loc>
     
     <lastmod>2026-09-21</lastmod>

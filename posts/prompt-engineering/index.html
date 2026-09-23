@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    
+    <style>
+        body {
+            font-family: "LXGW WenKai", "notoserifsc-medium", "Noto Serif SC", "Songti SC", "STSong", "Microsoft YaHei", "Hiragino Sans GB", "WenQuanYi Micro Hei", serif !important;
+        }
+    </style>
+
+
+    <head>
+    
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport" />
+    <meta name="theme-color" content="#f7f5ed" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#1e1e1e" media="(prefers-color-scheme: dark)">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta name="hexo-theme-A4" content="v2.0.1" />
+    <link rel="icon" href="/img/favicon.svg">
+    <link rel="alternate" type="application/atom+xml" title="Mau-Q" href="https://mau-q.github.io/atom.xml">
+    <link rel="canonical" href="https://mau-q.github.io/posts/prompt-engineering/">
+    <meta name="description" content="Prompt Engineering 是什么我们知道，模型的本质是在预测下一个 token，概率公式为 P(next token∣context)P(\text{next token}\mid \text{context})P(next token∣context) Prompt Engineering 就是在不修改模">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Prompt Engineering：从 Zero-shot、Few-shot 到 Prompt 结构">
+<meta property="og:url" content="https://mau-q.github.io/posts/prompt-engineering/">
+<meta property="og:site_name" content="Mau-Q">
+<meta property="og:description" content="Prompt Engineering 是什么我们知道，模型的本质是在预测下一个 token，概率公式为 P(next token∣context)P(\text{next token}\mid \text{context})P(next token∣context) Prompt Engineering 就是在不修改模">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://mau-q.github.io/img/og/posts--prompt-engineering.png">
+<meta property="article:published_time" content="2026-09-23T00:00:00.000Z">
+<meta property="article:modified_time" content="2026-09-22T16:00:00.000Z">
+<meta property="article:author" content="Mau-Q">
+<meta property="article:tag" content="Prompt Engineering">
+<meta property="article:tag" content="大语言模型">
+<meta property="article:tag" content="学习笔记">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://mau-q.github.io/img/og/posts--prompt-engineering.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="《Prompt Engineering：从 Zero-shot、Few-shot 到 Prompt 结构》分享卡片">
+    
+        <meta data-pagefind-meta="title" content="Prompt Engineering：从 Zero-shot、Few-shot 到 Prompt 结构">
+        <meta data-pagefind-meta="image" content="/img/og/posts--prompt-engineering.png">
+        <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Prompt Engineering：从 Zero-shot、Few-shot 到 Prompt 结构","description":"Prompt Engineering 是什么我们知道，模型的本质是在预测下一个 token，概率公式为 P(next token∣context)P(\\text{next token}\\mid \\text{context})P(next token∣context) Prompt Engineering 就是在不修改模","image":"https://mau-q.github.io/img/og/posts--prompt-engineering.png","datePublished":"2026-09-23T00:00:00.000Z","dateModified":"2026-09-22T16:00:00.000Z","author":{"@type":"Person","name":"Mau-Q"},"publisher":{"@type":"Person","name":"Mau-Q"},"mainEntityOfPage":"https://mau-q.github.io/posts/prompt-engineering/","inLanguage":"zh-CN"}</script>
+    
+    <title>Prompt Engineering：从 Zero-shot、Few-shot 到 Prompt 结构 | Mau-Q | 学习 · 记录 · 成长</title>
+
+    
+    
+        <script src="/js/pagefind-highlight.js" type="module"></script>
+    
+
+    
+        
+<link rel="stylesheet" href="/css/highlight/style1.css">
+
+        
+<link rel="stylesheet" href="/css/reset.css">
+
+        
+<link rel="stylesheet" href="/css/markdown.css">
+
+        
+<link rel="stylesheet" href="/css/fonts.css">
+
+         <!--注意：首页既不是post也不是page-->
+        
+
+        
+<link rel="stylesheet" href="/css/ui.css">
+
+        
+<link rel="stylesheet" href="/css/style.css">
+
+
+        
+            <!--返回顶部css-->
+            
+<link rel="stylesheet" href="/css/returnToTop.css">
+
+            
+<link rel="stylesheet" href="/css/unicons.css">
+
+        
+        
+            <!--目录-->
+            
+<link rel="stylesheet" href="/css/toc.css">
+
+        
+    
+
+    
+        
+<link rel="stylesheet" href="/css/returnToLastPage.css">
+
+    
+
+    
+
+    
+        
+<link rel="stylesheet" href="/css/custom.css">
+
+    
+
+    
+
+    <!-- Local LXGW WenKai font, CDN removed for stability -->
+<link rel="stylesheet" href="/css/code-theme.css?v=7e340c8a145c"><link rel="stylesheet" href="/css/article-outline.css?v=c8809551b426"><link rel="stylesheet" href="/lib/katex/katex.min.css"></head>
+
+    
+    
+
+    
+    
+
+
+
+    
+
+    
+    
+
+
+
+
+    <style>
+        .archive-main a:hover {
+            text-decoration: none; 
+        }
+    </style>
+
+    
+    
+
+
+    <body>
+        <a class="skip-link" href="#main-content">跳到正文</a>
+        
+        <script>
+        (function () {
+            // darkreader.min.js（88K）按需加载：浅色模式用户完全不下载
+            const drOptions = {
+                brightness: 100,
+                contrast: 95,
+                sepia: 10,
+                darkSchemeTextColor: '#e0e0e0',  // 粉笔白文字
+                darkSchemeBackgroundColor: '#1e1e1e', // 黑板灰背景
+                scrollbarStyle: 'native'
+            };
+
+            let loading = null;
+            function loadDarkReader() {
+                if (window.DarkReader) return Promise.resolve();
+                if (!loading) {
+                    loading = new Promise((resolve, reject) => {
+                        const script = document.createElement('script');
+                        script.src = '/js/darkreader.min.js';
+                        script.onload = resolve;
+                        script.onerror = reject;
+                        document.head.appendChild(script);
+                    });
+                }
+                return loading;
+            }
+
+            function enableDark() {
+                document.documentElement.style.backgroundColor = '#1e1e1e';
+                document.documentElement.style.colorScheme = 'dark';
+                return loadDarkReader().then(() => DarkReader.enable(drOptions, {
+                    css: "/* Code colors follow the site's light/dark mode, including DarkReader's toggle. */\nhtml:not([data-darkreader-mode]) {\n  --code-background: #e7ebf2;\n  --code-foreground: #343b48;\n  --code-border: #c2cbd9;\n  --code-gutter: #8792a2;\n  --code-comment: #6d7888;\n  --code-keyword: #8b3fa2;\n  --code-string: #2f7c57;\n  --code-number: #a15d25;\n  --code-function: #2865a8;\n  --code-variable: #b04452;\n  --inline-code-background: #f0f3f7;\n  --inline-code-border: #dce2ec;\n}\n\nhtml[data-darkreader-mode=\"dynamic\"] {\n  --code-background: #282c34;\n  --code-foreground: #abb2bf;\n  --code-border: #3e4451;\n  --code-gutter: #7f8794;\n  --code-comment: #9da5b4;\n  --code-keyword: #c678dd;\n  --code-string: #98c379;\n  --code-number: #d19a66;\n  --code-function: #61afef;\n  --code-variable: #e06c75;\n  --inline-code-background: #343a46;\n  --inline-code-border: #454c5a;\n}\n\n.post-md pre,\n.post-md code {\n  font-family: \"JetBrains Mono\", \"Fira Code\", \"Cascadia Code\", \"SF Mono\", Menlo, Monaco, Consolas, \"PingFang SC\", \"Microsoft YaHei\", monospace !important;\n}\n.post-md code {\n  padding: 0.08em 0.34em;\n  border: 1px solid var(--inline-code-border) !important;\n  border-radius: 4px;\n  background: var(--inline-code-background) !important;\n  color: var(--code-foreground) !important;\n  -webkit-box-decoration-break: clone;\n  box-decoration-break: clone;\n}\n.post-md .highlight,\n.post-md > pre {\n  background: var(--code-background) !important;\n  color: var(--code-foreground) !important;\n  border: 1px solid var(--code-border) !important;\n  border-radius: 6px;\n}\n.post-md .highlight pre,\n.post-md pre code {\n  padding: 0;\n  background: transparent !important;\n  color: var(--code-foreground) !important;\n  border: 0 !important;\n  border-radius: 0;\n}\n.post-md .highlight .gutter pre { color: var(--code-gutter) !important; }\n.post-md pre .comment { color: var(--code-comment) !important; }\n.post-md pre .keyword,\n.post-md pre .selector-tag { color: var(--code-keyword) !important; }\n.post-md pre .string,\n.post-md pre .addition { color: var(--code-string) !important; }\n.post-md pre .number,\n.post-md pre .literal,\n.post-md pre .built_in { color: var(--code-number) !important; }\n.post-md pre .title,\n.post-md pre .function { color: var(--code-function) !important; }\n.post-md pre .variable,\n.post-md pre .attribute { color: var(--code-variable) !important; }\n"
+                }));
+            }
+
+            function disableDark() {
+                document.documentElement.style.backgroundColor = '';
+                document.documentElement.style.colorScheme = '';
+                if (window.DarkReader) DarkReader.disable();
+            }
+
+            const savedTheme = localStorage.getItem('theme');
+            const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const startDark = savedTheme === 'dark' || (!savedTheme && systemDark);
+            if (startDark) enableDark();
+
+            window.addEventListener('DOMContentLoaded', () => {
+                const btn = document.createElement('button');
+                btn.innerText = '🌓';
+                btn.type = 'button';
+                btn.setAttribute('aria-label', '切换深色模式');
+                btn.title = '切换深色模式';
+                // 按钮样式：仿照你之前的布局，放在右下角
+                btn.style.cssText = `
+                    position: fixed; 
+                    bottom: 40px; 
+                    left: 42px; 
+                    z-index: 9999;
+                    width: 44px; 
+                    height: 44px; 
+                    border-radius: 50%; 
+                    border: 1px solid #ccc;
+                    background: #f7f5ed; 
+                    color: #000;
+                    font-size: 22px; 
+                    cursor: pointer;
+                    box-shadow: 0 4px 10px rgba(0,0,0,0.1); 
+                    transition: transform 0.2s, background-color 0.3s;
+                `;
+                let isDark = startDark;
+                function paintButton() {
+                    btn.style.backgroundColor = isDark ? '#1e1e1e' : '#f7f5ed';
+                    btn.style.color = isDark ? '#fff' : '#000';
+                }
+                paintButton();
+                btn.onmouseover = () => btn.style.transform = 'scale(1.1)';
+                btn.onmouseout = () => btn.style.transform = 'scale(1)';
+                document.body.appendChild(btn);
+                // 点击切换逻辑
+                btn.addEventListener('click', () => {
+                    isDark = !isDark;
+                    if (isDark) {
+                        enableDark();
+                        localStorage.setItem('theme', 'dark');
+                    } else {
+                        disableDark();
+                        localStorage.setItem('theme', 'light');
+                    }
+                    paintButton();
+                });
+            });
+        })();
+        </script>
+        
+        
+            
+                <div class="left-toc-container">
+                    <nav id="toc" class="bs-docs-sidebar"></nav>
+                </div>
+            
+        
+        <main id="main-content" class="paper" tabindex="-1">
+
+            
+
+            
+                <div class="shadow-drop-2-bottom paper-main">
+                    
+
+<header class="header">
+    <div class="header-container">
+        <img
+            alt="Mau-Q"
+            class="header-img"
+            src="/img/favicon.svg"
+            width="56"
+            height="56"
+        />
+        <div class="header-content">
+            <a class="logo" href="/">Mau-Q</a>
+            <span class="description">计算机学习、算法、C/C++、课程项目与排错复盘。</span>
+        </div>
+    </div>
+
+    <nav aria-label="主要导航">
+        <ul class="nav">
+            
+                
+                <li>
+                    <a href="/">首页</a>
+                </li>
+            
+                
+                <li>
+                    <a href="/list/">文章</a>
+                </li>
+            
+                
+                <li>
+                    <a href="/categories/">分类</a>
+                </li>
+            
+                
+                <li>
+                    <a href="/about/">关于</a>
+                </li>
+            
+                
+                <li>
+                    <a href="/now/">Now</a>
+                </li>
+            
+                
+                <li>
+                    <a href="/tags/">标签</a>
+                </li>
+            
+                
+                <li>
+                    <a href="/search/">搜索</a>
+                </li>
+            
+        </ul>
+    </nav>
+</header>
+
+
+                    
+                    
+
+                    
+                    
+
+                    <!--说明是文章post页面-->
+                    
+                        <div class="post-main">
+    
+
+    
+        
+            
+                <h1 class="post-main-title" style="text-align: center;">
+                    Prompt Engineering：从 Zero-shot、Few-shot 到 Prompt 结构
+                </h1>
+            
+        
+      
+    
+
+    
+
+        
+            <div class="post-head-meta-center">
+        
+                
+                    <span>最近更新：2026-09-23</span> 
+                
+                
+                    
+                        &nbsp; | &nbsp;
+                    
+                     <span>字数总计：2.1k</span>
+                
+                
+                    
+                        &nbsp; | &nbsp;
+                    
+                    <span>阅读估时：8分钟</span>
+                
+                
+            </div>
+    
+
+    <div class="post-md" data-pagefind-body>
+        
+            
+                <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Prompt-Engineering-%E6%98%AF%E4%BB%80%E4%B9%88"><span class="post-toc-text">Prompt Engineering 是什么</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Zero-shot-Prompting"><span class="post-toc-text">Zero-shot Prompting</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#%E4%B8%80%E4%B8%AA%E5%A5%BD%E7%9A%84-Zero-shot-Prompt"><span class="post-toc-text">一个好的 Zero-shot Prompt</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Few-shot-Prompting"><span class="post-toc-text">Few-shot Prompting</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#%E4%B8%80%E4%B8%AA%E5%A5%BD%E7%9A%84-Few-shot-Prompt"><span class="post-toc-text">一个好的 Few-shot Prompt</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BC%9A%E6%9C%89-Zero-shot-%E5%92%8C-Few-shot"><span class="post-toc-text">为什么会有 Zero-shot 和 Few-shot</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#In-Context-Learning%EF%BC%88ICL%EF%BC%8C%E4%B8%8A%E4%B8%8B%E6%96%87%E5%AD%A6%E4%B9%A0%EF%BC%89"><span class="post-toc-text">In-Context Learning（ICL，上下文学习）</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Few-shot-Prompting-%E7%BB%99%E6%A8%A1%E5%9E%8B%E6%8F%90%E4%BE%9B%E4%BA%86%E4%BB%80%E4%B9%88"><span class="post-toc-text">Few-shot Prompting 给模型提供了什么</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1-%E4%BB%BB%E5%8A%A1"><span class="post-toc-text">1. 任务</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2-%E6%A0%87%E7%AD%BE%E8%AF%AD%E4%B9%89"><span class="post-toc-text">2. 标签语义</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#3-%E8%BE%93%E5%87%BA%E6%A0%BC%E5%BC%8F"><span class="post-toc-text">3. 输出格式</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#4-%E4%BB%BB%E5%8A%A1%E7%9A%84%E9%9A%90%E5%90%AB%E8%A7%84%E5%88%99"><span class="post-toc-text">4. 任务的隐含规则</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Few-shot-%E7%A4%BA%E4%BE%8B%E4%B8%8D%E5%90%8C%EF%BC%8C%E4%B9%9F%E4%BC%9A%E6%94%B9%E5%8F%98%E7%BB%93%E6%9E%9C"><span class="post-toc-text">Few-shot 示例不同，也会改变结果</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88-Few-shot-%E6%9C%89%E6%95%88"><span class="post-toc-text">为什么 Few-shot 有效</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Prompt-%E7%9A%84%E7%BB%84%E6%88%90"><span class="post-toc-text">Prompt 的组成</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1-System"><span class="post-toc-text">1. System</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2-Instruction"><span class="post-toc-text">2. Instruction</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#3-Context"><span class="post-toc-text">3. Context</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#4-Constrains"><span class="post-toc-text">4. Constrains</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#5-Output-Format"><span class="post-toc-text">5. Output Format</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#%E5%AE%8C%E6%95%B4-Prompt-%E7%A4%BA%E4%BE%8B"><span class="post-toc-text">完整 Prompt 示例</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Role-Prompting-%E6%98%AF%E4%BB%80%E4%B9%88"><span class="post-toc-text">Role Prompting 是什么</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#%E7%BB%93%E6%9E%84%E5%8C%96-Prompt"><span class="post-toc-text">结构化 Prompt</span></a></li></ol>
+            
+        
+        <div class=".article-gallery"><!-- Generated from Obsidian: Blogs/Prompt Engineering.md. Edit the source note, then run npm run blog:sync. -->
+
+<h2 id="Prompt-Engineering-是什么"><a href="#Prompt-Engineering-是什么" class="headerlink" title="Prompt Engineering 是什么" aria-hidden="true" tabindex="-1"></a>Prompt Engineering 是什么</h2><p>我们知道，模型的本质是在预测下一个 token，概率公式为</p>
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>P</mi><mo stretchy="false">(</mo><mtext>next token</mtext><mo>∣</mo><mtext>context</mtext><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">P(\text{next token}\mid \text{context})</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="mopen">(</span><span class="mord text"><span class="mord">next token</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">∣</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">context</span></span><span class="mclose">)</span></span></span></span></span>
+<p>Prompt Engineering 就是在不修改模型参数的情况下改变 context，从而改变生成下一个 token 的概率。</p>
+<h2 id="Zero-shot-Prompting"><a href="#Zero-shot-Prompting" class="headerlink" title="Zero-shot Prompting" aria-hidden="true" tabindex="-1"></a>Zero-shot Prompting</h2><p>不给示例，只提供任务指令和输入。本质是在模型预训练阶段，已经学习了大量知识，Zero-shot Prompting 就是让模型调用现有能力完成任务。</p>
+<blockquote>
+<p><strong>示例 | 情感分类</strong></p>
+<p><strong>Prompt</strong></p>
+<p>判断下面评论的情感，只能回答 <code>positive</code> 或 <code>negative</code>。</p>
+<p><strong>评论：</strong><br>这家酒店环境很好，但服务员态度非常差。</p>
+<p><strong>Output：</strong> <code>negative</code></p>
+</blockquote>
+<h3 id="一个好的-Zero-shot-Prompt"><a href="#一个好的-Zero-shot-Prompt" class="headerlink" title="一个好的 Zero-shot Prompt" aria-hidden="true" tabindex="-1"></a>一个好的 Zero-shot Prompt</h3><p>通常至少包含：</p>
+<p><strong>Instruction</strong> → <strong>Label definition</strong> → <strong>Query</strong> → <strong>Output constraint</strong></p>
+<blockquote>
+<p><strong>示例｜问题分类</strong></p>
+<p><strong>Prompt</strong></p>
+<p>任务：判断下面的问题属于哪个类别。</p>
+<p>类别：math、coding、knowledge</p>
+<p>输入：What is gradient descent?</p>
+<p>输出要求：只输出类别名称。</p>
+</blockquote>
+<h2 id="Few-shot-Prompting"><a href="#Few-shot-Prompting" class="headerlink" title="Few-shot Prompting" aria-hidden="true" tabindex="-1"></a>Few-shot Prompting</h2><p>与 zero-shot 不同点在于在 prompt 中加入少量示例。</p>
+<blockquote>
+<p><strong>示例｜分类问题</strong></p>
+<p><strong>示例 1：</strong><br>问题：计算 1+2<br>类别：math</p>
+<p><strong>示例 2：</strong><br>问题：实现 quicksort<br>类别：coding</p>
+<p><strong>现在判断：</strong><br>问题：解释梯度下降。<br>类别：</p>
+</blockquote>
+<h3 id="一个好的-Few-shot-Prompt"><a href="#一个好的-Few-shot-Prompt" class="headerlink" title="一个好的 Few-shot Prompt" aria-hidden="true" tabindex="-1"></a>一个好的 Few-shot Prompt</h3><p>在 Zero-shot 的基础上加入示例：</p>
+<p><strong>Instruction</strong> → <strong>Label definition</strong> → <strong>Few-shot demonstrations</strong> → <strong>Query</strong> → <strong>Output constraint</strong></p>
+<h2 id="为什么会有-Zero-shot-和-Few-shot"><a href="#为什么会有-Zero-shot-和-Few-shot" class="headerlink" title="为什么会有 Zero-shot 和 Few-shot" aria-hidden="true" tabindex="-1"></a>为什么会有 Zero-shot 和 Few-shot</h2><p>如果让模型进行分类任务，而没有提供种类，那么模型就会依据自己的知识分类，可能达不到我们的要求，于是可以用 Few-shot 来提示模型该怎么分类。</p>
+<p>而 Few-shot 也不是全方面比 Zero-shot 好，如果知识简单的翻译问题，Zero-shot 通常就够了。</p>
+<h2 id="In-Context-Learning（ICL，上下文学习）"><a href="#In-Context-Learning（ICL，上下文学习）" class="headerlink" title="In-Context Learning（ICL，上下文学习）" aria-hidden="true" tabindex="-1"></a>In-Context Learning（ICL，上下文学习）</h2><p>Few-shot Prompting 就是 ICL 的一种典型形式。模型通过给出的 context 进行临时学习，从而改变 next token；它不会像 post training 那样改变模型参数，也不意味着模型获得了脱离该 context 保留的新知识。</p>
+<h2 id="Few-shot-Prompting-给模型提供了什么"><a href="#Few-shot-Prompting-给模型提供了什么" class="headerlink" title="Few-shot Prompting 给模型提供了什么" aria-hidden="true" tabindex="-1"></a>Few-shot Prompting 给模型提供了什么</h2><p>其实就是 context，那 context 中包含了什么呢？具体来说可以分为 4 类：</p>
+<h3 id="1-任务"><a href="#1-任务" class="headerlink" title="1. 任务" aria-hidden="true" tabindex="-1"></a>1. 任务</h3><blockquote>
+<p><strong>示例｜</strong></p>
+<p><strong>比如：</strong><br>Paris → France<br>Tokyo → Japan<br>Beijing →</p>
+<p><strong>模型推断：</strong><br>city → country</p>
+</blockquote>
+<h3 id="2-标签语义"><a href="#2-标签语义" class="headerlink" title="2. 标签语义" aria-hidden="true" tabindex="-1"></a>2. 标签语义</h3><p>假设任务使用自定义标签 <code>A</code>、<code>B</code>、<code>C</code>，模型本身并不知道这些标签代表什么。</p>
+<blockquote>
+<p><strong>示例｜推断标签语义</strong></p>
+<p><strong>Zero-shot</strong></p>
+<p>Classify as <code>A</code> &#x2F; <code>B</code> &#x2F; <code>C</code>：</p>
+<p>How do I sort an array?</p>
+<p>此时，<code>A</code>、<code>B</code>、<code>C</code> 没有被赋予任何具体语义。</p>
+<p><strong>Few-shot</strong></p>
+<p>How do I implement quicksort? → <code>A</code><br>What is gradient descent? → <code>B</code><br>What is the capital of France? → <code>C</code><br>How do I implement BFS? → ?</p>
+<p><strong>模型可以由此推断</strong></p>
+<p><code>A</code> ≈ coding　·　<code>B</code> ≈ ML &#x2F; concept　·　<code>C</code> ≈ knowledge</p>
+</blockquote>
+<h3 id="3-输出格式"><a href="#3-输出格式" class="headerlink" title="3. 输出格式" aria-hidden="true" tabindex="-1"></a>3. 输出格式</h3><p>Few-shot 示例还可以帮助模型学习输出格式。</p>
+<p>如果只告诉模型：</p>
+<p><strong>Prompt</strong>  <code>Return JSON.</code></p>
+<p>模型虽然会输出 JSON，但具体字段并不确定，例如：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;answer&quot;</span><span class="punctuation">:</span> <span class="string">&quot;...&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;explanation&quot;</span><span class="punctuation">:</span> <span class="string">&quot;...&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;confidence&quot;</span><span class="punctuation">:</span> <span class="number">0.9</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>如果进一步提供一个 example：</p>
+<p><strong>Input</strong>  <code>What is SFT?</code></p>
+<p><strong>Output</strong></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;category&quot;</span><span class="punctuation">:</span> <span class="string">&quot;post_training&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;difficulty&quot;</span><span class="punctuation">:</span> <span class="string">&quot;basic&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>模型就更容易模仿这个结构：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;category&quot;</span><span class="punctuation">:</span> <span class="string">&quot;...&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;difficulty&quot;</span><span class="punctuation">:</span> <span class="string">&quot;...&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>核心理解：</strong> Few-shot 不仅可以帮助模型理解任务，也可以隐式规定输出格式。</p>
+<h3 id="4-任务的隐含规则"><a href="#4-任务的隐含规则" class="headerlink" title="4. 任务的隐含规则" aria-hidden="true" tabindex="-1"></a>4. 任务的隐含规则</h3><p>比如任务：<code>判断一句话是否包含事实错误</code>，而“事实错误”的标准可能很模糊。</p>
+<blockquote>
+<p><strong>示例｜</strong></p>
+<p><strong>通过 examples：</strong><br>“The Earth revolves around the Sun.”<br>→ Correct</p>
+<p>“The Sun revolves around the Earth.”<br>→ Incorrect</p>
+<p>“Pluto is officially one of the eight planets.”<br>→ Incorrect</p>
+<p><strong>你实际上通过例子告诉了模型：</strong><br>我采用的是现代天文学定义，而不是泛泛判断句子是否听起来合理。</p>
+</blockquote>
+<p><strong>核心理解</strong>：Few-shot demonstrations 不只是提供参考答案，它们也在<strong>隐式定义任务本身</strong>。</p>
+<h3 id="Few-shot-示例不同，也会改变结果"><a href="#Few-shot-示例不同，也会改变结果" class="headerlink" title="Few-shot 示例不同，也会改变结果" aria-hidden="true" tabindex="-1"></a>Few-shot 示例不同，也会改变结果</h3><p>Few-shot demonstrations 本身就是 context 的一部分，因此<strong>示例内容或顺序发生变化，模型的输出也可能随之变化</strong>。</p>
+<p>例如，同样的三个示例：</p>
+<p><code>Example 1</code> → <code>Example 2</code> → <code>Example 3</code></p>
+<p>如果换成：</p>
+<p><code>Example 3</code> → <code>Example 1</code> → <code>Example 2</code></p>
+<p>模型接收到的 context 就已经不同，因此后续 token 的概率分布也可能发生变化。</p>
+<blockquote>
+<p><strong>示例｜错误 demonstrations 带来的偏移</strong></p>
+<p><strong>任务</strong></p>
+<p>判断动物类别。</p>
+<p><strong>Demonstrations</strong></p>
+<p>鲸鱼 → <code>fish</code><br>鲨鱼 → <code>fish</code><br>金枪鱼 → <code>fish</code></p>
+<p><strong>Query</strong></p>
+<p>海豚 → ?</p>
+<p><strong>模型可能输出</strong></p>
+<p><code>fish</code></p>
+<p>尽管真实答案并不是 <code>fish</code>，模型仍可能受到前文 demonstrations 的影响而模仿这一模式。</p>
+</blockquote>
+<p>因此，Few-shot demonstrations 有两面性：</p>
+<ul>
+<li><strong>好的 demonstrations</strong> → 帮助模型理解任务</li>
+<li><strong>坏的 demonstrations</strong> → 可能把模型带偏</li>
+</ul>
+<p>所以，<strong>examples 是 Prompt 中非常重要的一部分。</strong></p>
+<h2 id="为什么-Few-shot-有效"><a href="#为什么-Few-shot-有效" class="headerlink" title="为什么 Few-shot 有效" aria-hidden="true" tabindex="-1"></a>为什么 Few-shot 有效</h2><p>模型在预训练中已经接触并学习了大量类似的模式，例如：</p>
+<ul>
+<li>question → answer</li>
+<li>input → output</li>
+<li>example → solution</li>
+<li>document → summary</li>
+<li>English → Chinese</li>
+</ul>
+<p>自回归训练让模型学习<strong>如何根据前文预测后文</strong>。</p>
+<p>因此，当 Prompt 中给出 demonstrations 时，模型可以利用这些上下文中的模式，推断当前任务，并继续生成符合该模式的内容。</p>
+<blockquote>
+<p>ICL 在模型内部究竟如何实现，是一个更深的问题，可以在 Transformer &#x2F; In-Context Learning 机制部分进一步讨论。</p>
+</blockquote>
+<h2 id="Prompt-的组成"><a href="#Prompt-的组成" class="headerlink" title="Prompt 的组成" aria-hidden="true" tabindex="-1"></a>Prompt 的组成</h2><p>一个好的 prompt 最基本结构为 <code>System</code> + <code>Instruction</code> + <code>Context</code> + <code>Constrains</code> + <code>Output Format</code></p>
+<h3 id="1-System"><a href="#1-System" class="headerlink" title="1. System" aria-hidden="true" tabindex="-1"></a>1. System</h3><p>给模型设置一个全局行为框架。可以理解成：你应该怎么做，是长期规则。与 <code>System</code> 经常一起出现的是 <code>User</code>，可以理解成：现在具体做什么，更像当前任务。</p>
+<blockquote>
+<p><strong>示例｜</strong></p>
+<p><strong>System</strong><br>你是科研助手。<br>回答准确、简洁。<br>不要编造信息。</p>
+<p><strong>User:</strong><br>解释 SFT。</p>
+</blockquote>
+<h3 id="2-Instruction"><a href="#2-Instruction" class="headerlink" title="2. Instruction" aria-hidden="true" tabindex="-1"></a>2. Instruction</h3><p>是 prompt <strong>最核心的一部分</strong>：明确告诉模型要执行什么操作。而<code>Instuction</code> 最核心的是<strong>动作</strong>，可以想象成<code>动词 + 对象</code>，所以在写 Prompt 时，应该想我到底希望模型执行哪个动作？</p>
+<blockquote>
+<p><strong>示例｜</strong></p>
+<p><strong>不好的写法</strong><br>这篇论文的数据集。<br>模型并不知道你到底想：翻译&#x2F;总结&#x2F;列出名字&#x2F;分析用途&#x2F;判断训练集还是测试集</p>
+<p><strong>更好的写法</strong><br>Extract all datasets mentioned in the paper and classify each dataset as training, validation, or evaluation data.</p>
+</blockquote>
+<h3 id="3-Context"><a href="#3-Context" class="headerlink" title="3. Context" aria-hidden="true" tabindex="-1"></a>3. Context</h3><p>其实就是上下文，是提供给模型的额外信息。和 <code>Instruction</code> 的区别在于<code>Context</code> 是“已知条件”，而<code>Instruction</code> 是“你要做什么“。</p>
+<h3 id="4-Constrains"><a href="#4-Constrains" class="headerlink" title="4. Constrains" aria-hidden="true" tabindex="-1"></a>4. Constrains</h3><p>因为现在的模型不可避免的出现“幻觉“，所以需要<code>Constrains</code> 来限制模型的输出，最简单的是让模型在不知道的情况下输出<code>不知道</code>，而不是瞎猜，这对于没有辨识能力的人是非常危险的。</p>
+<p>比如让模型读一篇论文：</p>
+<blockquote>
+<p><strong>示例｜</strong></p>
+<p><strong>输入</strong><br>Extract the training dataset from this paper.</p>
+<p><strong>如果论文没有明确写，模型就可能瞎猜:</strong><br>The model was probably trained on Alpaca…</p>
+<p><strong>而如果加入<code>Constrains</code></strong> :<br>Only use information explicitly stated in the paper.If the dataset cannot be determined, output “Unknown”.</p>
+<p><strong>模型就会输出：</strong><br>Unknown</p>
+</blockquote>
+<p>常见的<code>Constrains</code>包括：内容边界，行为边界，长度，输出范围。</p>
+<h3 id="5-Output-Format"><a href="#5-Output-Format" class="headerlink" title="5. Output Format" aria-hidden="true" tabindex="-1"></a>5. Output Format</h3><p>其实<code>Output Format</code>和<code>Constrians</code>本质是相同的，不过为了逻辑清楚，通常在<code>Prompt</code>最后要求输出格式来满足后续自动化的实施。</p>
+<h3 id="完整-Prompt-示例"><a href="#完整-Prompt-示例" class="headerlink" title="完整 Prompt 示例" aria-hidden="true" tabindex="-1"></a>完整 Prompt 示例</h3><p>比如分析一篇 SFT 论文：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">System:</span><br><span class="line">You are an academic paper analysis assistant.</span><br><span class="line">Only make claims supported by the provided paper text.</span><br><span class="line"></span><br><span class="line">Task:</span><br><span class="line">Identify the datasets used in the paper.</span><br><span class="line"></span><br><span class="line">Context:</span><br><span class="line">The paper studies supervised fine-tuning data composition.</span><br><span class="line"></span><br><span class="line">Requirements:</span><br><span class="line">1. Separate training datasets from evaluation datasets.</span><br><span class="line">2. Do not infer datasets that are not explicitly mentioned.</span><br><span class="line">3. If a field cannot be determined, use &quot;Unknown&quot;.</span><br><span class="line"></span><br><span class="line">Output format:</span><br><span class="line"></span><br><span class="line">Training datasets:</span><br><span class="line">- Name:</span><br><span class="line">  Purpose:</span><br><span class="line">  Size:</span><br><span class="line"></span><br><span class="line">Evaluation datasets:</span><br><span class="line">- Name:</span><br><span class="line">  Purpose:</span><br><span class="line">  Metric:</span><br></pre></td></tr></table></figure>
+
+<h2 id="Role-Prompting-是什么"><a href="#Role-Prompting-是什么" class="headerlink" title="Role Prompting 是什么" aria-hidden="true" tabindex="-1"></a>Role Prompting 是什么</h2><p>在<code>Prompt</code>中经常看到类似这样的话：<code>You are an expert machine learning researcher.</code>这就是<code>Role Prompting</code>。</p>
+<p>但是<code>Role</code>也不是越复杂越好，一个好的<code>Role</code>应该是是给模型明确任务标准：</p>
+<p><code>You are an academic paper analysis assistant.Distinguish claims explicitly stated in the paper from your own interpretation.</code></p>
+<h2 id="结构化-Prompt"><a href="#结构化-Prompt" class="headerlink" title="结构化 Prompt" aria-hidden="true" tabindex="-1"></a>结构化 Prompt</h2><p><code>Prompt</code> 并不是黑魔法，不可能让模型的能力突然增强。不是越复杂越长的 <code>Prompt</code> 效果越好，而是要提高信息密度。</p>
+<p>在实际工程中，更重要的是：</p>
+<p><code>任务是否明确</code> + <code>信息是否充分</code> + <code>边界是否明确</code> + <code>示例是否合适</code> + <code>输出是否结构化</code></p>
+<p>所以 Prompt Engineering 更像：<strong>设计模型的输入接口</strong>，而不只是“研究一句怎么说效果最好”。</p>
+</div>
+        <aside class="post-afterword" aria-label="文章余韵">
+  <span class="post-afterword-label">文章余韵</span>
+  <p>学而时习之，不亦说乎？</p>
+  <cite>—— 孔子《论语·学而》</cite>
+</aside>
+    </div>
+
+    <div class="post-meta">
+        <i>
+        
+            <span>2026-09-23</span>
+            
+                <span>该篇文章被 Mau-Q</span>
+            
+            
+                <span>打上标签:
+                    
+                    
+                        <a href='/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/'>
+                            学习笔记
+                        </a>
+                    
+                        <a href='/tags/Prompt-Engineering/'>
+                            Prompt Engineering
+                        </a>
+                    
+                        <a href='/tags/%E5%A4%A7%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B/'>
+                            大语言模型
+                        </a>
+                    
+                </span>
+             
+             
+                <span>归为分类:
+                    
+                    
+                        <a href='/categories/%E6%8A%80%E6%9C%AF/'>
+                            技术
+                        </a>
+                    
+                </span>
+            
+        
+        </i>
+    </div>
+    <br>
+    
+    
+        
+            
+    
+            <div class="post-footer-pre-next">
+                
+
+                
+                    <span class="post-footer-pre-next-last-span-right">下一篇：<a href="/posts/dont-stop-output/">不要停止输出</a>
+                    </span>
+                
+            </div>
+    
+        
+    
+
+    
+        
+
+     
+</div>
+
+
+
+
+                    
+
+                    <div class="footer">
+    
+        <span> 
+            © 2026 Mau-Q 
+
+            
+                
+
+            
+        </span>
+       
+    
+</div>
+
+
+
+<!--这是指一条线往下的内容-->
+<div class="footer-last">
+    
+            <span></span>
+            
+                <span class="footer-last-span-right"><i>本站由<a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/index.html">Hexo</a>驱动｜使用<a target="_blank" rel="noopener" href="https://github.com/HiNinoJay/hexo-theme-A4">Hexo-theme-A4</a>主题</i></span>
+            
+    
+</div>
+
+
+<!--目录-->
+
+    
+<script src="/js/toc.js?v=68e5269049cc"></script>
+
+
+
+
+<!--回到顶部按钮-->
+
+    
+<script src="/js/returnToTop.js"></script>
+
+
+
+
+    
+<script src="/js/returnToLastPage.js"></script>
+
+
+
+
+
+
+
+
+
+                </div>
+            
+            
+                <!-- 回到顶部的按钮-->
+                <button class="progress-wrap shadow-drop-2-bottom" type="button" aria-label="回到页面顶部">
+                    <svg class="progress-circle svg-content" width="100%" height="100%" viewBox="-1 -1 102 102">
+                        <path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98"/>
+                    </svg>
+                </button>
+            
+            
+                <!-- 返回的按钮-->
+                <button class="return-to-last-progress-wrap shadow-drop-2-bottom" type="button" aria-label="返回上一页">
+                    <svg class="progress-circle svg-content" width="100%" height="100%" viewBox="-1 -1 102 102">
+                        <path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98"/>
+                    </svg>
+                </button>
+            
+        </main>
+    </body>
+</html>
+<script src="/js/emojiHandler.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        wrapEmojis('.paper');
+    });
+</script>
