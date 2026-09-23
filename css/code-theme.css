@@ -1,31 +1,72 @@
-/* Stable code colors in both page themes; also passed to DarkReader as custom CSS. */
+/* Code colors follow the site's light/dark mode, including DarkReader's toggle. */
+html:not([data-darkreader-mode]) {
+  --code-background: #e7ebf2;
+  --code-foreground: #343b48;
+  --code-border: #c2cbd9;
+  --code-gutter: #8792a2;
+  --code-comment: #6d7888;
+  --code-keyword: #8b3fa2;
+  --code-string: #2f7c57;
+  --code-number: #a15d25;
+  --code-function: #2865a8;
+  --code-variable: #b04452;
+  --inline-code-background: #f0f3f7;
+  --inline-code-border: #dce2ec;
+}
+
+html[data-darkreader-mode="dynamic"] {
+  --code-background: #282c34;
+  --code-foreground: #abb2bf;
+  --code-border: #3e4451;
+  --code-gutter: #7f8794;
+  --code-comment: #9da5b4;
+  --code-keyword: #c678dd;
+  --code-string: #98c379;
+  --code-number: #d19a66;
+  --code-function: #61afef;
+  --code-variable: #e06c75;
+  --inline-code-background: #343a46;
+  --inline-code-border: #454c5a;
+}
+
 .post-md pre,
 .post-md code {
   font-family: "JetBrains Mono", "Fira Code", "Cascadia Code", "SF Mono", Menlo, Monaco, Consolas, "PingFang SC", "Microsoft YaHei", monospace !important;
 }
+.post-md code {
+  padding: 0.08em 0.34em;
+  border: 1px solid var(--inline-code-border) !important;
+  border-radius: 4px;
+  background: var(--inline-code-background) !important;
+  color: var(--code-foreground) !important;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
 .post-md .highlight,
 .post-md > pre {
-  background: #282c34 !important;
-  color: #abb2bf !important;
-  border: 1px solid #3e4451 !important;
+  background: var(--code-background) !important;
+  color: var(--code-foreground) !important;
+  border: 1px solid var(--code-border) !important;
   border-radius: 6px;
 }
 .post-md .highlight pre,
 .post-md pre code {
+  padding: 0;
   background: transparent !important;
-  color: #abb2bf !important;
+  color: var(--code-foreground) !important;
   border: 0 !important;
+  border-radius: 0;
 }
-.post-md .highlight .gutter pre { color: #7f8794 !important; }
-.post-md pre .comment { color: #9da5b4 !important; }
+.post-md .highlight .gutter pre { color: var(--code-gutter) !important; }
+.post-md pre .comment { color: var(--code-comment) !important; }
 .post-md pre .keyword,
-.post-md pre .selector-tag { color: #c678dd !important; }
+.post-md pre .selector-tag { color: var(--code-keyword) !important; }
 .post-md pre .string,
-.post-md pre .addition { color: #98c379 !important; }
+.post-md pre .addition { color: var(--code-string) !important; }
 .post-md pre .number,
 .post-md pre .literal,
-.post-md pre .built_in { color: #d19a66 !important; }
+.post-md pre .built_in { color: var(--code-number) !important; }
 .post-md pre .title,
-.post-md pre .function { color: #61afef !important; }
+.post-md pre .function { color: var(--code-function) !important; }
 .post-md pre .variable,
-.post-md pre .attribute { color: #e06c75 !important; }
+.post-md pre .attribute { color: var(--code-variable) !important; }

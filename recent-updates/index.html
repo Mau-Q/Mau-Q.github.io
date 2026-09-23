@@ -94,7 +94,7 @@
     
 
     <!-- Local LXGW WenKai font, CDN removed for stability -->
-<link rel="stylesheet" href="/css/code-theme.css?v=2c462ce15246"></head>
+<link rel="stylesheet" href="/css/code-theme.css?v=7e340c8a145c"></head>
 
     
     
@@ -156,7 +156,7 @@
                 document.documentElement.style.backgroundColor = '#1e1e1e';
                 document.documentElement.style.colorScheme = 'dark';
                 return loadDarkReader().then(() => DarkReader.enable(drOptions, {
-                    css: "/* Stable code colors in both page themes; also passed to DarkReader as custom CSS. */\n.post-md pre,\n.post-md code {\n  font-family: \"JetBrains Mono\", \"Fira Code\", \"Cascadia Code\", \"SF Mono\", Menlo, Monaco, Consolas, \"PingFang SC\", \"Microsoft YaHei\", monospace !important;\n}\n.post-md .highlight,\n.post-md > pre {\n  background: #282c34 !important;\n  color: #abb2bf !important;\n  border: 1px solid #3e4451 !important;\n  border-radius: 6px;\n}\n.post-md .highlight pre,\n.post-md pre code {\n  background: transparent !important;\n  color: #abb2bf !important;\n  border: 0 !important;\n}\n.post-md .highlight .gutter pre { color: #7f8794 !important; }\n.post-md pre .comment { color: #9da5b4 !important; }\n.post-md pre .keyword,\n.post-md pre .selector-tag { color: #c678dd !important; }\n.post-md pre .string,\n.post-md pre .addition { color: #98c379 !important; }\n.post-md pre .number,\n.post-md pre .literal,\n.post-md pre .built_in { color: #d19a66 !important; }\n.post-md pre .title,\n.post-md pre .function { color: #61afef !important; }\n.post-md pre .variable,\n.post-md pre .attribute { color: #e06c75 !important; }\n"
+                    css: "/* Code colors follow the site's light/dark mode, including DarkReader's toggle. */\nhtml:not([data-darkreader-mode]) {\n  --code-background: #e7ebf2;\n  --code-foreground: #343b48;\n  --code-border: #c2cbd9;\n  --code-gutter: #8792a2;\n  --code-comment: #6d7888;\n  --code-keyword: #8b3fa2;\n  --code-string: #2f7c57;\n  --code-number: #a15d25;\n  --code-function: #2865a8;\n  --code-variable: #b04452;\n  --inline-code-background: #f0f3f7;\n  --inline-code-border: #dce2ec;\n}\n\nhtml[data-darkreader-mode=\"dynamic\"] {\n  --code-background: #282c34;\n  --code-foreground: #abb2bf;\n  --code-border: #3e4451;\n  --code-gutter: #7f8794;\n  --code-comment: #9da5b4;\n  --code-keyword: #c678dd;\n  --code-string: #98c379;\n  --code-number: #d19a66;\n  --code-function: #61afef;\n  --code-variable: #e06c75;\n  --inline-code-background: #343a46;\n  --inline-code-border: #454c5a;\n}\n\n.post-md pre,\n.post-md code {\n  font-family: \"JetBrains Mono\", \"Fira Code\", \"Cascadia Code\", \"SF Mono\", Menlo, Monaco, Consolas, \"PingFang SC\", \"Microsoft YaHei\", monospace !important;\n}\n.post-md code {\n  padding: 0.08em 0.34em;\n  border: 1px solid var(--inline-code-border) !important;\n  border-radius: 4px;\n  background: var(--inline-code-background) !important;\n  color: var(--code-foreground) !important;\n  -webkit-box-decoration-break: clone;\n  box-decoration-break: clone;\n}\n.post-md .highlight,\n.post-md > pre {\n  background: var(--code-background) !important;\n  color: var(--code-foreground) !important;\n  border: 1px solid var(--code-border) !important;\n  border-radius: 6px;\n}\n.post-md .highlight pre,\n.post-md pre code {\n  padding: 0;\n  background: transparent !important;\n  color: var(--code-foreground) !important;\n  border: 0 !important;\n  border-radius: 0;\n}\n.post-md .highlight .gutter pre { color: var(--code-gutter) !important; }\n.post-md pre .comment { color: var(--code-comment) !important; }\n.post-md pre .keyword,\n.post-md pre .selector-tag { color: var(--code-keyword) !important; }\n.post-md pre .string,\n.post-md pre .addition { color: var(--code-string) !important; }\n.post-md pre .number,\n.post-md pre .literal,\n.post-md pre .built_in { color: var(--code-number) !important; }\n.post-md pre .title,\n.post-md pre .function { color: var(--code-function) !important; }\n.post-md pre .variable,\n.post-md pre .attribute { color: var(--code-variable) !important; }\n"
                 }));
             }
 
@@ -315,21 +315,7 @@
         
             
             <li>
-              <span class="archive-date">&nbsp;&nbsp;&nbsp;2026/09/21 
-              </span>
-              <div class="archive-main">
-                
-                  <a class="archive-title"  href="/categories/技术/">
-                    技术 
-                  </a> | 
-                
-                  <a class="archive-title" href="/posts/dont-stop-output/">不要停止输出</a>
-              </div>
-            </li>
-        
-            
-            <li>
-              <span class="archive-date">&nbsp;&nbsp;&nbsp;2026/09/17 
+              <span class="archive-date">&nbsp;&nbsp;&nbsp;2026/09/23 
               </span>
               <div class="archive-main">
                 
@@ -343,7 +329,7 @@
         
             
             <li>
-              <span class="archive-date">&nbsp;&nbsp;&nbsp;2026/09/17 
+              <span class="archive-date">&nbsp;&nbsp;&nbsp;2026/09/23 
               </span>
               <div class="archive-main">
                 
@@ -352,6 +338,20 @@
                   </a> | 
                 
                   <a class="archive-title" href="/posts/neural-network-training-optimization-generalization/">神经网络训练技巧：从优化到泛化</a>
+              </div>
+            </li>
+        
+            
+            <li>
+              <span class="archive-date">&nbsp;&nbsp;&nbsp;2026/09/21 
+              </span>
+              <div class="archive-main">
+                
+                  <a class="archive-title"  href="/categories/技术/">
+                    技术 
+                  </a> | 
+                
+                  <a class="archive-title" href="/posts/dont-stop-output/">不要停止输出</a>
               </div>
             </li>
         

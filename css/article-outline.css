@@ -44,3 +44,9 @@
 @media (max-width: 1199px) {
   .left-toc-container { display: none; }
 }
+
+@media (min-width: 1200px) {
+  body > .left-toc-container + #main-content .post-md > .post-toc {
+    display: none;
+  }
+}

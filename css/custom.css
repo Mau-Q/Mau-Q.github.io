@@ -86,6 +86,141 @@ pre code {
     border-radius: 0;
 }
 
+/* Keep one navigation outline on wide screens; the sidebar owns that space. */
+.post-md > .post-toc {
+    margin: 0 0 1.8rem;
+    padding: 0.95rem 1.1rem 0.95rem 2rem;
+    border: 1px solid var(--line-2);
+    border-radius: 8px;
+    background: rgba(49, 95, 181, 0.035);
+    font-size: 0.93rem;
+}
+
+.post-md > .post-toc::before {
+    display: block;
+    margin-bottom: 0.45rem;
+    color: var(--font-color-1);
+    content: "文章目录";
+    font-weight: 700;
+}
+
+.post-md > .post-toc ol,
+.post-md > .post-toc ul {
+    margin: 0;
+    padding-left: 1.85rem;
+}
+
+.post-md > .post-toc li {
+    margin: 0.15rem 0;
+    line-height: 1.65;
+}
+
+/* Figures use Markdown image titles as visible captions. */
+.post-md .post-figure {
+    margin: 1.75rem 0 2rem;
+    text-align: center;
+}
+
+.post-md .post-figure img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+.post-md .post-figure figcaption {
+    max-width: 52rem;
+    margin: 0.65rem auto 0;
+    color: var(--font-color-2);
+    font-size: 0.88rem;
+    line-height: 1.65;
+}
+
+/* Tables stay readable and can scroll without widening the article. */
+.post-md .table-scroll {
+    max-width: 100%;
+    margin: 1.4rem 0 1.7rem;
+    overflow-x: auto;
+    border: 1px solid var(--line-2);
+    border-radius: 6px;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+}
+
+.post-md .table-scroll:focus-visible {
+    outline: 3px solid rgba(49, 95, 181, 0.72);
+    outline-offset: 3px;
+}
+
+.post-md .table-scroll table {
+    width: max-content;
+    min-width: 100%;
+    margin: 0;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.post-md .table-scroll th,
+.post-md .table-scroll td {
+    padding: 0.68rem 0.85rem;
+    border-bottom: 1px solid var(--line-2);
+    vertical-align: top;
+    overflow-wrap: anywhere;
+}
+
+.post-md .table-scroll th + th,
+.post-md .table-scroll td + td {
+    border-left: 1px solid var(--line-2);
+}
+
+.post-md .table-scroll thead th {
+    background: rgba(49, 95, 181, 0.075);
+    color: var(--font-color-1);
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.post-md .table-scroll tbody tr:nth-child(even) td {
+    background: rgba(49, 95, 181, 0.035);
+}
+
+.post-md .table-scroll tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+/* Obsidian example callouts render as quiet, responsive cards. */
+.post-md .post-callout-example {
+    margin: 1.55rem 0;
+    padding: 1rem 1.2rem;
+    border: 1px solid rgba(49, 95, 181, 0.24);
+    border-left: 3px solid #315fb5;
+    border-radius: 8px;
+    background: rgba(49, 95, 181, 0.055);
+    color: var(--font-color-1);
+    line-height: 1.8;
+    box-shadow: 0 4px 14px rgba(26, 38, 60, 0.05);
+}
+
+.post-md .post-callout-example > p {
+    margin: 0.65rem 0;
+}
+
+.post-md .post-callout-title {
+    margin-top: 0;
+    color: var(--font-color-1);
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.5;
+}
+
+.post-md .post-callout-example > :last-child {
+    margin-bottom: 0;
+}
+
+.post-md .post-callout-example pre {
+    margin: 0.6rem 0;
+}
+
 /* A quiet closing note selected from the post's category and tags. */
 .post-afterword {
     margin: 2.8rem auto 0.5rem;
@@ -452,6 +587,28 @@ input:focus-visible,
     pre {
         font-size: 13px;
         padding: 12px;
+    }
+
+    .post-md > .post-toc {
+        margin-bottom: 1.4rem;
+        padding: 0.85rem 0.95rem 0.85rem 2rem;
+    }
+
+    .post-md .post-figure {
+        margin: 1.3rem 0 1.5rem;
+    }
+
+    .post-md .table-scroll {
+        margin: 1rem 0 1.3rem;
+    }
+
+    .post-md .table-scroll th,
+    .post-md .table-scroll td {
+        padding: 0.55rem 0.65rem;
+    }
+
+    .post-md .post-callout-example {
+        padding: 0.9rem 1rem;
     }
 
     .post-afterword {
