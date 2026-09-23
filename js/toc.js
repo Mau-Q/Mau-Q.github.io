@@ -9,7 +9,7 @@
     if (!content) return;
 
     var levels = [];
-    for (var level = 1; level <= 6; level++) {
+    for (var level = 1; level <= 3; level++) {
       if (content.querySelectorAll('h' + level).length > 1) {
         levels.push('h' + level);
       }

@@ -107,7 +107,7 @@
     
 
     <!-- Local LXGW WenKai font, CDN removed for stability -->
-<link rel="stylesheet" href="/css/code-theme.css?v=7e340c8a145c"><link rel="stylesheet" href="/css/article-outline.css?v=c8809551b426"><link rel="stylesheet" href="/lib/katex/katex.min.css"></head>
+<link rel="stylesheet" href="/css/article-outline.css?v=c8809551b426"><link rel="stylesheet" href="/css/code-theme.css?v=2028f33b2cd2"><link rel="stylesheet" href="/lib/katex/katex.min.css"></head>
 
     
     
@@ -169,7 +169,7 @@
                 document.documentElement.style.backgroundColor = '#1e1e1e';
                 document.documentElement.style.colorScheme = 'dark';
                 return loadDarkReader().then(() => DarkReader.enable(drOptions, {
-                    css: "/* Code colors follow the site's light/dark mode, including DarkReader's toggle. */\nhtml:not([data-darkreader-mode]) {\n  --code-background: #e7ebf2;\n  --code-foreground: #343b48;\n  --code-border: #c2cbd9;\n  --code-gutter: #8792a2;\n  --code-comment: #6d7888;\n  --code-keyword: #8b3fa2;\n  --code-string: #2f7c57;\n  --code-number: #a15d25;\n  --code-function: #2865a8;\n  --code-variable: #b04452;\n  --inline-code-background: #f0f3f7;\n  --inline-code-border: #dce2ec;\n}\n\nhtml[data-darkreader-mode=\"dynamic\"] {\n  --code-background: #282c34;\n  --code-foreground: #abb2bf;\n  --code-border: #3e4451;\n  --code-gutter: #7f8794;\n  --code-comment: #9da5b4;\n  --code-keyword: #c678dd;\n  --code-string: #98c379;\n  --code-number: #d19a66;\n  --code-function: #61afef;\n  --code-variable: #e06c75;\n  --inline-code-background: #343a46;\n  --inline-code-border: #454c5a;\n}\n\n.post-md pre,\n.post-md code {\n  font-family: \"JetBrains Mono\", \"Fira Code\", \"Cascadia Code\", \"SF Mono\", Menlo, Monaco, Consolas, \"PingFang SC\", \"Microsoft YaHei\", monospace !important;\n}\n.post-md code {\n  padding: 0.08em 0.34em;\n  border: 1px solid var(--inline-code-border) !important;\n  border-radius: 4px;\n  background: var(--inline-code-background) !important;\n  color: var(--code-foreground) !important;\n  -webkit-box-decoration-break: clone;\n  box-decoration-break: clone;\n}\n.post-md .highlight,\n.post-md > pre {\n  background: var(--code-background) !important;\n  color: var(--code-foreground) !important;\n  border: 1px solid var(--code-border) !important;\n  border-radius: 6px;\n}\n.post-md .highlight pre,\n.post-md pre code {\n  padding: 0;\n  background: transparent !important;\n  color: var(--code-foreground) !important;\n  border: 0 !important;\n  border-radius: 0;\n}\n.post-md .highlight .gutter pre { color: var(--code-gutter) !important; }\n.post-md pre .comment { color: var(--code-comment) !important; }\n.post-md pre .keyword,\n.post-md pre .selector-tag { color: var(--code-keyword) !important; }\n.post-md pre .string,\n.post-md pre .addition { color: var(--code-string) !important; }\n.post-md pre .number,\n.post-md pre .literal,\n.post-md pre .built_in { color: var(--code-number) !important; }\n.post-md pre .title,\n.post-md pre .function { color: var(--code-function) !important; }\n.post-md pre .variable,\n.post-md pre .attribute { color: var(--code-variable) !important; }\n"
+                    css: "/* Code colors follow the site's light/dark mode, including DarkReader's toggle. */\nhtml:not([data-darkreader-mode]) {\n  --code-background: #e7ebf2;\n  --code-foreground: #343b48;\n  --code-border: #c2cbd9;\n  --code-gutter: #8792a2;\n  --code-comment: #6d7888;\n  --code-keyword: #8b3fa2;\n  --code-string: #2f7c57;\n  --code-number: #a15d25;\n  --code-function: #2865a8;\n  --code-variable: #b04452;\n  --inline-code-background: #f0f3f7;\n  --inline-code-border: #dce2ec;\n  --inline-code-foreground: #43576c;\n}\n\nhtml[data-darkreader-mode=\"dynamic\"] {\n  --code-background: #282c34;\n  --code-foreground: #abb2bf;\n  --code-border: #3e4451;\n  --code-gutter: #7f8794;\n  --code-comment: #9da5b4;\n  --code-keyword: #c678dd;\n  --code-string: #98c379;\n  --code-number: #d19a66;\n  --code-function: #61afef;\n  --code-variable: #e06c75;\n  --inline-code-background: #343a46;\n  --inline-code-border: #454c5a;\n  --inline-code-foreground: #d0d9e3;\n}\n\n.post-md pre,\n.post-md code {\n  font-family: \"JetBrains Mono\", \"Fira Code\", \"Cascadia Code\", \"SF Mono\", Menlo, Monaco, Consolas, \"PingFang SC\", \"Microsoft YaHei\", monospace !important;\n}\n.post-md :not(pre) > code {\n  padding: 0.07em 0.28em;\n  border: 1px solid var(--inline-code-border) !important;\n  border-radius: 4px;\n  background: var(--inline-code-background) !important;\n  color: var(--inline-code-foreground) !important;\n  font-size: 0.9em;\n  overflow-wrap: anywhere;\n  -webkit-box-decoration-break: clone;\n  box-decoration-break: clone;\n}\n.post-md .highlight,\n.post-md > pre {\n  background: var(--code-background) !important;\n  color: var(--code-foreground) !important;\n  border: 1px solid var(--code-border) !important;\n  border-radius: 6px;\n  padding: 0.7rem 0.95rem;\n  margin: 1.05rem 0;\n  max-width: 100%;\n  overflow-x: auto;\n}\n.post-md .highlight pre,\n.post-md pre code {\n  padding: 0;\n  background: transparent !important;\n  color: var(--code-foreground) !important;\n  border: 0 !important;\n  border-radius: 0;\n}\n.post-md .highlight .gutter pre { color: var(--code-gutter) !important; }\n.post-md .highlight .gutter pre { padding-right: 0.8rem; }\n.post-md .highlight:is(.json, .plaintext, .text, .prompt) .gutter { display: none; }\n.post-md .highlight:is(.json, .plaintext, .text, .prompt) .code { width: 100%; }\n.post-md pre .comment { color: var(--code-comment) !important; }\n.post-md pre .keyword,\n.post-md pre .selector-tag { color: var(--code-keyword) !important; }\n.post-md pre .string,\n.post-md pre .addition { color: var(--code-string) !important; }\n.post-md pre .number,\n.post-md pre .literal,\n.post-md pre .built_in { color: var(--code-number) !important; }\n.post-md pre .title,\n.post-md pre .function { color: var(--code-function) !important; }\n.post-md pre .variable,\n.post-md pre .attribute { color: var(--code-variable) !important; }\n"
                 }));
             }
 
@@ -363,44 +363,44 @@
 <span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>P</mi><mo stretchy="false">(</mo><mtext>next token</mtext><mo>∣</mo><mtext>context</mtext><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">P(\text{next token}\mid \text{context})</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="mopen">(</span><span class="mord text"><span class="mord">next token</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">∣</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">context</span></span><span class="mclose">)</span></span></span></span></span>
 <p>Prompt Engineering 就是在不修改模型参数的情况下改变 context，从而改变生成下一个 token 的概率。</p>
 <h2 id="Zero-shot-Prompting"><a href="#Zero-shot-Prompting" class="headerlink" title="Zero-shot Prompting" aria-hidden="true" tabindex="-1"></a>Zero-shot Prompting</h2><p>不给示例，只提供任务指令和输入。本质是在模型预训练阶段，已经学习了大量知识，Zero-shot Prompting 就是让模型调用现有能力完成任务。</p>
-<blockquote>
-<p><strong>示例 | 情感分类</strong></p>
+<aside class="post-callout post-callout-example" aria-label="示例 | 情感分类">
+<p class="post-callout-title">示例 | 情感分类</p>
 <p><strong>Prompt</strong></p>
 <p>判断下面评论的情感，只能回答 <code>positive</code> 或 <code>negative</code>。</p>
 <p><strong>评论：</strong><br>这家酒店环境很好，但服务员态度非常差。</p>
 <p><strong>Output：</strong> <code>negative</code></p>
-</blockquote>
+</aside>
 <h3 id="一个好的-Zero-shot-Prompt"><a href="#一个好的-Zero-shot-Prompt" class="headerlink" title="一个好的 Zero-shot Prompt" aria-hidden="true" tabindex="-1"></a>一个好的 Zero-shot Prompt</h3><p>通常至少包含：</p>
 <p><strong>Instruction</strong> → <strong>Label definition</strong> → <strong>Query</strong> → <strong>Output constraint</strong></p>
-<blockquote>
-<p><strong>示例｜问题分类</strong></p>
+<aside class="post-callout post-callout-example" aria-label="示例｜问题分类">
+<p class="post-callout-title">示例｜问题分类</p>
 <p><strong>Prompt</strong></p>
 <p>任务：判断下面的问题属于哪个类别。</p>
 <p>类别：math、coding、knowledge</p>
 <p>输入：What is gradient descent?</p>
 <p>输出要求：只输出类别名称。</p>
-</blockquote>
+</aside>
 <h2 id="Few-shot-Prompting"><a href="#Few-shot-Prompting" class="headerlink" title="Few-shot Prompting" aria-hidden="true" tabindex="-1"></a>Few-shot Prompting</h2><p>与 zero-shot 不同点在于在 prompt 中加入少量示例。</p>
-<blockquote>
-<p><strong>示例｜分类问题</strong></p>
+<aside class="post-callout post-callout-example" aria-label="示例｜分类问题">
+<p class="post-callout-title">示例｜分类问题</p>
 <p><strong>示例 1：</strong><br>问题：计算 1+2<br>类别：math</p>
 <p><strong>示例 2：</strong><br>问题：实现 quicksort<br>类别：coding</p>
 <p><strong>现在判断：</strong><br>问题：解释梯度下降。<br>类别：</p>
-</blockquote>
+</aside>
 <h3 id="一个好的-Few-shot-Prompt"><a href="#一个好的-Few-shot-Prompt" class="headerlink" title="一个好的 Few-shot Prompt" aria-hidden="true" tabindex="-1"></a>一个好的 Few-shot Prompt</h3><p>在 Zero-shot 的基础上加入示例：</p>
 <p><strong>Instruction</strong> → <strong>Label definition</strong> → <strong>Few-shot demonstrations</strong> → <strong>Query</strong> → <strong>Output constraint</strong></p>
 <h2 id="为什么会有-Zero-shot-和-Few-shot"><a href="#为什么会有-Zero-shot-和-Few-shot" class="headerlink" title="为什么会有 Zero-shot 和 Few-shot" aria-hidden="true" tabindex="-1"></a>为什么会有 Zero-shot 和 Few-shot</h2><p>如果让模型进行分类任务，而没有提供种类，那么模型就会依据自己的知识分类，可能达不到我们的要求，于是可以用 Few-shot 来提示模型该怎么分类。</p>
 <p>而 Few-shot 也不是全方面比 Zero-shot 好，如果知识简单的翻译问题，Zero-shot 通常就够了。</p>
 <h2 id="In-Context-Learning（ICL，上下文学习）"><a href="#In-Context-Learning（ICL，上下文学习）" class="headerlink" title="In-Context Learning（ICL，上下文学习）" aria-hidden="true" tabindex="-1"></a>In-Context Learning（ICL，上下文学习）</h2><p>Few-shot Prompting 就是 ICL 的一种典型形式。模型通过给出的 context 进行临时学习，从而改变 next token；它不会像 post training 那样改变模型参数，也不意味着模型获得了脱离该 context 保留的新知识。</p>
 <h2 id="Few-shot-Prompting-给模型提供了什么"><a href="#Few-shot-Prompting-给模型提供了什么" class="headerlink" title="Few-shot Prompting 给模型提供了什么" aria-hidden="true" tabindex="-1"></a>Few-shot Prompting 给模型提供了什么</h2><p>其实就是 context，那 context 中包含了什么呢？具体来说可以分为 4 类：</p>
-<h3 id="1-任务"><a href="#1-任务" class="headerlink" title="1. 任务" aria-hidden="true" tabindex="-1"></a>1. 任务</h3><blockquote>
-<p><strong>示例｜</strong></p>
+<h3 id="1-任务"><a href="#1-任务" class="headerlink" title="1. 任务" aria-hidden="true" tabindex="-1"></a>1. 任务</h3><aside class="post-callout post-callout-example" aria-label="示例｜">
+<p class="post-callout-title">示例｜</p>
 <p><strong>比如：</strong><br>Paris → France<br>Tokyo → Japan<br>Beijing →</p>
 <p><strong>模型推断：</strong><br>city → country</p>
-</blockquote>
+</aside>
 <h3 id="2-标签语义"><a href="#2-标签语义" class="headerlink" title="2. 标签语义" aria-hidden="true" tabindex="-1"></a>2. 标签语义</h3><p>假设任务使用自定义标签 <code>A</code>、<code>B</code>、<code>C</code>，模型本身并不知道这些标签代表什么。</p>
-<blockquote>
-<p><strong>示例｜推断标签语义</strong></p>
+<aside class="post-callout post-callout-example" aria-label="示例｜推断标签语义">
+<p class="post-callout-title">示例｜推断标签语义</p>
 <p><strong>Zero-shot</strong></p>
 <p>Classify as <code>A</code> &#x2F; <code>B</code> &#x2F; <code>C</code>：</p>
 <p>How do I sort an array?</p>
@@ -409,7 +409,7 @@
 <p>How do I implement quicksort? → <code>A</code><br>What is gradient descent? → <code>B</code><br>What is the capital of France? → <code>C</code><br>How do I implement BFS? → ?</p>
 <p><strong>模型可以由此推断</strong></p>
 <p><code>A</code> ≈ coding　·　<code>B</code> ≈ ML &#x2F; concept　·　<code>C</code> ≈ knowledge</p>
-</blockquote>
+</aside>
 <h3 id="3-输出格式"><a href="#3-输出格式" class="headerlink" title="3. 输出格式" aria-hidden="true" tabindex="-1"></a>3. 输出格式</h3><p>Few-shot 示例还可以帮助模型学习输出格式。</p>
 <p>如果只告诉模型：</p>
 <p><strong>Prompt</strong>  <code>Return JSON.</code></p>
@@ -426,13 +426,13 @@
 
 <p><strong>核心理解：</strong> Few-shot 不仅可以帮助模型理解任务，也可以隐式规定输出格式。</p>
 <h3 id="4-任务的隐含规则"><a href="#4-任务的隐含规则" class="headerlink" title="4. 任务的隐含规则" aria-hidden="true" tabindex="-1"></a>4. 任务的隐含规则</h3><p>比如任务：<code>判断一句话是否包含事实错误</code>，而“事实错误”的标准可能很模糊。</p>
-<blockquote>
-<p><strong>示例｜</strong></p>
+<aside class="post-callout post-callout-example" aria-label="示例｜">
+<p class="post-callout-title">示例｜</p>
 <p><strong>通过 examples：</strong><br>“The Earth revolves around the Sun.”<br>→ Correct</p>
 <p>“The Sun revolves around the Earth.”<br>→ Incorrect</p>
 <p>“Pluto is officially one of the eight planets.”<br>→ Incorrect</p>
 <p><strong>你实际上通过例子告诉了模型：</strong><br>我采用的是现代天文学定义，而不是泛泛判断句子是否听起来合理。</p>
-</blockquote>
+</aside>
 <p><strong>核心理解</strong>：Few-shot demonstrations 不只是提供参考答案，它们也在<strong>隐式定义任务本身</strong>。</p>
 <h3 id="Few-shot-示例不同，也会改变结果"><a href="#Few-shot-示例不同，也会改变结果" class="headerlink" title="Few-shot 示例不同，也会改变结果" aria-hidden="true" tabindex="-1"></a>Few-shot 示例不同，也会改变结果</h3><p>Few-shot demonstrations 本身就是 context 的一部分，因此<strong>示例内容或顺序发生变化，模型的输出也可能随之变化</strong>。</p>
 <p>例如，同样的三个示例：</p>
@@ -440,8 +440,8 @@
 <p>如果换成：</p>
 <p><code>Example 3</code> → <code>Example 1</code> → <code>Example 2</code></p>
 <p>模型接收到的 context 就已经不同，因此后续 token 的概率分布也可能发生变化。</p>
-<blockquote>
-<p><strong>示例｜错误 demonstrations 带来的偏移</strong></p>
+<aside class="post-callout post-callout-example" aria-label="示例｜错误 demonstrations 带来的偏移">
+<p class="post-callout-title">示例｜错误 demonstrations 带来的偏移</p>
 <p><strong>任务</strong></p>
 <p>判断动物类别。</p>
 <p><strong>Demonstrations</strong></p>
@@ -451,7 +451,7 @@
 <p><strong>模型可能输出</strong></p>
 <p><code>fish</code></p>
 <p>尽管真实答案并不是 <code>fish</code>，模型仍可能受到前文 demonstrations 的影响而模仿这一模式。</p>
-</blockquote>
+</aside>
 <p>因此，Few-shot demonstrations 有两面性：</p>
 <ul>
 <li><strong>好的 demonstrations</strong> → 帮助模型理解任务</li>
@@ -473,27 +473,27 @@
 </blockquote>
 <h2 id="Prompt-的组成"><a href="#Prompt-的组成" class="headerlink" title="Prompt 的组成" aria-hidden="true" tabindex="-1"></a>Prompt 的组成</h2><p>一个好的 prompt 最基本结构为 <code>System</code> + <code>Instruction</code> + <code>Context</code> + <code>Constrains</code> + <code>Output Format</code></p>
 <h3 id="1-System"><a href="#1-System" class="headerlink" title="1. System" aria-hidden="true" tabindex="-1"></a>1. System</h3><p>给模型设置一个全局行为框架。可以理解成：你应该怎么做，是长期规则。与 <code>System</code> 经常一起出现的是 <code>User</code>，可以理解成：现在具体做什么，更像当前任务。</p>
-<blockquote>
-<p><strong>示例｜</strong></p>
+<aside class="post-callout post-callout-example" aria-label="示例｜">
+<p class="post-callout-title">示例｜</p>
 <p><strong>System</strong><br>你是科研助手。<br>回答准确、简洁。<br>不要编造信息。</p>
 <p><strong>User:</strong><br>解释 SFT。</p>
-</blockquote>
+</aside>
 <h3 id="2-Instruction"><a href="#2-Instruction" class="headerlink" title="2. Instruction" aria-hidden="true" tabindex="-1"></a>2. Instruction</h3><p>是 prompt <strong>最核心的一部分</strong>：明确告诉模型要执行什么操作。而<code>Instuction</code> 最核心的是<strong>动作</strong>，可以想象成<code>动词 + 对象</code>，所以在写 Prompt 时，应该想我到底希望模型执行哪个动作？</p>
-<blockquote>
-<p><strong>示例｜</strong></p>
+<aside class="post-callout post-callout-example" aria-label="示例｜">
+<p class="post-callout-title">示例｜</p>
 <p><strong>不好的写法</strong><br>这篇论文的数据集。<br>模型并不知道你到底想：翻译&#x2F;总结&#x2F;列出名字&#x2F;分析用途&#x2F;判断训练集还是测试集</p>
 <p><strong>更好的写法</strong><br>Extract all datasets mentioned in the paper and classify each dataset as training, validation, or evaluation data.</p>
-</blockquote>
+</aside>
 <h3 id="3-Context"><a href="#3-Context" class="headerlink" title="3. Context" aria-hidden="true" tabindex="-1"></a>3. Context</h3><p>其实就是上下文，是提供给模型的额外信息。和 <code>Instruction</code> 的区别在于<code>Context</code> 是“已知条件”，而<code>Instruction</code> 是“你要做什么“。</p>
 <h3 id="4-Constrains"><a href="#4-Constrains" class="headerlink" title="4. Constrains" aria-hidden="true" tabindex="-1"></a>4. Constrains</h3><p>因为现在的模型不可避免的出现“幻觉“，所以需要<code>Constrains</code> 来限制模型的输出，最简单的是让模型在不知道的情况下输出<code>不知道</code>，而不是瞎猜，这对于没有辨识能力的人是非常危险的。</p>
 <p>比如让模型读一篇论文：</p>
-<blockquote>
-<p><strong>示例｜</strong></p>
+<aside class="post-callout post-callout-example" aria-label="示例｜">
+<p class="post-callout-title">示例｜</p>
 <p><strong>输入</strong><br>Extract the training dataset from this paper.</p>
 <p><strong>如果论文没有明确写，模型就可能瞎猜:</strong><br>The model was probably trained on Alpaca…</p>
 <p><strong>而如果加入<code>Constrains</code></strong> :<br>Only use information explicitly stated in the paper.If the dataset cannot be determined, output “Unknown”.</p>
 <p><strong>模型就会输出：</strong><br>Unknown</p>
-</blockquote>
+</aside>
 <p>常见的<code>Constrains</code>包括：内容边界，行为边界，长度，输出范围。</p>
 <h3 id="5-Output-Format"><a href="#5-Output-Format" class="headerlink" title="5. Output Format" aria-hidden="true" tabindex="-1"></a>5. Output Format</h3><p>其实<code>Output Format</code>和<code>Constrians</code>本质是相同的，不过为了逻辑清楚，通常在<code>Prompt</code>最后要求输出格式来满足后续自动化的实施。</p>
 <h3 id="完整-Prompt-示例"><a href="#完整-Prompt-示例" class="headerlink" title="完整 Prompt 示例" aria-hidden="true" tabindex="-1"></a>完整 Prompt 示例</h3><p>比如分析一篇 SFT 论文：</p>
@@ -611,7 +611,7 @@
 <!--目录-->
 
     
-<script src="/js/toc.js?v=68e5269049cc"></script>
+<script src="/js/toc.js?v=496cd1a37bc1"></script>
 
 
 

@@ -86,6 +86,94 @@ pre code {
     border-radius: 0;
 }
 
+/* Article typography follows A4's paper palette in both modes. */
+.post-md[data-pagefind-body] {
+    --article-h2: #425e7a;
+    --article-h3: #586f85;
+    --article-h4: #687684;
+    --article-strong: #745a3b;
+    --article-quote-line: #b8c3ce;
+    --callout-background: #f4f6f8;
+    --callout-border: #d9e0e7;
+    --callout-line: #8299b0;
+    --callout-title: #344f69;
+    --callout-label: #607186;
+    --note-background: #f8f9fa;
+    --note-line: #a9b7c5;
+    line-height: 1.75;
+}
+
+html[data-darkreader-mode="dynamic"] .post-md[data-pagefind-body] {
+    --article-h2: #b8d4f2;
+    --article-h3: #a9bfd3;
+    --article-h4: #aeb9c5;
+    --article-strong: #f0dfbf;
+    --article-quote-line: #687684;
+    --callout-background: #2b3034;
+    --callout-border: #45525e;
+    --callout-line: #829bb4;
+    --callout-title: #dce7f1;
+    --callout-label: #b8c5d2;
+    --note-background: #292d30;
+    --note-line: #748393;
+}
+
+.post-md[data-pagefind-body] h1 {
+    color: inherit;
+}
+
+.post-md[data-pagefind-body] h2,
+.post-md[data-pagefind-body] h3,
+.post-md[data-pagefind-body] h4,
+.post-md[data-pagefind-body] h5,
+.post-md[data-pagefind-body] h6 {
+    padding: 0;
+    font-weight: 700;
+}
+
+.post-md[data-pagefind-body] h2 {
+    margin: 2.05rem 0 0.7rem;
+    color: var(--article-h2);
+    font-size: 1.55rem;
+    line-height: 1.38;
+}
+
+.post-md[data-pagefind-body] h3 {
+    margin: 1.55rem 0 0.5rem;
+    color: var(--article-h3);
+    font-size: 1.27rem;
+    line-height: 1.44;
+}
+
+.post-md[data-pagefind-body] h4,
+.post-md[data-pagefind-body] h5,
+.post-md[data-pagefind-body] h6 {
+    margin: 1.3rem 0 0.45rem;
+    color: var(--article-h4);
+    line-height: 1.5;
+}
+
+.post-md[data-pagefind-body] h4 { font-size: 1.12rem; }
+.post-md[data-pagefind-body] h5 { font-size: 1.03rem; }
+.post-md[data-pagefind-body] h6 { font-size: 1rem; }
+
+.post-md[data-pagefind-body] strong {
+    color: var(--article-strong);
+}
+
+.post-md[data-pagefind-body] li {
+    margin: 0.18rem 0;
+    line-height: 1.72;
+}
+
+.post-md[data-pagefind-body] blockquote {
+    margin: 1.05rem 0;
+    padding: 0.1rem 0 0.1rem 0.85rem;
+    border-left: 2px solid var(--article-quote-line);
+    background: transparent;
+    color: inherit;
+}
+
 /* Keep one navigation outline on wide screens; the sidebar owns that space. */
 .post-md > .post-toc {
     margin: 0 0 1.8rem;
@@ -188,36 +276,51 @@ pre code {
     border-bottom: 0;
 }
 
-/* Obsidian example callouts render as quiet, responsive cards. */
-.post-md .post-callout-example {
-    margin: 1.55rem 0;
-    padding: 1rem 1.2rem;
-    border: 1px solid rgba(49, 95, 181, 0.24);
-    border-left: 3px solid #315fb5;
+/* Obsidian callouts stay distinct from plain blockquotes. */
+.post-md[data-pagefind-body] .post-callout {
+    margin: 1.25rem 0 1.5rem;
+    padding: 0.85rem 1.05rem;
+    border: 1px solid var(--callout-border);
+    border-left: 3px solid var(--callout-line);
     border-radius: 8px;
-    background: rgba(49, 95, 181, 0.055);
-    color: var(--font-color-1);
-    line-height: 1.8;
-    box-shadow: 0 4px 14px rgba(26, 38, 60, 0.05);
+    background: var(--callout-background);
+    color: inherit;
+    line-height: 1.72;
+    overflow-wrap: anywhere;
 }
 
-.post-md .post-callout-example > p {
-    margin: 0.65rem 0;
+.post-md[data-pagefind-body] .post-callout-note {
+    border-left-width: 2px;
+    border-left-color: var(--note-line);
+    background: var(--note-background);
 }
 
-.post-md .post-callout-title {
-    margin-top: 0;
-    color: var(--font-color-1);
+.post-md[data-pagefind-body] .post-callout > p {
+    margin: 0.55rem 0;
+}
+
+.post-md[data-pagefind-body] .post-callout > .post-callout-title {
+    margin: 0 0 0.45rem;
+    color: var(--callout-title);
     font-size: 1rem;
     font-weight: 700;
     line-height: 1.5;
 }
 
-.post-md .post-callout-example > :last-child {
+.post-md[data-pagefind-body] .post-callout-note > .post-callout-title {
+    font-size: 0.94rem;
+}
+
+.post-md[data-pagefind-body] .post-callout strong {
+    color: var(--callout-label);
+    font-size: 0.93em;
+}
+
+.post-md[data-pagefind-body] .post-callout > :last-child {
     margin-bottom: 0;
 }
 
-.post-md .post-callout-example pre {
+.post-md[data-pagefind-body] .post-callout pre {
     margin: 0.6rem 0;
 }
 
@@ -586,8 +689,18 @@ input:focus-visible,
         padding: 0.55rem 0.65rem;
     }
 
-    .post-md .post-callout-example {
-        padding: 0.9rem 1rem;
+    .post-md[data-pagefind-body] h2 {
+        margin-top: 1.8rem;
+        font-size: 1.42rem;
+    }
+
+    .post-md[data-pagefind-body] h3 {
+        margin-top: 1.4rem;
+        font-size: 1.18rem;
+    }
+
+    .post-md[data-pagefind-body] .post-callout {
+        padding: 0.75rem 0.85rem;
     }
 
     .post-afterword {
