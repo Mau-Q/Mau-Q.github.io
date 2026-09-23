@@ -518,27 +518,6 @@ input:focus-visible,
     font-size: 1.2rem;
 }
 
-.article-card > p {
-    margin: 0.55rem 0 0;
-    color: var(--font-color-2);
-    font-size: 0.94rem;
-    line-height: 1.75;
-}
-
-.article-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.35rem 0.75rem;
-    margin: 0.6rem 0 0;
-    padding: 0;
-    list-style: none;
-    font-size: 0.8rem;
-}
-
-.article-tags a {
-    color: #697a9a;
-}
-
 /* Pagefind uses the existing typography and paper palette. */
 .site-search {
     --pagefind-ui-scale: 0.9;
