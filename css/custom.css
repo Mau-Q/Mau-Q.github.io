@@ -157,8 +157,13 @@ html[data-darkreader-mode="dynamic"] .post-md[data-pagefind-body] {
 .post-md[data-pagefind-body] h5 { font-size: 1.03rem; }
 .post-md[data-pagefind-body] h6 { font-size: 1rem; }
 
-.post-md[data-pagefind-body] strong {
+.post-md[data-pagefind-body] strong,
+.post-md[data-pagefind-body] b {
+    font-weight: 500;
     color: var(--article-strong);
+    background: rgba(210, 185, 140, 0.09);
+    padding: 0.01em 0.12em;
+    border-radius: 2px;
 }
 
 .post-md[data-pagefind-body] li {
@@ -311,9 +316,14 @@ html[data-darkreader-mode="dynamic"] .post-md[data-pagefind-body] {
     font-size: 0.94rem;
 }
 
-.post-md[data-pagefind-body] .post-callout strong {
+.post-md[data-pagefind-body] .post-callout strong,
+.post-md[data-pagefind-body] .post-callout b {
+    font-weight: 700;
     color: var(--callout-label);
     font-size: 0.93em;
+    background: none;
+    padding: 0;
+    border-radius: 0;
 }
 
 .post-md[data-pagefind-body] .post-callout > :last-child {
