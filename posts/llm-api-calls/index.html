@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    
+    <style>
+        body {
+            font-family: "LXGW WenKai", "notoserifsc-medium", "Noto Serif SC", "Songti SC", "STSong", "Microsoft YaHei", "Hiragino Sans GB", "WenQuanYi Micro Hei", serif !important;
+        }
+    </style>
+
+
+    <head>
+    
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport" />
+    <meta name="theme-color" content="#f7f5ed" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#1e1e1e" media="(prefers-color-scheme: dark)">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta name="hexo-theme-A4" content="v2.0.1" />
+    <link rel="icon" href="/img/favicon.svg">
+    <link rel="alternate" type="application/atom+xml" title="Mau-Q" href="https://mau-q.github.io/atom.xml">
+    <link rel="canonical" href="https://mau-q.github.io/posts/llm-api-calls/">
+    <meta name="description" content="API 是什么在Prompt Engineering已经知道了怎么写Prompt，那怎么把Prompt发给模型，并取得结果呢？这就需要API（Application Programming Interface）。可以理解为程序和模型服务进行通信的接口。 调用 API 时，一个通常的过程是： Python →\right">
+<meta property="og:type" content="article">
+<meta property="og:title" content="API 调用">
+<meta property="og:url" content="https://mau-q.github.io/posts/llm-api-calls/">
+<meta property="og:site_name" content="Mau-Q">
+<meta property="og:description" content="API 是什么在Prompt Engineering已经知道了怎么写Prompt，那怎么把Prompt发给模型，并取得结果呢？这就需要API（Application Programming Interface）。可以理解为程序和模型服务进行通信的接口。 调用 API 时，一个通常的过程是： Python →\right">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://mau-q.github.io/img/og/posts--llm-api-calls.png">
+<meta property="article:published_time" content="2026-10-01T07:30:00.000Z">
+<meta property="article:modified_time" content="2026-09-30T16:00:00.000Z">
+<meta property="article:author" content="Mau-Q">
+<meta property="article:tag" content="API">
+<meta property="article:tag" content="大语言模型">
+<meta property="article:tag" content="学习笔记">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://mau-q.github.io/img/og/posts--llm-api-calls.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="《API 调用》分享卡片">
+    
+        <meta data-pagefind-meta="title" content="API 调用">
+        <meta data-pagefind-meta="image" content="/img/og/posts--llm-api-calls.png">
+        <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"API 调用","description":"API 是什么在Prompt Engineering已经知道了怎么写Prompt，那怎么把Prompt发给模型，并取得结果呢？这就需要API（Application Programming Interface）。可以理解为程序和模型服务进行通信的接口。 调用 API 时，一个通常的过程是： Python →\\right","image":"https://mau-q.github.io/img/og/posts--llm-api-calls.png","datePublished":"2026-10-01T07:30:00.000Z","dateModified":"2026-09-30T16:00:00.000Z","author":{"@type":"Person","name":"Mau-Q"},"publisher":{"@type":"Person","name":"Mau-Q"},"mainEntityOfPage":"https://mau-q.github.io/posts/llm-api-calls/","inLanguage":"zh-CN"}</script>
+    
+    <title>API 调用 | Mau-Q | 学习 · 记录 · 成长</title>
+
+    
+    
+        <script src="/js/pagefind-highlight.js" type="module"></script>
+    
+
+    
+        
+<link rel="stylesheet" href="/css/highlight/style1.css">
+
+        
+<link rel="stylesheet" href="/css/reset.css">
+
+        
+<link rel="stylesheet" href="/css/markdown.css">
+
+        
+<link rel="stylesheet" href="/css/fonts.css">
+
+         <!--注意：首页既不是post也不是page-->
+        
+
+        
+<link rel="stylesheet" href="/css/ui.css">
+
+        
+<link rel="stylesheet" href="/css/style.css">
+
+
+        
+            <!--返回顶部css-->
+            
+<link rel="stylesheet" href="/css/returnToTop.css">
+
+            
+<link rel="stylesheet" href="/css/unicons.css">
+
+        
+        
+            <!--目录-->
+            
+<link rel="stylesheet" href="/css/toc.css">
+
+        
+    
+
+    
+        
+<link rel="stylesheet" href="/css/returnToLastPage.css">
+
+    
+
+    
+
+    
+        
+<link rel="stylesheet" href="/css/custom.css">
+
+    
+
+    
+
+    <!-- Local LXGW WenKai font, CDN removed for stability -->
+<link rel="stylesheet" href="/css/article-outline.css?v=c8809551b426"><link rel="stylesheet" href="/css/code-theme.css?v=2028f33b2cd2"><link rel="stylesheet" href="/lib/katex/katex.min.css"></head>
+
+    
+    
+
+    
+    
+
+
+
+    
+
+    
+    
+
+
+
+
+    <style>
+        .archive-main a:hover {
+            text-decoration: none; 
+        }
+    </style>
+
+    
+    
+
+
+    <body>
+        <a class="skip-link" href="#main-content">跳到正文</a>
+        
+        <script>
+        (function () {
+            // darkreader.min.js（88K）按需加载：浅色模式用户完全不下载
+            const drOptions = {
+                brightness: 100,
+                contrast: 95,
+                sepia: 10,
+                darkSchemeTextColor: '#e0e0e0',  // 粉笔白文字
+                darkSchemeBackgroundColor: '#1e1e1e', // 黑板灰背景
+                scrollbarStyle: 'native'
+            };
+
+            let loading = null;
+            function loadDarkReader() {
+                if (window.DarkReader) return Promise.resolve();
+                if (!loading) {
+                    loading = new Promise((resolve, reject) => {
+                        const script = document.createElement('script');
+                        script.src = '/js/darkreader.min.js';
+                        script.onload = resolve;
+                        script.onerror = reject;
+                        document.head.appendChild(script);
+                    });
+                }
+                return loading;
+            }
+
+            function enableDark() {
+                document.documentElement.style.backgroundColor = '#1e1e1e';
+                document.documentElement.style.colorScheme = 'dark';
+                return loadDarkReader().then(() => DarkReader.enable(drOptions, {
+                    css: "/* Code colors follow the site's light/dark mode, including DarkReader's toggle. */\nhtml:not([data-darkreader-mode]) {\n  --code-background: #e7ebf2;\n  --code-foreground: #343b48;\n  --code-border: #c2cbd9;\n  --code-gutter: #8792a2;\n  --code-comment: #6d7888;\n  --code-keyword: #8b3fa2;\n  --code-string: #2f7c57;\n  --code-number: #a15d25;\n  --code-function: #2865a8;\n  --code-variable: #b04452;\n  --inline-code-background: #f0f3f7;\n  --inline-code-border: #dce2ec;\n  --inline-code-foreground: #43576c;\n}\n\nhtml[data-darkreader-mode=\"dynamic\"] {\n  --code-background: #282c34;\n  --code-foreground: #abb2bf;\n  --code-border: #3e4451;\n  --code-gutter: #7f8794;\n  --code-comment: #9da5b4;\n  --code-keyword: #c678dd;\n  --code-string: #98c379;\n  --code-number: #d19a66;\n  --code-function: #61afef;\n  --code-variable: #e06c75;\n  --inline-code-background: #343a46;\n  --inline-code-border: #454c5a;\n  --inline-code-foreground: #d0d9e3;\n}\n\n.post-md pre,\n.post-md code {\n  font-family: \"JetBrains Mono\", \"Fira Code\", \"Cascadia Code\", \"SF Mono\", Menlo, Monaco, Consolas, \"PingFang SC\", \"Microsoft YaHei\", monospace !important;\n}\n.post-md :not(pre) > code {\n  padding: 0.07em 0.28em;\n  border: 1px solid var(--inline-code-border) !important;\n  border-radius: 4px;\n  background: var(--inline-code-background) !important;\n  color: var(--inline-code-foreground) !important;\n  font-size: 0.9em;\n  overflow-wrap: anywhere;\n  -webkit-box-decoration-break: clone;\n  box-decoration-break: clone;\n}\n.post-md .highlight,\n.post-md > pre {\n  background: var(--code-background) !important;\n  color: var(--code-foreground) !important;\n  border: 1px solid var(--code-border) !important;\n  border-radius: 6px;\n  padding: 0.7rem 0.95rem;\n  margin: 1.05rem 0;\n  max-width: 100%;\n  overflow-x: auto;\n}\n.post-md .highlight pre,\n.post-md pre code {\n  padding: 0;\n  background: transparent !important;\n  color: var(--code-foreground) !important;\n  border: 0 !important;\n  border-radius: 0;\n}\n.post-md .highlight .gutter pre { color: var(--code-gutter) !important; }\n.post-md .highlight .gutter pre { padding-right: 0.8rem; }\n.post-md .highlight:is(.json, .plaintext, .text, .prompt) .gutter { display: none; }\n.post-md .highlight:is(.json, .plaintext, .text, .prompt) .code { width: 100%; }\n.post-md pre .comment { color: var(--code-comment) !important; }\n.post-md pre .keyword,\n.post-md pre .selector-tag { color: var(--code-keyword) !important; }\n.post-md pre .string,\n.post-md pre .addition { color: var(--code-string) !important; }\n.post-md pre .number,\n.post-md pre .literal,\n.post-md pre .built_in { color: var(--code-number) !important; }\n.post-md pre .title,\n.post-md pre .function { color: var(--code-function) !important; }\n.post-md pre .variable,\n.post-md pre .attribute { color: var(--code-variable) !important; }\n"
+                }));
+            }
+
+            function disableDark() {
+                document.documentElement.style.backgroundColor = '';
+                document.documentElement.style.colorScheme = '';
+                if (window.DarkReader) DarkReader.disable();
+            }
+
+            const savedTheme = localStorage.getItem('theme');
+            const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const startDark = savedTheme === 'dark' || (!savedTheme && systemDark);
+            if (startDark) enableDark();
+
+            window.addEventListener('DOMContentLoaded', () => {
+                const btn = document.createElement('button');
+                btn.innerText = '🌓';
+                btn.type = 'button';
+                btn.setAttribute('aria-label', '切换深色模式');
+                btn.title = '切换深色模式';
+                // 按钮样式：仿照你之前的布局，放在右下角
+                btn.style.cssText = `
+                    position: fixed; 
+                    bottom: 40px; 
+                    left: 42px; 
+                    z-index: 9999;
+                    width: 44px; 
+                    height: 44px; 
+                    border-radius: 50%; 
+                    border: 1px solid #ccc;
+                    background: #f7f5ed; 
+                    color: #000;
+                    font-size: 22px; 
+                    cursor: pointer;
+                    box-shadow: 0 4px 10px rgba(0,0,0,0.1); 
+                    transition: transform 0.2s, background-color 0.3s;
+                `;
+                let isDark = startDark;
+                function paintButton() {
+                    btn.style.backgroundColor = isDark ? '#1e1e1e' : '#f7f5ed';
+                    btn.style.color = isDark ? '#fff' : '#000';
+                }
+                paintButton();
+                btn.onmouseover = () => btn.style.transform = 'scale(1.1)';
+                btn.onmouseout = () => btn.style.transform = 'scale(1)';
+                document.body.appendChild(btn);
+                // 点击切换逻辑
+                btn.addEventListener('click', () => {
+                    isDark = !isDark;
+                    if (isDark) {
+                        enableDark();
+                        localStorage.setItem('theme', 'dark');
+                    } else {
+                        disableDark();
+                        localStorage.setItem('theme', 'light');
+                    }
+                    paintButton();
+                });
+            });
+        })();
+        </script>
+        
+        
+            
+                <div class="left-toc-container">
+                    <nav id="toc" class="bs-docs-sidebar"></nav>
+                </div>
+            
+        
+        <main id="main-content" class="paper" tabindex="-1">
+
+            
+
+            
+                <div class="shadow-drop-2-bottom paper-main">
+                    
+
+<header class="header">
+    <div class="header-container">
+        <img
+            alt="Mau-Q"
+            class="header-img"
+            src="/img/favicon.svg"
+            width="56"
+            height="56"
+        />
+        <div class="header-content">
+            <a class="logo" href="/">Mau-Q</a>
+            <span class="description">计算机学习、算法、C/C++、课程项目与排错复盘。</span>
+        </div>
+    </div>
+
+    <nav aria-label="主要导航">
+        <ul class="nav">
+            
+                
+                <li>
+                    <a href="/">首页</a>
+                </li>
+            
+                
+                <li>
+                    <a href="/list/">文章</a>
+                </li>
+            
+                
+                <li>
+                    <a href="/categories/">分类</a>
+                </li>
+            
+                
+                <li>
+                    <a href="/about/">关于</a>
+                </li>
+            
+                
+                <li>
+                    <a href="/now/">Now</a>
+                </li>
+            
+                
+                <li>
+                    <a href="/tags/">标签</a>
+                </li>
+            
+                
+                <li>
+                    <a href="/search/">搜索</a>
+                </li>
+            
+        </ul>
+    </nav>
+</header>
+
+
+                    
+                    
+
+                    
+                    
+
+                    <!--说明是文章post页面-->
+                    
+                        <div class="post-main">
+    
+
+    
+        
+            
+                <h1 class="post-main-title" style="text-align: center;">
+                    API 调用
+                </h1>
+            
+        
+      
+    
+
+    
+
+        
+            <div class="post-head-meta-center">
+        
+                
+                    <span>最近更新：2026-10-01</span> 
+                
+                
+                    
+                        &nbsp; | &nbsp;
+                    
+                     <span>字数总计：2.6k</span>
+                
+                
+                    
+                        &nbsp; | &nbsp;
+                    
+                    <span>阅读估时：10分钟</span>
+                
+                
+            </div>
+    
+
+    <div class="post-md" data-pagefind-body>
+        
+            
+                <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#API-%E6%98%AF%E4%BB%80%E4%B9%88"><span class="post-toc-text">API 是什么</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#API-%E7%9A%84%E7%BB%84%E6%88%90"><span class="post-toc-text">API 的组成</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1-API-Key"><span class="post-toc-text">1. API Key</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2-model"><span class="post-toc-text">2. model</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#3-messages-%E4%B8%8E-input"><span class="post-toc-text">3. messages 与 input</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#4-Generation-Parameters"><span class="post-toc-text">4. Generation Parameters</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#5-Response"><span class="post-toc-text">5. Response</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#%E5%A4%9A%E8%BD%AE%E5%AF%B9%E8%AF%9D"><span class="post-toc-text">多轮对话</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#%E6%89%B9%E9%87%8F%E5%A4%84%E7%90%86"><span class="post-toc-text">批量处理</span></a></li></ol>
+            
+        
+        <div class=".article-gallery"><!-- Generated from Obsidian: Blogs/API 调用.md. Edit the source note, then run npm run blog:sync. -->
+
+<h2 id="API-是什么"><a href="#API-是什么" class="headerlink" title="API 是什么" aria-hidden="true" tabindex="-1"></a>API 是什么</h2><p>在<a href="/posts/prompt-engineering/">Prompt Engineering</a>已经知道了怎么写<code>Prompt</code>，那怎么把<code>Prompt</code>发给模型，并取得结果呢？这就需要<code>API</code>（<strong>Application Programming Interface</strong>）。可以理解为程序和模型服务进行通信的接口。</p>
+<p>调用 API 时，一个通常的过程是：</p>
+<blockquote>
+<p><code>Python</code> <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>→</mo></mrow><annotation encoding="application/x-tex">\rightarrow</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.3669em;"></span><span class="mrel">→</span></span></span></span> <code>HTTP Request</code> <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>→</mo></mrow><annotation encoding="application/x-tex">\rightarrow</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.3669em;"></span><span class="mrel">→</span></span></span></span> <code>API Server</code> <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>→</mo></mrow><annotation encoding="application/x-tex">\rightarrow</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.3669em;"></span><span class="mrel">→</span></span></span></span> <code>LLM</code> <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>→</mo></mrow><annotation encoding="application/x-tex">\rightarrow</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.3669em;"></span><span class="mrel">→</span></span></span></span> <code>HTTP Response</code> <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>→</mo></mrow><annotation encoding="application/x-tex">\rightarrow</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.3669em;"></span><span class="mrel">→</span></span></span></span> <code>Python</code></p>
+</blockquote>
+<h2 id="API-的组成"><a href="#API-的组成" class="headerlink" title="API 的组成" aria-hidden="true" tabindex="-1"></a>API 的组成</h2><p>一次 API 调用包含请求（<code>Request</code>）和响应（<code>Response</code>）。请求通常包括身份认证信息（<code>API Key</code>）、模型名称（<code>Model</code>）、输入（<code>Input</code>）和生成参数（<code>Generation Parameters</code>）；响应则包括模型输出、用量统计等信息。</p>
+<h3 id="1-API-Key"><a href="#1-API-Key" class="headerlink" title="1. API Key" aria-hidden="true" tabindex="-1"></a>1. API Key</h3><p>可以理解成：程序访问模型服务的身份凭证。所以不要显式写在代码中，最好使用环境变量：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> DEEPSEEK_API_KEY=<span class="string">&quot;...&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-model"><a href="#2-model" class="headerlink" title="2. model" aria-hidden="true" tabindex="-1"></a>2. model</h3><p>告诉服务器本次请求由哪一个模型完成。不同的模型能力不一样。</p>
+<h3 id="3-messages-与-input"><a href="#3-messages-与-input" class="headerlink" title="3. messages 与 input" aria-hidden="true" tabindex="-1"></a>3. messages 与 input</h3><p>Chat Completions API 使用<code>messages</code>传入消息列表，常见写法是：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">messages=[</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="string">&quot;role&quot;</span>: <span class="string">&quot;system&quot;</span>,</span><br><span class="line">        <span class="string">&quot;content&quot;</span>: <span class="string">&quot;You are a helpful assistant.&quot;</span></span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="string">&quot;role&quot;</span>: <span class="string">&quot;user&quot;</span>,</span><br><span class="line">        <span class="string">&quot;content&quot;</span>: <span class="string">&quot;Explain SFT.&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<p>这就是<code>system</code>+<code>user</code>。其中<code>role</code>表示消息的角色，<code>content</code>表示消息内容：<code>system</code>用来设置整体要求，<code>user</code>是用户输入，<code>assistant</code>是模型回复。</p>
+<p>Responses API 则使用<code>input</code>传入输入，最简单的写法是：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">response = client.responses.create(</span><br><span class="line">    model=<span class="string">&quot;...&quot;</span>,</span><br><span class="line">    <span class="built_in">input</span>=<span class="string">&quot;Explain SFT.&quot;</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>这两种接口的输入与返回结构不同，读取结果时也要使用对应接口的字段。下面以 DeepSeek 的 Chat Completions API 为例，完成一次调用。</p>
+<p>先安装 OpenAI Python SDK（Software Development Kit，软件开发工具包）：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 -m pip install openai</span><br></pre></td></tr></table></figure>
+
+<p><code>from openai import OpenAI</code>使用的是这个 SDK，<code>base_url</code>决定请求发往哪个服务。这里设置为 DeepSeek 的地址，所以实际调用的是 DeepSeek。它支持兼容的 API 格式，可以使用 OpenAI SDK 发送请求，具体配置见<a target="_blank" rel="noopener" href="https://api-docs.deepseek.com/">官方调用示例</a>。</p>
+<p>一次完整的调用（这里显式关闭思考模式，便于先理解普通文本生成）：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">from</span> openai <span class="keyword">import</span> OpenAI</span><br><span class="line"></span><br><span class="line">client = OpenAI(</span><br><span class="line">    api_key=os.environ[<span class="string">&quot;DEEPSEEK_API_KEY&quot;</span>],</span><br><span class="line">    base_url=<span class="string">&quot;https://api.deepseek.com&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">response = client.chat.completions.create(</span><br><span class="line">    model=<span class="string">&quot;deepseek-flash&quot;</span>,</span><br><span class="line">    messages=[</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="string">&quot;role&quot;</span>: <span class="string">&quot;system&quot;</span>,</span><br><span class="line">            <span class="string">&quot;content&quot;</span>: <span class="string">&quot;You are a concise AI tutor.&quot;</span></span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="string">&quot;role&quot;</span>: <span class="string">&quot;user&quot;</span>,</span><br><span class="line">            <span class="string">&quot;content&quot;</span>: <span class="string">&quot;Explain supervised fine-tuning.&quot;</span></span><br><span class="line">        &#125;</span><br><span class="line">    ],</span><br><span class="line">    extra_body=&#123;<span class="string">&quot;thinking&quot;</span>: &#123;<span class="string">&quot;type&quot;</span>: <span class="string">&quot;disabled&quot;</span>&#125;&#125;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(response.choices[<span class="number">0</span>].message.content)</span><br></pre></td></tr></table></figure>
+
+<p>其中<code>completions</code>指的是“补全”，因为模型本质就是根据我们给的 token 预测下一个 token。</p>
+<p>调用本质就是<code>输入 context</code> <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>→</mo></mrow><annotation encoding="application/x-tex">\rightarrow</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.3669em;"></span><span class="mrel">→</span></span></span></span> <code>model</code> <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>→</mo></mrow><annotation encoding="application/x-tex">\rightarrow</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.3669em;"></span><span class="mrel">→</span></span></span></span> <code>输出 output</code>。</p>
+<h3 id="4-Generation-Parameters"><a href="#4-Generation-Parameters" class="headerlink" title="4. Generation Parameters" aria-hidden="true" tabindex="-1"></a>4. Generation Parameters</h3><h4 id="4-1-temperature"><a href="#4-1-temperature" class="headerlink" title="4.1 temperature" aria-hidden="true" tabindex="-1"></a>4.1 temperature</h4><p><code>temperature</code>在 softmax 前缩放 logits，用来控制概率分布的集中程度。logits 是模型给各个候选 Token 的分数，经过 softmax 后得到概率。记第 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi></mrow><annotation encoding="application/x-tex">i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6595em;"></span><span class="mord mathnormal">i</span></span></span></span> 个候选 Token 的分数为 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>z</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">z_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.044em;">z</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.044em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>，概率为 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>P</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">P_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>，则：</p>
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi>P</mi><mi>i</mi></msub><mo>=</mo><mfrac><msup><mi>e</mi><msub><mi>z</mi><mi>i</mi></msub></msup><mrow><munder><mo>∑</mo><mi>j</mi></munder><msup><mi>e</mi><msub><mi>z</mi><mi>j</mi></msub></msup></mrow></mfrac></mrow><annotation encoding="application/x-tex">P_i= \frac{e^{z_i}} {\sum_j e^{z_j}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:2.4632em;vertical-align:-1.1218em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3414em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mop"><span class="mop op-symbol small-op" style="position:relative;top:0em;">∑</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.162em;"><span style="top:-2.4003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0572em;">j</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.4358em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal">e</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6065em;"><span style="top:-3.0051em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.044em;">z</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3281em;"><span style="top:-2.357em;margin-left:-0.044em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="katex-sizing reset-size3 size1 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0572em;">j</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2819em;"><span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal">e</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6644em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.044em;">z</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3281em;"><span style="top:-2.357em;margin-left:-0.044em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="katex-sizing reset-size3 size1 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.143em;"><span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.1218em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span>
+<p>任意 2 个 Token 的输出概率比为：</p>
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mfrac><msub><mi>P</mi><mi>i</mi></msub><msub><mi>P</mi><mi>j</mi></msub></mfrac><mo>=</mo><mfrac><msup><mi>e</mi><msub><mi>z</mi><mi>i</mi></msub></msup><msup><mi>e</mi><msub><mi>z</mi><mi>j</mi></msub></msup></mfrac><mo>=</mo><msup><mi>e</mi><mrow><msub><mi>z</mi><mi>i</mi></msub><mo>−</mo><msub><mi>z</mi><mi>j</mi></msub></mrow></msup></mrow><annotation encoding="application/x-tex">\frac{P_i}{P_j}=\frac{e^{z_i}}{e^{z_j}}=e^{z_i-z_j}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:2.3324em;vertical-align:-0.9721em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3603em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0572em;">j</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.9721em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:2.0274em;vertical-align:-0.686em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3414em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal">e</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6065em;"><span style="top:-3.0051em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.044em;">z</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3281em;"><span style="top:-2.357em;margin-left:-0.044em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="katex-sizing reset-size3 size1 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0572em;">j</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2819em;"><span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal">e</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6644em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.044em;">z</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3281em;"><span style="top:-2.357em;margin-left:-0.044em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="katex-sizing reset-size3 size1 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.143em;"><span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.8213em;"></span><span class="mord"><span class="mord mathnormal">e</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8213em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.044em;">z</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3281em;"><span style="top:-2.357em;margin-left:-0.044em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="katex-sizing reset-size3 size1 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.143em;"><span></span></span></span></span></span></span><span class="mbin mtight">−</span><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.044em;">z</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3281em;"><span style="top:-2.357em;margin-left:-0.044em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="katex-sizing reset-size3 size1 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0572em;">j</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2819em;"><span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span>
+<p>于是我们将 logits 都除以 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>T</mi></mrow><annotation encoding="application/x-tex">T</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.1389em;">T</span></span></span></span>，也就是<code>temperature</code>，再进行 softmax。<code>temperature</code>越小，概率越集中，模型更倾向选择最高概率 Token，所以输出通常更稳定、更保守。反之<code>temperature</code>越大，原本概率较小的 Token 也更有机会被选中，所以输出通常更多样、更随机。</p>
+<p>每个 logits 的概率变为：</p>
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi>P</mi><mi>i</mi></msub><mo>=</mo><mfrac><msup><mi>e</mi><mrow><msub><mi>z</mi><mi>i</mi></msub><mi mathvariant="normal">/</mi><mi>T</mi></mrow></msup><mrow><munder><mo>∑</mo><mi>j</mi></munder><msup><mi>e</mi><mrow><msub><mi>z</mi><mi>j</mi></msub><mi mathvariant="normal">/</mi><mi>T</mi></mrow></msup></mrow></mfrac><mo separator="true">,</mo><mspace width="2em"/><mi>T</mi><mo>&gt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">P_i= \frac{e^{z_i/T}} {\sum_j e^{z_j/T}},\qquad T&gt;0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:2.7209em;vertical-align:-1.1559em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.565em;"><span style="top:-2.2799em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mop"><span class="mop op-symbol small-op" style="position:relative;top:0em;">∑</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.162em;"><span style="top:-2.4003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0572em;">j</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.4358em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal">e</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8301em;"><span style="top:-3.0051em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.044em;">z</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3281em;"><span style="top:-2.357em;margin-left:-0.044em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="katex-sizing reset-size3 size1 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0572em;">j</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2819em;"><span></span></span></span></span></span></span><span class="mord mtight">/</span><span class="mord mathnormal mtight" style="margin-right:0.1389em;">T</span></span></span></span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal">e</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.888em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.044em;">z</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3281em;"><span style="top:-2.357em;margin-left:-0.044em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="katex-sizing reset-size3 size1 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.143em;"><span></span></span></span></span></span></span><span class="mord mtight">/</span><span class="mord mathnormal mtight" style="margin-right:0.1389em;">T</span></span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.1559em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:2em;"></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.1389em;">T</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">&gt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">0</span></span></span></span></span>
+<p>对应的概率比变为：</p>
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mfrac><msub><mi>P</mi><mi>i</mi></msub><msub><mi>P</mi><mi>j</mi></msub></mfrac><mo>=</mo><msup><mi>e</mi><mrow><mo stretchy="false">(</mo><msub><mi>z</mi><mi>i</mi></msub><mo>−</mo><msub><mi>z</mi><mi>j</mi></msub><mo stretchy="false">)</mo><mi mathvariant="normal">/</mi><mi>T</mi></mrow></msup></mrow><annotation encoding="application/x-tex">\frac{P_i}{P_j}=e^{(z_i-z_j)/T}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:2.3324em;vertical-align:-0.9721em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3603em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0572em;">j</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.9721em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.938em;"></span><span class="mord"><span class="mord mathnormal">e</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.938em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mopen mtight">(</span><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.044em;">z</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3281em;"><span style="top:-2.357em;margin-left:-0.044em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="katex-sizing reset-size3 size1 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.143em;"><span></span></span></span></span></span></span><span class="mbin mtight">−</span><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.044em;">z</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3281em;"><span style="top:-2.357em;margin-left:-0.044em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="katex-sizing reset-size3 size1 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0572em;">j</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2819em;"><span></span></span></span></span></span></span><span class="mclose mtight">)</span><span class="mord mtight">/</span><span class="mord mathnormal mtight" style="margin-right:0.1389em;">T</span></span></span></span></span></span></span></span></span></span></span></span></span>
+<p>当 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>z</mi><mi>i</mi></msub><mo>&gt;</mo><msub><mi>z</mi><mi>j</mi></msub></mrow><annotation encoding="application/x-tex">z_i&gt;z_j</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6891em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.044em;">z</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.044em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">&gt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.7167em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.044em;">z</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.044em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0572em;">j</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span></span></span></span> 时，<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>T</mi></mrow><annotation encoding="application/x-tex">T</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.1389em;">T</span></span></span></span> 越小，这个比值越大，就说明模型越倾向选择分数较高的 Token。对于不同的任务可以选用不同的<code>temperature</code>：在分类任务中可以调低，而在创作任务中可以调高。</p>
+<p>接口允许的范围取决于服务商和模型。DeepSeek 当前文档给出的范围是<code>0~2</code>，但在思考模式下这个参数不起作用。公式要求 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>T</mi><mo>&gt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">T&gt;0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.7224em;vertical-align:-0.0391em;"></span><span class="mord mathnormal" style="margin-right:0.1389em;">T</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">&gt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">0</span></span></span></span>；接口中的<code>temperature=0</code>通常表示采用贪心选择或接近贪心的生成方式，不能直接把 0 代入上面的公式，也不应据此保证每次输出完全一致。</p>
+<h4 id="4-2-top-p"><a href="#4-2-top-p" class="headerlink" title="4.2 top_p" aria-hidden="true" tabindex="-1"></a>4.2 top_p</h4><p>称为 Nucleus Sampling（核采样）。</p>
+<p>如果取 <code>top_p</code> &#x3D; 0.9，那从<strong>最高概率开始累计</strong>，选取累计概率首次达到或超过<code>top_p</code>的最小候选集合，再只从这些 Token 中采样。</p>
+<div class="table-scroll" role="region" tabindex="0" aria-label="可横向滚动的表格">
+<table>
+<thead>
+<tr>
+<th>Token</th>
+<th>Probability</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>A</td>
+<td>0.50</td>
+</tr>
+<tr>
+<td>B</td>
+<td>0.25</td>
+</tr>
+<tr>
+<td>C</td>
+<td>0.15</td>
+</tr>
+<tr>
+<td>D</td>
+<td>0.07</td>
+</tr>
+<tr>
+<td>E</td>
+<td>0.03</td>
+</tr>
+</tbody></table>
+</div>
+<p>例如本例<code>A + B + C</code> &#x3D; 0.9，于是只从这三者之间采样。</p>
+<p>采样前还要重新归一化：A、B、C 的概率分别变为 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>0.50</mn><mi mathvariant="normal">/</mi><mn>0.90</mn></mrow><annotation encoding="application/x-tex">0.50/0.90</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">0.50/0.90</span></span></span></span>、<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>0.25</mn><mi mathvariant="normal">/</mi><mn>0.90</mn></mrow><annotation encoding="application/x-tex">0.25/0.90</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">0.25/0.90</span></span></span></span>、<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>0.15</mn><mi mathvariant="normal">/</mi><mn>0.90</mn></mrow><annotation encoding="application/x-tex">0.15/0.90</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">0.15/0.90</span></span></span></span>，三者之和为 1。</p>
+<p>可以这样理解：</p>
+<p><code>Temperature</code>改变<strong>整个概率分布的尖锐程度</strong>。而<code>Top-p</code>改变<strong>允许参加抽样的候选 Token 范围</strong>。</p>
+<p>在流程图中可以画成：</p>
+<blockquote>
+<p><code>Logits</code> <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>→</mo></mrow><annotation encoding="application/x-tex">\rightarrow</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.3669em;"></span><span class="mrel">→</span></span></span></span> <code>Temperature</code> <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>→</mo></mrow><annotation encoding="application/x-tex">\rightarrow</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.3669em;"></span><span class="mrel">→</span></span></span></span> <code>Probability distribution</code> <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>→</mo></mrow><annotation encoding="application/x-tex">\rightarrow</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.3669em;"></span><span class="mrel">→</span></span></span></span> <code>Top-p filtering</code> <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>→</mo></mrow><annotation encoding="application/x-tex">\rightarrow</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.3669em;"></span><span class="mrel">→</span></span></span></span> <code>Sampling</code> <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>→</mo></mrow><annotation encoding="application/x-tex">\rightarrow</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.3669em;"></span><span class="mrel">→</span></span></span></span> <code>Next Token</code></p>
+</blockquote>
+<p>上面展示的是一般采样原理，具体接口不一定允许同时调整这两个参数。按 DeepSeek 当前文档，<code>top_p</code>在非思考模式下固定为 1，传入值会被忽略；在思考模式下有效范围为<code>0.95~1.0</code>，低于 0.95 的值按 0.95 处理。因此，上面的<code>top_p=0.9</code>是原理算例。参数支持说明以<a target="_blank" rel="noopener" href="https://api-docs.deepseek.com/api/create-chat-completion/">官方接口文档</a>为准（核对日期：2026-10-01）。</p>
+<h4 id="4-3-max-tokens"><a href="#4-3-max-tokens" class="headerlink" title="4.3 max_tokens" aria-hidden="true" tabindex="-1"></a>4.3 max_tokens</h4><p>控制最多允许模型生成多少 Token。</p>
+<p>这是输出长度的上限，不是要求模型一定生成这么多。如果达到上限，回答可能被截断；在 Chat Completions 返回中，可以查看<code>finish_reason</code>，其中<code>length</code>表示触及长度限制。不同接口的参数名称可能不同，使用时要查对应文档。</p>
+<h4 id="4-4-Context-Window"><a href="#4-4-Context-Window" class="headerlink" title="4.4 Context Window" aria-hidden="true" tabindex="-1"></a>4.4 Context Window</h4><p><code>Context Window</code>（上下文窗口）表示模型一次处理所能容纳的 Token 数量上限。对于这里的 DeepSeek 接口，输入与生成 Token 的总长度受这个上限约束：</p>
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mtext>Input Tokens</mtext><mo>+</mo><mtext>Output Tokens</mtext><mo>≤</mo><mtext>Context Window</mtext></mrow><annotation encoding="application/x-tex">\text{Input Tokens}+\text{Output Tokens}\leq\text{Context Window}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord text"><span class="mord">Input Tokens</span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord text"><span class="mord">Output Tokens</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6944em;"></span><span class="mord text"><span class="mord">Context Window</span></span></span></span></span></span>
+<p>它表示容量，不是本次实际用量。输入包括系统要求、历史消息和本次问题等；输出包括模型本次生成的内容。模型还可能有独立的最大输出长度限制，所以并不是上下文剩余多少，就一定能输出多少。</p>
+<p>费用按实际使用的 Token 计算，不会按整个上下文容量收费。控制输入仍然很重要，因为更长的输入通常意味着更多费用和处理时间。</p>
+<h3 id="5-Response"><a href="#5-Response" class="headerlink" title="5. Response" aria-hidden="true" tabindex="-1"></a>5. Response</h3><p>如果是普通返回，模型只会在生成完成后才返回整段<code>Response</code>，而使用<code>Streaming</code>，模型就会以小 chunk 形式不断返回<code>Response</code>。</p>
+<p>在网页对话时，我们往往只看到模型返回的文本，但 API 的响应通常还会包含<code>metadata</code>（元数据），例如模型名称和用量统计。下面是简化的 Chat Completions 返回示例：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;...&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;model&quot;</span><span class="punctuation">:</span> <span class="string">&quot;...&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;choices&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">    <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;message&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;role&quot;</span><span class="punctuation">:</span> <span class="string">&quot;assistant&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;content&quot;</span><span class="punctuation">:</span> <span class="string">&quot;SFT is...&quot;</span></span><br><span class="line">      <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;usage&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;prompt_tokens&quot;</span><span class="punctuation">:</span> <span class="number">100</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;completion_tokens&quot;</span><span class="punctuation">:</span> <span class="number">50</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;total_tokens&quot;</span><span class="punctuation">:</span> <span class="number">150</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>其中<code>prompt_tokens</code>是输入用量，<code>completion_tokens</code>是生成用量，<code>total_tokens</code>是两者之和。在这个例子中，就是 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>100</mn><mo>+</mo><mn>50</mn><mo>=</mo><mn>150</mn></mrow><annotation encoding="application/x-tex">100+50=150</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">100</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">50</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">150</span></span></span></span>。</p>
+<p>但总 Token 数不能直接代表费用，因为输入和输出的单价可能不同，输入命中缓存时还可能享有不同价格。可以先按下面的方式理解：</p>
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mtext>费用</mtext><mo>=</mo><mtext>输入 Token 数</mtext><mo>×</mo><mtext>输入单价</mtext><mo>+</mo><mtext>输出 Token 数</mtext><mo>×</mo><mtext>输出单价</mtext></mrow><annotation encoding="application/x-tex">\text{费用}=\text{输入 Token 数}\times\text{输入单价}+\text{输出 Token 数}\times\text{输出单价}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord text"><span class="mord cjk_fallback">费用</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.7778em;vertical-align:-0.0833em;"></span><span class="mord text"><span class="mord cjk_fallback">输入</span><span class="mord"> Token </span><span class="mord cjk_fallback">数</span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span class="mord text"><span class="mord cjk_fallback">输入单价</span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.7778em;vertical-align:-0.0833em;"></span><span class="mord text"><span class="mord cjk_fallback">输出</span><span class="mord"> Token </span><span class="mord cjk_fallback">数</span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord text"><span class="mord cjk_fallback">输出单价</span></span></span></span></span></span>
+<p>这里的单价按每个 Token 计算；如果定价页给的是每百万 Token 的价格，要先将 Token 数除以一百万再乘对应价格。如果输入分为缓存命中和未命中，还要分别计算这两部分。具体价格以<a target="_blank" rel="noopener" href="https://api-docs.deepseek.com/quick_start/pricing/">官方定价页</a>为准。</p>
+<h2 id="多轮对话"><a href="#多轮对话" class="headerlink" title="多轮对话" aria-hidden="true" tabindex="-1"></a>多轮对话</h2><p>在网页和 AI 聊天时，模型是有上下文记忆的，那使用<code>API</code>也会有吗，怎么实现的呢？</p>
+<p>对于这里的 Chat Completions 调用，服务不会自动把上一次请求当成本次的上下文。简单来说，就是把之前的聊天记录，包括用户输入和模型回复，与本次问题一起打包发给模型。模型就能依据上下文回答。</p>
+<p>沿用前面创建的<code>client</code>，可以这样完成两轮对话：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">messages = [</span><br><span class="line">    &#123;<span class="string">&quot;role&quot;</span>: <span class="string">&quot;system&quot;</span>, <span class="string">&quot;content&quot;</span>: <span class="string">&quot;You are a concise AI tutor.&quot;</span>&#125;,</span><br><span class="line">    &#123;<span class="string">&quot;role&quot;</span>: <span class="string">&quot;user&quot;</span>, <span class="string">&quot;content&quot;</span>: <span class="string">&quot;Explain supervised fine-tuning.&quot;</span>&#125;</span><br><span class="line">]</span><br><span class="line"></span><br><span class="line">response = client.chat.completions.create(</span><br><span class="line">    model=<span class="string">&quot;deepseek-flash&quot;</span>,</span><br><span class="line">    messages=messages,</span><br><span class="line">    extra_body=&#123;<span class="string">&quot;thinking&quot;</span>: &#123;<span class="string">&quot;type&quot;</span>: <span class="string">&quot;disabled&quot;</span>&#125;&#125;</span><br><span class="line">)</span><br><span class="line">answer = response.choices[<span class="number">0</span>].message.content</span><br><span class="line"><span class="built_in">print</span>(answer)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 把第一轮模型回复和第二轮用户问题加入历史</span></span><br><span class="line">messages.append(&#123;<span class="string">&quot;role&quot;</span>: <span class="string">&quot;assistant&quot;</span>, <span class="string">&quot;content&quot;</span>: answer&#125;)</span><br><span class="line">messages.append(&#123;<span class="string">&quot;role&quot;</span>: <span class="string">&quot;user&quot;</span>, <span class="string">&quot;content&quot;</span>: <span class="string">&quot;How is it different from pretraining?&quot;</span>&#125;)</span><br><span class="line"></span><br><span class="line">response = client.chat.completions.create(</span><br><span class="line">    model=<span class="string">&quot;deepseek-flash&quot;</span>,</span><br><span class="line">    messages=messages,</span><br><span class="line">    extra_body=&#123;<span class="string">&quot;thinking&quot;</span>: &#123;<span class="string">&quot;type&quot;</span>: <span class="string">&quot;disabled&quot;</span>&#125;&#125;</span><br><span class="line">)</span><br><span class="line"><span class="built_in">print</span>(response.choices[<span class="number">0</span>].message.content)</span><br></pre></td></tr></table></figure>
+
+<p>第二次请求包含第一轮的问题、第一轮的回答，以及第二轮的问题，所以模型能够接着回答。随着对话越来越多，每次发送的历史 Token 通常也越多，这会增加用量，并可能增加费用与延迟；缓存命中可以降低部分输入费用，但历史仍占用上下文空间。</p>
+<p><code>context compression</code>（上下文压缩）可以把历史整理成更短的摘要；<code>RAG</code>（Retrieval-Augmented Generation，检索增强生成）可以按当前问题检索相关材料，减少一次性塞入全部资料的需要。两者都涉及取舍，压缩或检索没有保留下来的信息，模型就不能直接依据它回答。</p>
+<h2 id="批量处理"><a href="#批量处理" class="headerlink" title="批量处理" aria-hidden="true" tabindex="-1"></a>批量处理</h2><p>如果需要调用<code>API</code>进行批量处理，比如翻译 100 篇论文，至少要考虑<code>Retry</code>和<code>Checkpoint</code>。前者使得出现错误时能有限次重试，后者保证在中断时保持已完成的结果。</p>
+</div>
+        <aside class="post-afterword" aria-label="文章余韵">
+  <span class="post-afterword-label">文章余韵</span>
+  <p>学然后知不足，教然后知困。</p>
+  <cite>—— 《礼记·学记》</cite>
+</aside>
+    </div>
+
+    <div class="post-meta">
+        <i>
+        
+            <span>2026-10-01</span>
+            
+                <span>该篇文章被 Mau-Q</span>
+            
+            
+                <span>打上标签:
+                    
+                    
+                        <a href='/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/'>
+                            学习笔记
+                        </a>
+                    
+                        <a href='/tags/%E5%A4%A7%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B/'>
+                            大语言模型
+                        </a>
+                    
+                        <a href='/tags/API/'>
+                            API
+                        </a>
+                    
+                </span>
+             
+             
+                <span>归为分类:
+                    
+                    
+                        <a href='/categories/%E6%8A%80%E6%9C%AF/'>
+                            技术
+                        </a>
+                    
+                </span>
+            
+        
+        </i>
+    </div>
+    <br>
+    
+    
+        
+            
+    
+            <div class="post-footer-pre-next">
+                
+                    <span>上一篇：<a href='/posts/pytorch-training-workflow/'>PyTorch：从 Tensor 到完整训练流程</a></span>
+                
+
+                
+                    <span class="post-footer-pre-next-last-span-right">下一篇：<a href="/posts/prompt-engineering/">Prompt Engineering：从 Zero-shot、Few-shot 到 Prompt 结构</a>
+                    </span>
+                
+            </div>
+    
+        
+    
+
+    
+        
+
+     
+</div>
+
+
+
+
+                    
+
+                    <div class="footer">
+    
+        <span> 
+            © 2026 Mau-Q 
+
+            
+                
+
+            
+        </span>
+       
+    
+</div>
+
+
+
+<!--这是指一条线往下的内容-->
+<div class="footer-last">
+    
+            <span></span>
+            
+                <span class="footer-last-span-right"><i>本站由<a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/index.html">Hexo</a>驱动｜使用<a target="_blank" rel="noopener" href="https://github.com/HiNinoJay/hexo-theme-A4">Hexo-theme-A4</a>主题</i></span>
+            
+    
+</div>
+
+
+<!--目录-->
+
+    
+<script src="/js/toc.js?v=496cd1a37bc1"></script>
+
+
+
+
+<!--回到顶部按钮-->
+
+    
+<script src="/js/returnToTop.js"></script>
+
+
+
+
+    
+<script src="/js/returnToLastPage.js"></script>
+
+
+
+
+
+
+
+
+
+                </div>
+            
+            
+                <!-- 回到顶部的按钮-->
+                <button class="progress-wrap shadow-drop-2-bottom" type="button" aria-label="回到页面顶部">
+                    <svg class="progress-circle svg-content" width="100%" height="100%" viewBox="-1 -1 102 102">
+                        <path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98"/>
+                    </svg>
+                </button>
+            
+            
+                <!-- 返回的按钮-->
+                <button class="return-to-last-progress-wrap shadow-drop-2-bottom" type="button" aria-label="返回上一页">
+                    <svg class="progress-circle svg-content" width="100%" height="100%" viewBox="-1 -1 102 102">
+                        <path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98"/>
+                    </svg>
+                </button>
+            
+        </main>
+    </body>
+</html>
+<script src="/js/emojiHandler.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        wrapEmojis('.paper');
+    });
+</script>
