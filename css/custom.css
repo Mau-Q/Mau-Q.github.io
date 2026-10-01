@@ -7,7 +7,8 @@
 
 /* These exported teaching diagrams use light strokes on transparent canvases. */
 .post-md img[src^="/img/blogs/deep-learning-basics/"],
-.post-md img[src^="/img/blogs/neural-network-training-optimization-generalization/"] {
+.post-md img[src^="/img/blogs/neural-network-training-optimization-generalization/"],
+.post-md img[src^="/img/blogs/pytorch-training-workflow/"] {
     background: #1e1e1e;
     border-radius: 8px;
     padding: 12px;

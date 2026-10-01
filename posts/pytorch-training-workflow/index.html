@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    
+    <style>
+        body {
+            font-family: "LXGW WenKai", "notoserifsc-medium", "Noto Serif SC", "Songti SC", "STSong", "Microsoft YaHei", "Hiragino Sans GB", "WenQuanYi Micro Hei", serif !important;
+        }
+    </style>
+
+
+    <head>
+    
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport" />
+    <meta name="theme-color" content="#f7f5ed" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#1e1e1e" media="(prefers-color-scheme: dark)">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta name="hexo-theme-A4" content="v2.0.1" />
+    <link rel="icon" href="/img/favicon.svg">
+    <link rel="alternate" type="application/atom+xml" title="Mau-Q" href="https://mau-q.github.io/atom.xml">
+    <link rel="canonical" href="https://mau-q.github.io/posts/pytorch-training-workflow/">
+    <meta name="description" content="PyTorch 是什么可以理解为： 用 Tensor 表示数据，用神经网络做计算，用 Autograd 自动求梯度，再用 Optimizer 更新参数。 一个训练 step 内的数据、梯度与参数关系 用伪代码表示全局： 12345678910111213141516171819202122232425262728# 数">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PyTorch：从 Tensor 到完整训练流程">
+<meta property="og:url" content="https://mau-q.github.io/posts/pytorch-training-workflow/">
+<meta property="og:site_name" content="Mau-Q">
+<meta property="og:description" content="PyTorch 是什么可以理解为： 用 Tensor 表示数据，用神经网络做计算，用 Autograd 自动求梯度，再用 Optimizer 更新参数。 一个训练 step 内的数据、梯度与参数关系 用伪代码表示全局： 12345678910111213141516171819202122232425262728# 数">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://mau-q.github.io/img/og/posts--pytorch-training-workflow.png">
+<meta property="article:published_time" content="2026-10-01T15:15:00.000Z">
+<meta property="article:modified_time" content="2026-10-01T07:13:14.000Z">
+<meta property="article:author" content="Mau-Q">
+<meta property="article:tag" content="PyTorch">
+<meta property="article:tag" content="学习笔记">
+<meta property="article:tag" content="深度学习">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://mau-q.github.io/img/og/posts--pytorch-training-workflow.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="《PyTorch：从 Tensor 到完整训练流程》分享卡片">
+    
+        <meta data-pagefind-meta="title" content="PyTorch：从 Tensor 到完整训练流程">
+        <meta data-pagefind-meta="image" content="/img/og/posts--pytorch-training-workflow.png">
+        <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"PyTorch：从 Tensor 到完整训练流程","description":"PyTorch 是什么可以理解为： 用 Tensor 表示数据，用神经网络做计算，用 Autograd 自动求梯度，再用 Optimizer 更新参数。 一个训练 step 内的数据、梯度与参数关系 用伪代码表示全局： 12345678910111213141516171819202122232425262728# 数","image":"https://mau-q.github.io/img/og/posts--pytorch-training-workflow.png","datePublished":"2026-10-01T15:15:00.000Z","dateModified":"2026-10-01T07:13:14.000Z","author":{"@type":"Person","name":"Mau-Q"},"publisher":{"@type":"Person","name":"Mau-Q"},"mainEntityOfPage":"https://mau-q.github.io/posts/pytorch-training-workflow/","inLanguage":"zh-CN"}</script>
+    
+    <title>PyTorch：从 Tensor 到完整训练流程 | Mau-Q | 学习 · 记录 · 成长</title>
+
+    
+    
+        <script src="/js/pagefind-highlight.js" type="module"></script>
+    
+
+    
+        
+<link rel="stylesheet" href="/css/highlight/style1.css">
+
+        
+<link rel="stylesheet" href="/css/reset.css">
+
+        
+<link rel="stylesheet" href="/css/markdown.css">
+
+        
+<link rel="stylesheet" href="/css/fonts.css">
+
+         <!--注意：首页既不是post也不是page-->
+        
+
+        
+<link rel="stylesheet" href="/css/ui.css">
+
+        
+<link rel="stylesheet" href="/css/style.css">
+
+
+        
+            <!--返回顶部css-->
+            
+<link rel="stylesheet" href="/css/returnToTop.css">
+
+            
+<link rel="stylesheet" href="/css/unicons.css">
+
+        
+        
+            <!--目录-->
+            
+<link rel="stylesheet" href="/css/toc.css">
+
+        
+    
+
+    
+        
+<link rel="stylesheet" href="/css/returnToLastPage.css">
+
+    
+
+    
+        
+<link rel="stylesheet" href="/css/lightgallery-bundle.min.css">
+
+    
+
+    
+        
+<link rel="stylesheet" href="/css/custom.css">
+
+    
+
+    
+
+    <!-- Local LXGW WenKai font, CDN removed for stability -->
+<link rel="stylesheet" href="/css/article-outline.css?v=c8809551b426"><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="stylesheet" href="/css/code-theme.css?v=2028f33b2cd2"></head>
+
+    
+    
+
+    
+    
+
+
+
+    
+
+    
+    
+
+
+
+
+    <style>
+        .archive-main a:hover {
+            text-decoration: none; 
+        }
+    </style>
+
+    
+    
+
+
+    <body>
+        <a class="skip-link" href="#main-content">跳到正文</a>
+        
+        <script>
+        (function () {
+            // darkreader.min.js（88K）按需加载：浅色模式用户完全不下载
+            const drOptions = {
+                brightness: 100,
+                contrast: 95,
+                sepia: 10,
+                darkSchemeTextColor: '#e0e0e0',  // 粉笔白文字
+                darkSchemeBackgroundColor: '#1e1e1e', // 黑板灰背景
+                scrollbarStyle: 'native'
+            };
+
+            let loading = null;
+            function loadDarkReader() {
+                if (window.DarkReader) return Promise.resolve();
+                if (!loading) {
+                    loading = new Promise((resolve, reject) => {
+                        const script = document.createElement('script');
+                        script.src = '/js/darkreader.min.js';
+                        script.onload = resolve;
+                        script.onerror = reject;
+                        document.head.appendChild(script);
+                    });
+                }
+                return loading;
+            }
+
+            function enableDark() {
+                document.documentElement.style.backgroundColor = '#1e1e1e';
+                document.documentElement.style.colorScheme = 'dark';
+                return loadDarkReader().then(() => DarkReader.enable(drOptions, {
+                    css: "/* Code colors follow the site's light/dark mode, including DarkReader's toggle. */\nhtml:not([data-darkreader-mode]) {\n  --code-background: #e7ebf2;\n  --code-foreground: #343b48;\n  --code-border: #c2cbd9;\n  --code-gutter: #8792a2;\n  --code-comment: #6d7888;\n  --code-keyword: #8b3fa2;\n  --code-string: #2f7c57;\n  --code-number: #a15d25;\n  --code-function: #2865a8;\n  --code-variable: #b04452;\n  --inline-code-background: #f0f3f7;\n  --inline-code-border: #dce2ec;\n  --inline-code-foreground: #43576c;\n}\n\nhtml[data-darkreader-mode=\"dynamic\"] {\n  --code-background: #282c34;\n  --code-foreground: #abb2bf;\n  --code-border: #3e4451;\n  --code-gutter: #7f8794;\n  --code-comment: #9da5b4;\n  --code-keyword: #c678dd;\n  --code-string: #98c379;\n  --code-number: #d19a66;\n  --code-function: #61afef;\n  --code-variable: #e06c75;\n  --inline-code-background: #343a46;\n  --inline-code-border: #454c5a;\n  --inline-code-foreground: #d0d9e3;\n}\n\n.post-md pre,\n.post-md code {\n  font-family: \"JetBrains Mono\", \"Fira Code\", \"Cascadia Code\", \"SF Mono\", Menlo, Monaco, Consolas, \"PingFang SC\", \"Microsoft YaHei\", monospace !important;\n}\n.post-md :not(pre) > code {\n  padding: 0.07em 0.28em;\n  border: 1px solid var(--inline-code-border) !important;\n  border-radius: 4px;\n  background: var(--inline-code-background) !important;\n  color: var(--inline-code-foreground) !important;\n  font-size: 0.9em;\n  overflow-wrap: anywhere;\n  -webkit-box-decoration-break: clone;\n  box-decoration-break: clone;\n}\n.post-md .highlight,\n.post-md > pre {\n  background: var(--code-background) !important;\n  color: var(--code-foreground) !important;\n  border: 1px solid var(--code-border) !important;\n  border-radius: 6px;\n  padding: 0.7rem 0.95rem;\n  margin: 1.05rem 0;\n  max-width: 100%;\n  overflow-x: auto;\n}\n.post-md .highlight pre,\n.post-md pre code {\n  padding: 0;\n  background: transparent !important;\n  color: var(--code-foreground) !important;\n  border: 0 !important;\n  border-radius: 0;\n}\n.post-md .highlight .gutter pre { color: var(--code-gutter) !important; }\n.post-md .highlight .gutter pre { padding-right: 0.8rem; }\n.post-md .highlight:is(.json, .plaintext, .text, .prompt) .gutter { display: none; }\n.post-md .highlight:is(.json, .plaintext, .text, .prompt) .code { width: 100%; }\n.post-md pre .comment { color: var(--code-comment) !important; }\n.post-md pre .keyword,\n.post-md pre .selector-tag { color: var(--code-keyword) !important; }\n.post-md pre .string,\n.post-md pre .addition { color: var(--code-string) !important; }\n.post-md pre .number,\n.post-md pre .literal,\n.post-md pre .built_in { color: var(--code-number) !important; }\n.post-md pre .title,\n.post-md pre .function { color: var(--code-function) !important; }\n.post-md pre .variable,\n.post-md pre .attribute { color: var(--code-variable) !important; }\n"
+                }));
+            }
+
+            function disableDark() {
+                document.documentElement.style.backgroundColor = '';
+                document.documentElement.style.colorScheme = '';
+                if (window.DarkReader) DarkReader.disable();
+            }
+
+            const savedTheme = localStorage.getItem('theme');
+            const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const startDark = savedTheme === 'dark' || (!savedTheme && systemDark);
+            if (startDark) enableDark();
+
+            window.addEventListener('DOMContentLoaded', () => {
+                const btn = document.createElement('button');
+                btn.innerText = '🌓';
+                btn.type = 'button';
+                btn.setAttribute('aria-label', '切换深色模式');
+                btn.title = '切换深色模式';
+                // 按钮样式：仿照你之前的布局，放在右下角
+                btn.style.cssText = `
+                    position: fixed; 
+                    bottom: 40px; 
+                    left: 42px; 
+                    z-index: 9999;
+                    width: 44px; 
+                    height: 44px; 
+                    border-radius: 50%; 
+                    border: 1px solid #ccc;
+                    background: #f7f5ed; 
+                    color: #000;
+                    font-size: 22px; 
+                    cursor: pointer;
+                    box-shadow: 0 4px 10px rgba(0,0,0,0.1); 
+                    transition: transform 0.2s, background-color 0.3s;
+                `;
+                let isDark = startDark;
+                function paintButton() {
+                    btn.style.backgroundColor = isDark ? '#1e1e1e' : '#f7f5ed';
+                    btn.style.color = isDark ? '#fff' : '#000';
+                }
+                paintButton();
+                btn.onmouseover = () => btn.style.transform = 'scale(1.1)';
+                btn.onmouseout = () => btn.style.transform = 'scale(1)';
+                document.body.appendChild(btn);
+                // 点击切换逻辑
+                btn.addEventListener('click', () => {
+                    isDark = !isDark;
+                    if (isDark) {
+                        enableDark();
+                        localStorage.setItem('theme', 'dark');
+                    } else {
+                        disableDark();
+                        localStorage.setItem('theme', 'light');
+                    }
+                    paintButton();
+                });
+            });
+        })();
+        </script>
+        
+        
+            
+                <div class="left-toc-container">
+                    <nav id="toc" class="bs-docs-sidebar"></nav>
+                </div>
+            
+        
+        <main id="main-content" class="paper" tabindex="-1">
+
+            
+
+            
+                <div class="shadow-drop-2-bottom paper-main">
+                    
+
+<header class="header">
+    <div class="header-container">
+        <img
+            alt="Mau-Q"
+            class="header-img"
+            src="/img/favicon.svg"
+            width="56"
+            height="56"
+        />
+        <div class="header-content">
+            <a class="logo" href="/">Mau-Q</a>
+            <span class="description">计算机学习、算法、C/C++、课程项目与排错复盘。</span>
+        </div>
+    </div>
+
+    <nav aria-label="主要导航">
+        <ul class="nav">
+            
+                
+                <li>
+                    <a href="/">首页</a>
+                </li>
+            
+                
+                <li>
+                    <a href="/list/">文章</a>
+                </li>
+            
+                
+                <li>
+                    <a href="/categories/">分类</a>
+                </li>
+            
+                
+                <li>
+                    <a href="/about/">关于</a>
+                </li>
+            
+                
+                <li>
+                    <a href="/now/">Now</a>
+                </li>
+            
+                
+                <li>
+                    <a href="/tags/">标签</a>
+                </li>
+            
+                
+                <li>
+                    <a href="/search/">搜索</a>
+                </li>
+            
+        </ul>
+    </nav>
+</header>
+
+
+                    
+                    
+
+                    
+                    
+
+                    <!--说明是文章post页面-->
+                    
+                        <div class="post-main">
+    
+
+    
+        
+            
+                <h1 class="post-main-title" style="text-align: center;">
+                    PyTorch：从 Tensor 到完整训练流程
+                </h1>
+            
+        
+      
+    
+
+    
+
+        
+            <div class="post-head-meta-center">
+        
+                
+                    <span>最近更新：2026-10-01</span> 
+                
+                
+                    
+                        &nbsp; | &nbsp;
+                    
+                     <span>字数总计：4.8k</span>
+                
+                
+                    
+                        &nbsp; | &nbsp;
+                    
+                    <span>阅读估时：20分钟</span>
+                
+                
+            </div>
+    
+
+    <div class="post-md" data-pagefind-body>
+        
+            
+                <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#PyTorch-%E6%98%AF%E4%BB%80%E4%B9%88"><span class="post-toc-text">PyTorch 是什么</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1-%E6%B8%85%E6%A2%AF%E5%BA%A6"><span class="post-toc-text">1.清梯度</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2-%E5%89%8D%E5%90%91%E4%BC%A0%E6%92%AD"><span class="post-toc-text">2.前向传播</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#3-%E7%AE%97-loss"><span class="post-toc-text">3.算 loss</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#4-%E5%8F%8D%E5%90%91%E4%BC%A0%E6%92%AD"><span class="post-toc-text">4.反向传播</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#5-%E6%9B%B4%E6%96%B0%E5%8F%82%E6%95%B0"><span class="post-toc-text">5.更新参数</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Tensor"><span class="post-toc-text">Tensor</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Tensor-%E5%8F%98%E5%BD%A2"><span class="post-toc-text">Tensor 变形</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1-squeeze%EF%BC%9A%E5%88%A0%E6%8E%89%E9%95%BF%E5%BA%A6%E4%B8%BA-1-%E7%9A%84%E7%BB%B4%E5%BA%A6"><span class="post-toc-text">1.squeeze：删掉长度为 1 的维度</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2-unsqueeze%EF%BC%9A%E5%A2%9E%E5%8A%A0%E4%B8%80%E4%B8%AA%E9%95%BF%E5%BA%A6%E4%B8%BA-1-%E7%9A%84%E7%BB%B4%E5%BA%A6"><span class="post-toc-text">2.unsqueeze：增加一个长度为 1 的维度</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#3-transpose%EF%BC%9A%E4%BA%A4%E6%8D%A2%E4%B8%A4%E4%B8%AA%E7%BB%B4%E5%BA%A6"><span class="post-toc-text">3.transpose：交换两个维度</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#4-cat%EF%BC%9A%E6%B2%BF%E6%9F%90%E4%B8%AA%E7%BB%B4%E5%BA%A6%E6%8B%BC%E6%8E%A5-Tensor"><span class="post-toc-text">4.cat：沿某个维度拼接 Tensor</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Autograd"><span class="post-toc-text">Autograd</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Dataset-%E4%B8%8E-DataLoader"><span class="post-toc-text">Dataset 与 DataLoader</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#shape-%E4%BC%9A%E5%8F%91%E7%94%9F%E4%BB%80%E4%B9%88%E5%8F%98%E5%8C%96"><span class="post-toc-text">shape 会发生什么变化</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#torch-nn"><span class="post-toc-text">torch.nn</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#nn-Linear-in-features-out-features"><span class="post-toc-text">nn.Linear(in_features, out_features)</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0"><span class="post-toc-text">激活函数</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Loss-Function"><span class="post-toc-text">Loss Function</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#%E5%AE%9A%E4%B9%89%E8%87%AA%E5%B7%B1%E7%9A%84%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C"><span class="post-toc-text">定义自己的神经网络</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#torch-optim"><span class="post-toc-text">torch.optim</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#%E5%88%9B%E5%BB%BA-Optimizer"><span class="post-toc-text">创建 Optimizer</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#%E5%AE%8C%E6%95%B4-Training-Loop"><span class="post-toc-text">完整 Training Loop</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Validation%E3%80%81Testing"><span class="post-toc-text">Validation、Testing</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Validation-%E7%9A%84%E5%AE%8C%E6%95%B4%E4%BB%A3%E7%A0%81"><span class="post-toc-text">Validation 的完整代码</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Testing"><span class="post-toc-text">Testing</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#%E4%BF%9D%E5%AD%98%E6%A8%A1%E5%9E%8B"><span class="post-toc-text">保存模型</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#PyTorch-%E8%AE%AD%E7%BB%83%E6%B5%81%E7%A8%8B"><span class="post-toc-text">PyTorch 训练流程</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#%E5%B8%B8%E8%A7%81%E6%8A%A5%E9%94%99"><span class="post-toc-text">常见报错</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Positional-Argument"><span class="post-toc-text">Positional Argument</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Keyword-Argument"><span class="post-toc-text">Keyword Argument</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#%E5%9B%9B%E7%B1%BB%E5%B8%B8%E8%A7%81%E9%94%99%E8%AF%AF"><span class="post-toc-text">四类常见错误</span></a></li></ol></li></ol>
+            
+        
+        <div class=".article-gallery"><!-- Generated from Obsidian: Blogs/PyTorch.md. Edit the source note, then run npm run blog:sync. -->
+
+<h2 id="PyTorch-是什么"><a href="#PyTorch-是什么" class="headerlink" title="PyTorch 是什么" aria-hidden="true" tabindex="-1"></a>PyTorch 是什么</h2><p>可以理解为：</p>
+<blockquote>
+<p>用 Tensor 表示数据，用神经网络做计算，用 Autograd 自动求梯度，再用 Optimizer 更新参数。</p>
+</blockquote>
+<figure class="post-figure">
+<a href="/img/blogs/pytorch-training-workflow/pytorch-c698106e.svg" title="输入和标签计算损失，反向传播计算梯度，优化器更新模型参数的单步训练流程" class="gallery-item" style="box-shadow: none;"> <img src="/img/blogs/pytorch-training-workflow/pytorch-c698106e.svg" alt="输入和标签计算损失，反向传播计算梯度，优化器更新模型参数的单步训练流程"></a>
+<figcaption>一个训练 step 内的数据、梯度与参数关系</figcaption></figure>
+<p>用伪代码表示全局：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"># 数据</span><br><span class="line">dataset = ...</span><br><span class="line"></span><br><span class="line"># 模型</span><br><span class="line">model = ...</span><br><span class="line"></span><br><span class="line"># 损失函数</span><br><span class="line">criterion = ...</span><br><span class="line"></span><br><span class="line"># 优化器</span><br><span class="line">optimizer = ...</span><br><span class="line"></span><br><span class="line">for x, y in dataset:</span><br><span class="line"></span><br><span class="line">    # 1. 清梯度</span><br><span class="line">    optimizer.zero_grad()</span><br><span class="line"></span><br><span class="line">    # 2. 前向传播</span><br><span class="line">    pred = model(x)</span><br><span class="line"></span><br><span class="line">    # 3. 算 loss</span><br><span class="line">    loss = criterion(pred, y)</span><br><span class="line"></span><br><span class="line">    # 4. 反向传播</span><br><span class="line">    loss.backward()</span><br><span class="line"></span><br><span class="line">    # 5. 更新参数</span><br><span class="line">    optimizer.step()</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-清梯度"><a href="#1-清梯度" class="headerlink" title="1.清梯度" aria-hidden="true" tabindex="-1"></a>1.清梯度</h3><p>调用 <code>loss.backward()</code> 时，梯度会累积到模型参数的 <code>.grad</code> 中。普通训练中，每个 training step 都希望使用当前这一批数据的梯度，所以先用 <code>optimizer.zero_grad()</code> 清除上一轮梯度。</p>
+<p>如果有意做梯度累积，也可以连续处理几个小批次，再统一更新参数。这里先按“每批清梯度、每批更新一次”的普通训练流程理解。</p>
+<h3 id="2-前向传播"><a href="#2-前向传播" class="headerlink" title="2.前向传播" aria-hidden="true" tabindex="-1"></a>2.前向传播</h3><p>数学上是:</p>
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>x</mi><mo>→</mo><mtext>Neural Network</mtext><mo>→</mo><mover accent="true"><mi>y</mi><mo>^</mo></mover></mrow><annotation encoding="application/x-tex">x \rightarrow \text{Neural Network} \rightarrow \hat y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6944em;"></span><span class="mord text"><span class="mord">Neural Network</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord katex-accent"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.6944em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">y</span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.1944em;"><span class="mord">^</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1944em;"><span></span></span></span></span></span></span></span></span></span>
+<h3 id="3-算-loss"><a href="#3-算-loss" class="headerlink" title="3.算 loss" aria-hidden="true" tabindex="-1"></a>3.算 loss</h3><p>比如回归：</p>
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>L</mi><mo>=</mo><mo stretchy="false">(</mo><mover accent="true"><mi>y</mi><mo>^</mo></mover><mo>−</mo><mi>y</mi><msup><mo stretchy="false">)</mo><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">L=(\hat y-y)^2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal">L</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord katex-accent"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.6944em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">y</span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.1944em;"><span class="mord">^</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1944em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1.1141em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="mclose"><span class="mclose">)</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8641em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span></span></span>
+<h3 id="4-反向传播"><a href="#4-反向传播" class="headerlink" title="4.反向传播" aria-hidden="true" tabindex="-1"></a>4.反向传播</h3><p>PyTorch 最关键的能力之一，沿计算图反向计算梯度，但不更新。这就是Autograd。</p>
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mfrac><mrow><mi mathvariant="normal">∂</mi><mi>L</mi></mrow><mrow><mi mathvariant="normal">∂</mi><msub><mi>W</mi><mn>1</mn></msub></mrow></mfrac><mo separator="true">,</mo><mspace width="1em"/><mfrac><mrow><mi mathvariant="normal">∂</mi><mi>L</mi></mrow><mrow><mi mathvariant="normal">∂</mi><msub><mi>b</mi><mn>1</mn></msub></mrow></mfrac><mo separator="true">,</mo><mspace width="1em"/><mfrac><mrow><mi mathvariant="normal">∂</mi><mi>L</mi></mrow><mrow><mi mathvariant="normal">∂</mi><msub><mi>W</mi><mn>2</mn></msub></mrow></mfrac><mo separator="true">,</mo><mspace width="1em"/><mfrac><mrow><mi mathvariant="normal">∂</mi><mi>L</mi></mrow><mrow><mi mathvariant="normal">∂</mi><msub><mi>b</mi><mn>2</mn></msub></mrow></mfrac></mrow><annotation encoding="application/x-tex">\frac{\partial L}{\partial W_1}, \quad \frac{\partial L}{\partial b_1}, \quad \frac{\partial L}{\partial W_2}, \quad \frac{\partial L}{\partial b_2}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:2.2074em;vertical-align:-0.836em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3714em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord" style="margin-right:0.0556em;">∂</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1389em;">W</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord" style="margin-right:0.0556em;">∂</span><span class="mord mathnormal">L</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.836em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:1em;"></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3714em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord" style="margin-right:0.0556em;">∂</span><span class="mord"><span class="mord mathnormal">b</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord" style="margin-right:0.0556em;">∂</span><span class="mord mathnormal">L</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.836em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:1em;"></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3714em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord" style="margin-right:0.0556em;">∂</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1389em;">W</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord" style="margin-right:0.0556em;">∂</span><span class="mord mathnormal">L</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.836em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:1em;"></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3714em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord" style="margin-right:0.0556em;">∂</span><span class="mord"><span class="mord mathnormal">b</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord" style="margin-right:0.0556em;">∂</span><span class="mord mathnormal">L</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.836em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span>
+<h3 id="5-更新参数"><a href="#5-更新参数" class="headerlink" title="5.更新参数" aria-hidden="true" tabindex="-1"></a>5.更新参数</h3><p>有了梯度以后，例如随机梯度下降（Stochastic Gradient Descent，SGD）：</p>
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>W</mi><mo>←</mo><mi>W</mi><mo>−</mo><mi>η</mi><mfrac><mrow><mi mathvariant="normal">∂</mi><mi>L</mi></mrow><mrow><mi mathvariant="normal">∂</mi><mi>W</mi></mrow></mfrac></mrow><annotation encoding="application/x-tex">W \leftarrow W-\eta\frac{\partial L}{\partial W}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.1389em;">W</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">←</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal" style="margin-right:0.1389em;">W</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:2.0574em;vertical-align:-0.686em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">η</span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3714em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord" style="margin-right:0.0556em;">∂</span><span class="mord mathnormal" style="margin-right:0.1389em;">W</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord" style="margin-right:0.0556em;">∂</span><span class="mord mathnormal">L</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span>
+<h2 id="Tensor"><a href="#Tensor" class="headerlink" title="Tensor" aria-hidden="true" tabindex="-1"></a>Tensor</h2><p>Tensor &#x3D; 可以有任意维度的数组。</p>
+<p>例如 0 维 Tensor <code>x = torch.tensor(3.0)</code>。它只是一个数：</p>
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mn>3</mn></mrow><annotation encoding="application/x-tex">3</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">3</span></span></span></span></span>
+<p>1 维 Tensor <code>x = torch.tensor([1, 2, 3, 4, 5])</code>。可以想成一个向量：</p>
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mo stretchy="false">[</mo><mn>1</mn><mo separator="true">,</mo><mn>2</mn><mo separator="true">,</mo><mn>3</mn><mo separator="true">,</mo><mn>4</mn><mo separator="true">,</mo><mn>5</mn><mo stretchy="false">]</mo></mrow><annotation encoding="application/x-tex">[1,2,3,4,5]</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord">1</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">2</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">3</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">4</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">5</span><span class="mclose">]</span></span></span></span></span>
+<p>2 维 Tensor <code>x = torch.zeros(3, 5)</code>。可以看成：</p>
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mo fence="true">[</mo><mtable rowspacing="0.16em" columnalign="center center center center center" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>0</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>0</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>0</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>0</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>0</mn></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>0</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>0</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>0</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>0</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>0</mn></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>0</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>0</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>0</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>0</mn></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>0</mn></mstyle></mtd></mtr></mtable><mo fence="true">]</mo></mrow><annotation encoding="application/x-tex">\begin{bmatrix} 0&amp;0&amp;0&amp;0&amp;0\\ 0&amp;0&amp;0&amp;0&amp;0\\ 0&amp;0&amp;0&amp;0&amp;0 \end{bmatrix}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:3.6em;vertical-align:-1.55em;"></span><span class="minner"><span class="mopen"><span class="delimsizing mult"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:2.05em;"><span style="top:-4.05em;"><span class="pstrut" style="height:5.6em;"></span><span style="width:0.667em;height:3.6em;"><svg xmlns="http://www.w3.org/2000/svg" width="0.667em" height="3.6em" viewBox="0 0 667 3600"><path d="M403 1759 V84 H666 V0 H319 V1759 v0 v1759 v84 h347 v-84
+H403z M403 1759 V0 H319 V1759 v0 v1759 v84 h84z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.55em;"><span></span></span></span></span></span></span><span class="mord"><span class="mtable"><span class="col-align-c"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:2.05em;"><span style="top:-4.21em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">0</span></span></span><span style="top:-3.01em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">0</span></span></span><span style="top:-1.81em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.55em;"><span></span></span></span></span></span><span class="arraycolsep" style="width:0.5em;"></span><span class="arraycolsep" style="width:0.5em;"></span><span class="col-align-c"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:2.05em;"><span style="top:-4.21em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">0</span></span></span><span style="top:-3.01em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">0</span></span></span><span style="top:-1.81em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.55em;"><span></span></span></span></span></span><span class="arraycolsep" style="width:0.5em;"></span><span class="arraycolsep" style="width:0.5em;"></span><span class="col-align-c"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:2.05em;"><span style="top:-4.21em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">0</span></span></span><span style="top:-3.01em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">0</span></span></span><span style="top:-1.81em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.55em;"><span></span></span></span></span></span><span class="arraycolsep" style="width:0.5em;"></span><span class="arraycolsep" style="width:0.5em;"></span><span class="col-align-c"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:2.05em;"><span style="top:-4.21em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">0</span></span></span><span style="top:-3.01em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">0</span></span></span><span style="top:-1.81em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.55em;"><span></span></span></span></span></span><span class="arraycolsep" style="width:0.5em;"></span><span class="arraycolsep" style="width:0.5em;"></span><span class="col-align-c"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:2.05em;"><span style="top:-4.21em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">0</span></span></span><span style="top:-3.01em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">0</span></span></span><span style="top:-1.81em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.55em;"><span></span></span></span></span></span></span></span><span class="mclose"><span class="delimsizing mult"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:2.05em;"><span style="top:-4.05em;"><span class="pstrut" style="height:5.6em;"></span><span style="width:0.667em;height:3.6em;"><svg xmlns="http://www.w3.org/2000/svg" width="0.667em" height="3.6em" viewBox="0 0 667 3600"><path d="M347 1759 V0 H0 V84 H263 V1759 v0 v1759 H0 v84 H347z
+M347 1759 V0 H263 V1759 v0 v1759 h84z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.55em;"><span></span></span></span></span></span></span></span></span></span></span></span>
+<p>对这个 2 维 Tensor 计算 <code>x.shape</code>，得到 <code>torch.Size([3, 5])</code>，两个维度的长度分别是 3、5。</p>
+<p>再看一个 3 维 Tensor：<code>x = torch.zeros(4, 5, 3)</code>，它的 shape 是 <code>torch.Size([4, 5, 3])</code>。<br>这时三个维度分别为 dim0、dim1、dim2，长度分别是 4、5、3。</p>
+<p>注意：<strong>不要死记“dim&#x3D;0 是行还是列”。</strong></p>
+<p>比如因为以后 Tensor 会变成：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(batch, seq_len, hidden_size)</span><br></pre></td></tr></table></figure>
+
+<p>根本不能简单说“行列”。</p>
+<p>Tensor可以直接从 Python list 创建或者从 NumPy 转过来</p>
+<p>Tensor 不仅有 shape，还有<code>x.dtype</code></p>
+<p>2个常见的：</p>
+<div class="table-scroll" role="region" tabindex="0" aria-label="可横向滚动的表格">
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>PyTorch</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>32-bit float</td>
+<td><code>torch.float</code></td>
+</tr>
+<tr>
+<td>64-bit integer</td>
+<td><code>torch.long</code></td>
+</tr>
+</tbody></table>
+</div>
+<p>不同操作要求的数据类型不同，比如 <code>nn.CrossEntropyLoss()</code> 使用整数类别编号作为标签时，label 应该是 <code>torch.long</code>。后面的回归例子使用浮点数标签。</p>
+<p>Tensor 还有另一个属性：<code>x.device</code>。<br>默认情况下，Tensor 和 Module 都在 CPU 上计算。<br>需要注意的是：参与同一次运算的数据必须处在兼容的 device上，就是model 和 Tensor 必须在同一个 device。</p>
+<p>所以以后深度学习代码一报 Tensor 相关错误，先打印：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">print(x.shape)</span><br><span class="line">print(x.dtype)</span><br><span class="line">print(x.device)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="Tensor-变形"><a href="#Tensor-变形" class="headerlink" title="Tensor 变形" aria-hidden="true" tabindex="-1"></a>Tensor 变形</h2><h3 id="1-squeeze：删掉长度为-1-的维度"><a href="#1-squeeze：删掉长度为-1-的维度" class="headerlink" title="1.squeeze：删掉长度为 1 的维度" aria-hidden="true" tabindex="-1"></a>1.squeeze：删掉长度为 1 的维度</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">x = torch.zeros([1, 2, 3])</span><br><span class="line"></span><br><span class="line">x.shape</span><br><span class="line"># torch.Size([1, 2, 3])</span><br><span class="line"></span><br><span class="line">x = x.squeeze(0)</span><br><span class="line"></span><br><span class="line">x.shape</span><br><span class="line"># torch.Size([2, 3])</span><br></pre></td></tr></table></figure>
+
+<p><code>x.squeeze(0)</code> 的意思是删除长度为 1 的 dim0。这里 dim1 的长度是 2，所以 <code>x.squeeze(1)</code> 会保持原来的 shape。</p>
+<p>那为什么可以删去呢？比如看<code>torch.Size([1, 2, 3])</code>，可以理解成1 组 <code>2 × 3</code> 的数据。因为只有 <strong>1 组</strong>，所以你有时候并不需要保留“组”这一层。<br>可以类比：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[</span><br><span class="line">    [</span><br><span class="line">      [a, b, c],</span><br><span class="line">      [d, e, f]</span><br><span class="line">    ]</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<p>最外面只有一组。</p>
+<p><code>squeeze(0)</code> 后可以理解为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[</span><br><span class="line">  [a, b, c],</span><br><span class="line">  [d, e, f]</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<p>不过，长度为 1 只是“能删除”的条件，是否应该删除还取决于这一维的含义。例如输入是 <code>(1, 3, 224, 224)</code>，第一维表示 batch，即使只有一张图片，模型也可能要求保留它。直接用不指定维度的 <code>squeeze()</code> 会删除所有长度为 1 的维度，尤其容易误删 batch 维。</p>
+<h3 id="2-unsqueeze：增加一个长度为-1-的维度"><a href="#2-unsqueeze：增加一个长度为-1-的维度" class="headerlink" title="2.unsqueeze：增加一个长度为 1 的维度" aria-hidden="true" tabindex="-1"></a>2.<code>unsqueeze</code>：增加一个长度为 1 的维度</h3><p>与前者相反，<code>x.unsqueeze(0)</code> 表示在 dim&#x3D;0 的位置插入一个长度为 1 的新维度。</p>
+<p>那为什么需要<code>unsqueeze</code>呢？</p>
+<p>假设一张图片：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">x.shape = (3, 224, 224)</span><br></pre></td></tr></table></figure>
+
+<p>可以表示：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">channel = 3</span><br><span class="line">height  = 224</span><br><span class="line">width   = 224</span><br></pre></td></tr></table></figure>
+
+<p>但很多模型希望输入：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(batch, channel, height, width)</span><br></pre></td></tr></table></figure>
+
+<p>也就是 4 维 Tensor。</p>
+<p>你只有一张图片，于是 batch size 是：</p>
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mn>1</mn></mrow><annotation encoding="application/x-tex">1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span></span>
+<p>就可以：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">x = x.unsqueeze(0)</span><br></pre></td></tr></table></figure>
+
+<p>得到：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(1, 3, 224, 224)</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-transpose：交换两个维度"><a href="#3-transpose：交换两个维度" class="headerlink" title="3.transpose：交换两个维度" aria-hidden="true" tabindex="-1"></a>3.<code>transpose</code>：交换两个维度</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">x = torch.zeros([2, 3])</span><br><span class="line"></span><br><span class="line">x.shape</span><br><span class="line"># torch.Size([2, 3])</span><br><span class="line"></span><br><span class="line">x = x.transpose(0, 1)</span><br><span class="line"></span><br><span class="line">x.shape</span><br><span class="line"># torch.Size([3, 2])</span><br></pre></td></tr></table></figure>
+
+<p>在shape 不匹配时经常会用 <code>transpose</code>，<br>比如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">x = torch.randn(4, 5)</span><br><span class="line">y = torch.randn(5, 4)</span><br><span class="line">z = x + y #这里会报 shape 不匹配</span><br></pre></td></tr></table></figure>
+
+<p>这里：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">x.shape = (4,5)</span><br><span class="line">y.shape = (5,4)</span><br></pre></td></tr></table></figure>
+
+<p>不能直接相加。</p>
+<p>PPT 给出的处理方式：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">y = y.transpose(0, 1)</span><br><span class="line">z = x + y</span><br></pre></td></tr></table></figure>
+
+<p>此时：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">y.shape:</span><br><span class="line">(5,4)</span><br><span class="line">↓</span><br><span class="line">(4,5)</span><br></pre></td></tr></table></figure>
+
+<p>就和 <code>x</code> 对齐了。</p>
+<p>这个处理成立的前提是：<code>y</code> 的两个维度确实与 <code>x</code> 的维度顺序相反。比如 <code>x</code> 是 <code>(样本数, 特征数)</code>，<code>y</code> 是 <code>(特征数, 样本数)</code>，交换后才有对应意义。只让 shape 一致，不能保证相加的含义正确。</p>
+<h3 id="4-cat：沿某个维度拼接-Tensor"><a href="#4-cat：沿某个维度拼接-Tensor" class="headerlink" title="4.cat：沿某个维度拼接 Tensor" aria-hidden="true" tabindex="-1"></a>4.<code>cat</code>：沿某个维度拼接 Tensor</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">x = torch.zeros([2, 1, 3])</span><br><span class="line">y = torch.zeros([2, 3, 3])</span><br><span class="line">z = torch.zeros([2, 2, 3])</span><br><span class="line"></span><br><span class="line">w = torch.cat([x, y, z], dim=1)</span><br><span class="line"></span><br><span class="line">w.shape</span><br><span class="line"># torch.Size([2, 6, 3])</span><br></pre></td></tr></table></figure>
+
+<p>意思就是将 dim&#x3D;1 的长度相加，但其他维度的长度必须相同。</p>
+<h2 id="Autograd"><a href="#Autograd" class="headerlink" title="Autograd" aria-hidden="true" tabindex="-1"></a>Autograd</h2><p>围绕这个例子：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">x = torch.tensor([[1., 0.],</span><br><span class="line">                  [-1., 1.]],</span><br><span class="line">                 requires_grad=True)</span><br><span class="line"></span><br><span class="line">z = x.pow(2).sum()</span><br><span class="line"></span><br><span class="line">z.backward()</span><br><span class="line"></span><br><span class="line">print(x.grad)</span><br><span class="line"></span><br><span class="line">#预期输出</span><br><span class="line"># tensor([[ 2.,  0.],</span><br><span class="line">#         [-2.,  2.]])</span><br></pre></td></tr></table></figure>
+
+<p><code>x.pow(2)</code>就是每个元素平方，<code>sum()</code>把所有元素加起来，所以最后<code>z = 3</code>。</p>
+<p><code>requires_grad=True</code>表示我之后希望对这个 Tensor 求梯度，也就是告诉 PyTorch这个 x 参与后续计算时，保留反向传播所需要的信息。所以在后续计算时，PyTorch 会知道 <code>z</code> 是由 <code>x</code> 计算出来的。</p>
+<p>也就是保留<code>x</code> -&gt; <code>pow(2)</code> -&gt; <code>sum()</code> -&gt; <code>z</code>。</p>
+<p>这些运算和它们之间的依赖关系构成了计算图。反向传播沿着这张图，用链式法则计算梯度。这个例子里，每个元素的平方求导得到 <code>2x</code>。</p>
+<p>执行<code>z.backward()</code>，它会从最终结果 <code>z</code> 开始，沿着之前的计算关系往回算梯度。</p>
+<p>最后得到：</p>
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mfrac><mrow><mi mathvariant="normal">∂</mi><mi>z</mi></mrow><mrow><mi mathvariant="normal">∂</mi><mi>x</mi></mrow></mfrac></mrow><annotation encoding="application/x-tex">\frac{\partial z}{\partial x}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:2.0574em;vertical-align:-0.686em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3714em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord" style="margin-right:0.0556em;">∂</span><span class="mord mathnormal">x</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord" style="margin-right:0.0556em;">∂</span><span class="mord mathnormal" style="margin-right:0.044em;">z</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span>
+<p>保存在<code>x.grad</code>。</p>
+<p>也就是：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">tensor([[ 2.,  0.],</span><br><span class="line">        [-2.,  2.]])</span><br></pre></td></tr></table></figure>
+
+<p>于是可以粗略理解成：Autograd 是 PyTorch 自动完成 Backpropagation 的机制。<code>backward()</code> 计算梯度，后面由优化器更新参数。</p>
+<h2 id="Dataset-与-DataLoader"><a href="#Dataset-与-DataLoader" class="headerlink" title="Dataset 与 DataLoader" aria-hidden="true" tabindex="-1"></a>Dataset 与 DataLoader</h2><p>可以先把 <code>Dataset</code> 理解成： <strong>一个“可以按编号取样本”的数据容器。</strong></p>
+<p>后面的代码围绕同一个回归任务：每个样本有 10 个特征，预测 1 个数。用 <code>x</code> 表示特征，用 <code>y</code> 表示标签。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">from</span> torch.utils.data <span class="keyword">import</span> Dataset, DataLoader</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MyDataset</span>(<span class="title class_ inherited__">Dataset</span>):</span><br><span class="line">    <span class="comment">#接收已经准备好的特征和标签</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, x, y</span>):</span><br><span class="line">        <span class="variable language_">self</span>.x = x <span class="comment">#shape: (N, 10)</span></span><br><span class="line">        <span class="variable language_">self</span>.y = y <span class="comment">#shape: (N, 1)</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">#一次返回一个 sample</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__getitem__</span>(<span class="params">self, index</span>):</span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">self</span>.x[index], <span class="variable language_">self</span>.y[index]</span><br><span class="line"></span><br><span class="line">    <span class="comment">#返回数据集大小</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__len__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">len</span>(<span class="variable language_">self</span>.x)</span><br></pre></td></tr></table></figure>
+
+<p>当你写：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dataset = MyDataset(x_data, y_data)</span><br></pre></td></tr></table></figure>
+
+<p>时，首先执行 <code>__init__</code>。这里的 <code>x_data</code>、<code>y_data</code> 表示已经准备好的数据，初始化时把它们存下来；实际项目也可以在这里读取文件、做预处理。<code>__init__</code> 在创建对象时执行。</p>
+<p>所以你可以把：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dataset[index]</span><br></pre></td></tr></table></figure>
+
+<p>理解成调用 <code>dataset.__getitem__(index)</code>：“给我第 index 个样本。”例如 <code>dataset[3]</code> 对应 <code>dataset.__getitem__(3)</code>。</p>
+<p>实际监督学习中，一个 sample 往往是：<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>x</mi><mo separator="true">,</mo><mi>y</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(x,y)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="mclose">)</span></span></span></span>，那么：<code>dataset[3]</code>可能返回：<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><msub><mi>x</mi><mn>3</mn></msub><mo separator="true">,</mo><msub><mi>y</mi><mn>3</mn></msub><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(x_3, y_3)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">3</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">3</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span>。</p>
+<p><code>len(dataset)</code>就是简单的返回数据集大小</p>
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><menclose notation="box"><mstyle scriptlevel="0" displaystyle="false"><mstyle scriptlevel="0" displaystyle="false"><mstyle scriptlevel="0" displaystyle="true"><mrow><mi>D</mi><mi>a</mi><mi>t</mi><mi>a</mi><mi>s</mi><mi>e</mi><mi>t</mi><mo>=</mo><mtext>“数据集有多大”</mtext><mo>+</mo><mtext>“如何取一个样本”</mtext></mrow></mstyle></mstyle></mstyle></menclose></mrow><annotation encoding="application/x-tex">\boxed{ Dataset = \text{“数据集有多大”} + \text{“如何取一个样本”} }</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1.4578em;vertical-align:-0.4233em;"></span><span class="mord"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.0344em;"><span style="top:-3.4578em;"><span class="pstrut" style="height:3.4578em;"></span><span class="boxpad"><span class="mord"><span class="mord"><span class="mord mathnormal" style="margin-right:0.0278em;">D</span><span class="mord mathnormal">a</span><span class="mord mathnormal">t</span><span class="mord mathnormal">a</span><span class="mord mathnormal">se</span><span class="mord mathnormal">t</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mord text"><span class="mord">“</span><span class="mord cjk_fallback">数据集有多大</span><span class="mord">”</span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord text"><span class="mord">“</span><span class="mord cjk_fallback">如何取一个样本</span><span class="mord">”</span></span></span></span></span></span><span style="top:-3.0344em;"><span class="pstrut" style="height:3.4578em;"></span><span class="katex-stretchy fbox" style="height:1.4578em;border-style:solid;border-width:0.04em;"></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.4233em;"><span></span></span></span></span></span></span></span></span></span>
+<p>而训练通常不是一次把整个数据集都扔进模型，也不一定是每次只训练一个样本，更常见的是一次取一小批样本，也就是 mini-batch。所以还需要<code>DataLoader</code>。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">dataset = MyDataset(x_data, y_data)</span><br><span class="line"></span><br><span class="line">dataloader = DataLoader(</span><br><span class="line">    dataset,</span><br><span class="line">    batch_size=16, #每次送进模型的样本数</span><br><span class="line">    shuffle=True #取数据前把样本顺序打乱</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<h3 id="shape-会发生什么变化"><a href="#shape-会发生什么变化" class="headerlink" title="shape 会发生什么变化" aria-hidden="true" tabindex="-1"></a>shape 会发生什么变化</h3><p>假设单个样本：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">x.shape = (10,)</span><br><span class="line">y.shape = (1,)</span><br></pre></td></tr></table></figure>
+
+<p>如果：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">batch_size = 16</span><br></pre></td></tr></table></figure>
+
+<p>那么一批数据通常就会变成：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">x.shape = (16, 10)</span><br><span class="line">y.shape = (16, 1)</span><br></pre></td></tr></table></figure>
+
+<p>也就是：</p>
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mo stretchy="false">(</mo><mtext>batch size</mtext><mo separator="true">,</mo><mtext>feature dimension</mtext><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(\text{batch size},\text{feature dimension})</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord text"><span class="mord">batch size</span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord text"><span class="mord">feature dimension</span></span><span class="mclose">)</span></span></span></span></span>
+<p>所以<code>DataLoader</code> 很常见的效果，就是在最前面引入一个 batch 维度。</p>
+<p><code>unsqueeze(0)</code> 可以给一个样本增加长度为 1 的 batch 维；这里 DataLoader 则把多个样本堆叠成一批。后面用 <code>B</code> 表示当前批次的实际样本数，输入是 <code>(B, 10)</code>，标签是 <code>(B, 1)</code>。最后一批可能不足 16 个样本。</p>
+<h2 id="torch-nn"><a href="#torch-nn" class="headerlink" title="torch.nn" aria-hidden="true" tabindex="-1"></a>torch.nn</h2><h3 id="nn-Linear-in-features-out-features"><a href="#nn-Linear-in-features-out-features" class="headerlink" title="nn.Linear(in_features, out_features)" aria-hidden="true" tabindex="-1"></a>nn.Linear(in_features, out_features)</h3><p>例如<code>nn.Linear(32, 64)</code>，意思是输入最后一维大小必须是 32，输出最后一维变成 64。</p>
+<p>例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(10, 32)</span><br><span class="line">   ↓ Linear(32,64)</span><br><span class="line">(10, 64)</span><br></pre></td></tr></table></figure>
+
+<p>这点以后对 Transformer 很重要，因为经常有：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(batch, seq_len, hidden_size)</span><br></pre></td></tr></table></figure>
+
+<p>然后：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nn.Linear(hidden_size, new_size)</span><br></pre></td></tr></table></figure>
+
+<p>本质就是对每个 token（词元）的最后一维做同一个线性变换。</p>
+<p><code>Linear(32,64)</code> 数学上其实就是矩阵乘法</p>
+<p>例如：</p>
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>W</mi><mi>x</mi><mo>+</mo><mi>b</mi><mo>=</mo><mi>y</mi></mrow><annotation encoding="application/x-tex">Wx+b=y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal" style="margin-right:0.1389em;">W</span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6944em;"></span><span class="mord mathnormal">b</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">y</span></span></span></span></span>
+<p>其中：</p>
+<ul>
+<li>输入 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span>：32 维</li>
+<li>输出 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi></mrow><annotation encoding="application/x-tex">y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">y</span></span></span></span>：64 维</li>
+<li>权重 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>W</mi></mrow><annotation encoding="application/x-tex">W</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.1389em;">W</span></span></span></span>：<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>64</mn><mo>×</mo><mn>32</mn></mrow><annotation encoding="application/x-tex">64\times32</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">64</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">32</span></span></span></span></li>
+<li>bias：64 维。</li>
+</ul>
+<p>所以<code>Linear(32,64)</code>就体现了<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>W</mi></mrow><annotation encoding="application/x-tex">W</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.1389em;">W</span></span></span></span>和<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>b</mi></mrow><annotation encoding="application/x-tex">b</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6944em;"></span><span class="mord mathnormal">b</span></span></span></span> 2 个参数，也就是 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>θ</mi></mrow><annotation encoding="application/x-tex">\theta</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.0278em;">θ</span></span></span></span>。</p>
+<p>也就是说：</p>
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>x</mi><mo>∈</mo><msup><mi mathvariant="double-struck">R</mi><mn>32</mn></msup></mrow><annotation encoding="application/x-tex">x\in\mathbb R^{32}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.5782em;vertical-align:-0.0391em;"></span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.8641em;"></span><span class="mord"><span class="mord mathbb">R</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8641em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">32</span></span></span></span></span></span></span></span></span></span></span></span></span>
+<p>希望得到：</p>
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>y</mi><mo>∈</mo><msup><mi mathvariant="double-struck">R</mi><mn>64</mn></msup></mrow><annotation encoding="application/x-tex">y\in\mathbb R^{64}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.7335em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.8641em;"></span><span class="mord"><span class="mord mathbb">R</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8641em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">64</span></span></span></span></span></span></span></span></span></span></span></span></span>
+<p>因此需要：</p>
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>W</mi><mo>∈</mo><msup><mi mathvariant="double-struck">R</mi><mrow><mn>64</mn><mo>×</mo><mn>32</mn></mrow></msup></mrow><annotation encoding="application/x-tex">W\in\mathbb R^{64\times32}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.7224em;vertical-align:-0.0391em;"></span><span class="mord mathnormal" style="margin-right:0.1389em;">W</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.8641em;"></span><span class="mord"><span class="mord mathbb">R</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8641em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">64</span><span class="mbin mtight">×</span><span class="mord mtight">32</span></span></span></span></span></span></span></span></span></span></span></span></span>
+<p>于是：</p>
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>W</mi><mi>x</mi><mo>:</mo><mo stretchy="false">(</mo><mn>64</mn><mo>×</mo><mn>32</mn><mo stretchy="false">)</mo><mo stretchy="false">(</mo><mn>32</mn><mo>×</mo><mn>1</mn><mo stretchy="false">)</mo><mo>→</mo><mn>64</mn><mo>×</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">Wx: (64\times32)(32\times1) \rightarrow 64\times1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.1389em;">W</span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">:</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord">64</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">32</span><span class="mclose">)</span><span class="mopen">(</span><span class="mord">32</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">64</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span></span>
+<p>最后：</p>
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>y</mi><mo>=</mo><mi>W</mi><mi>x</mi><mo>+</mo><mi>b</mi></mrow><annotation encoding="application/x-tex">y=Wx+b</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal" style="margin-right:0.1389em;">W</span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6944em;"></span><span class="mord mathnormal">b</span></span></span></span></span>
+<p>上面把单个输入 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span> 写成列向量。PyTorch 代码里，一批输入通常按 <code>(B, 32)</code> 排列，记为 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>X</mi></mrow><annotation encoding="application/x-tex">X</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.0785em;">X</span></span></span></span>，对应计算是 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Y</mi><mo>=</mo><mi>X</mi><msup><mi>W</mi><mi>T</mi></msup><mo>+</mo><mi>b</mi></mrow><annotation encoding="application/x-tex">Y=XW^T+b</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.2222em;">Y</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.9247em;vertical-align:-0.0833em;"></span><span class="mord mathnormal" style="margin-right:0.0785em;">X</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1389em;">W</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.1389em;">T</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6944em;"></span><span class="mord mathnormal">b</span></span></span></span>，输出为 <code>(B, 64)</code>。两种写法表达的是同一个线性变换，只是数据的排列方式不同。</p>
+<h3 id="激活函数"><a href="#激活函数" class="headerlink" title="激活函数" aria-hidden="true" tabindex="-1"></a>激活函数</h3><p>2 个常见的是<code>nn.Sigmoid()</code>和<code>nn.ReLU()</code>。这里不再赘述。</p>
+<h3 id="Loss-Function"><a href="#Loss-Function" class="headerlink" title="Loss Function" aria-hidden="true" tabindex="-1"></a>Loss Function</h3><p>2 个常见的是<code>nn.MSELoss()</code>和<code>nn.CrossEntropyLoss()</code>。这里不再赘述。</p>
+<p>这里使用 <code>nn.MSELoss()</code> 做回归。默认 <code>reduction=&quot;mean&quot;</code>，会对所有元素的平方误差求平均。在每个样本只输出 1 个数的例子里，一批数据的 loss 是：</p>
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>L</mi><mo>=</mo><mfrac><mn>1</mn><mi>B</mi></mfrac><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>B</mi></munderover><mo stretchy="false">(</mo><msub><mover accent="true"><mi>y</mi><mo>^</mo></mover><mi>i</mi></msub><mo>−</mo><msub><mi>y</mi><mi>i</mi></msub><msup><mo stretchy="false">)</mo><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">L=\frac{1}{B}\sum_{i=1}^{B}(\hat y_i-y_i)^2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal">L</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:3.106em;vertical-align:-1.2777em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3214em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0502em;">B</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.8283em;"><span style="top:-1.8723em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">i</span><span class="mrel mtight">=</span><span class="mord mtight">1</span></span></span></span><span style="top:-3.05em;"><span class="pstrut" style="height:3.05em;"></span><span><span class="mop op-symbol large-op">∑</span></span></span><span style="top:-4.3em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.0502em;">B</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.2777em;"><span></span></span></span></span></span><span class="mopen">(</span><span class="mord"><span class="mord katex-accent"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.6944em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">y</span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.1944em;"><span class="mord">^</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1944em;"><span></span></span></span></span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1.1141em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose"><span class="mclose">)</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8641em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span></span></span>
+<p>计算<code>Loss</code>:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">criterion = nn.MSELoss()</span><br><span class="line"></span><br><span class="line">loss = criterion(pred, y)</span><br></pre></td></tr></table></figure>
+
+<p><strong>这里 <code>pred</code> 和 <code>y</code> 都应是 <code>(B, 1)</code>。</strong> 如果 <code>pred</code> 是 <code>(B, 1)</code>，<code>y</code> 却是 <code>(B,)</code>，当 <code>B &gt; 1</code> 时，两者相减会按广播规则扩展为 <code>(B, B)</code>，把每个预测与所有标签比较。MSELoss 会发出形状不一致的警告，但仍可能完成计算，所以“代码能运行”并不表示 loss 算对了。</p>
+<p>如果标签原本是一维的 <code>(N,)</code>，且确实是每个样本对应一个数，可以在准备数据时用 <code>y_data = y_data.unsqueeze(1)</code> 统一成 <code>(N, 1)</code>。</p>
+<h3 id="定义自己的神经网络"><a href="#定义自己的神经网络" class="headerlink" title="定义自己的神经网络" aria-hidden="true" tabindex="-1"></a>定义自己的神经网络</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch.nn <span class="keyword">as</span> nn</span><br><span class="line"></span><br><span class="line"><span class="comment">#定义一个 PyTorch 模型</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MyModel</span>(nn.Module):</span><br><span class="line"></span><br><span class="line">    <span class="comment">#初始化模型、定义 layers</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="built_in">super</span>(MyModel, <span class="variable language_">self</span>).__init__()</span><br><span class="line"></span><br><span class="line">        <span class="comment">#把神经网络层按顺序串起来</span></span><br><span class="line">        <span class="variable language_">self</span>.net = nn.Sequential(</span><br><span class="line">            nn.Linear(<span class="number">10</span>, <span class="number">32</span>),</span><br><span class="line">            nn.Sigmoid(),</span><br><span class="line">            nn.Linear(<span class="number">32</span>, <span class="number">1</span>)</span><br><span class="line">        )</span><br><span class="line"></span><br><span class="line">    <span class="comment">#计算神经网络输出，表示输入 x 之后，数据怎么流过网络。</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, x</span>):</span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">self</span>.net(x)</span><br></pre></td></tr></table></figure>
+
+<p>平时一般写</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">model = MyModel()</span><br><span class="line"></span><br><span class="line">x = torch.randn(16, 10)</span><br><span class="line">pred = model(x) #shape: (16, 1)</span><br></pre></td></tr></table></figure>
+
+<p>这一批数据经过网络时，shape 依次是 <code>(B, 10) → (B, 32) → (B, 32) → (B, 1)</code>。Sigmoid 对每个元素计算激活值，保持 shape；两个 Linear 分别改变最后一维。</p>
+<p>直觉上，它最终会按照定义的<code>forward()</code>执行前向计算。也就是：</p>
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>x</mi><mo>→</mo><msub><mi>W</mi><mn>1</mn></msub><mi>x</mi><mo>+</mo><msub><mi>b</mi><mn>1</mn></msub><mo>→</mo><mi>h</mi><mo>=</mo><mi mathvariant="normal">Sigmoid</mi><mo>⁡</mo><mo stretchy="false">(</mo><msub><mi>W</mi><mn>1</mn></msub><mi>x</mi><mo>+</mo><msub><mi>b</mi><mn>1</mn></msub><mo stretchy="false">)</mo><mo>→</mo><mover accent="true"><mi>y</mi><mo>^</mo></mover><mo>=</mo><msub><mi>W</mi><mn>2</mn></msub><mi>h</mi><mo>+</mo><msub><mi>b</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">x \rightarrow W_1x+b_1 \rightarrow h=\operatorname{Sigmoid}(W_1x+b_1) \rightarrow \hat y=W_2h+b_2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1389em;">W</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">b</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6944em;"></span><span class="mord mathnormal">h</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mop"><span class="mord mathrm">Sigmoid</span></span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1389em;">W</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathnormal">b</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord katex-accent"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.6944em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">y</span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.1944em;"><span class="mord">^</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1944em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1389em;">W</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord mathnormal">h</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">b</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span>
+<p>然后：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">criterion = nn.MSELoss()</span><br><span class="line">y = torch.randn(16, 1) #用于演示的标签</span><br><span class="line">loss = criterion(pred, y)</span><br></pre></td></tr></table></figure>
+
+<p>得到：</p>
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>L</mi></mrow><annotation encoding="application/x-tex">L</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal">L</span></span></span></span></span>
+<p>再：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">loss.backward()</span><br></pre></td></tr></table></figure>
+
+<p>PyTorch 会沿整个计算过程反向计算：</p>
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mfrac><mrow><mi mathvariant="normal">∂</mi><mi>L</mi></mrow><mrow><mi mathvariant="normal">∂</mi><msub><mi>W</mi><mn>2</mn></msub></mrow></mfrac><mo separator="true">,</mo><mfrac><mrow><mi mathvariant="normal">∂</mi><mi>L</mi></mrow><mrow><mi mathvariant="normal">∂</mi><msub><mi>b</mi><mn>2</mn></msub></mrow></mfrac><mo separator="true">,</mo><mfrac><mrow><mi mathvariant="normal">∂</mi><mi>L</mi></mrow><mrow><mi mathvariant="normal">∂</mi><msub><mi>W</mi><mn>1</mn></msub></mrow></mfrac><mo separator="true">,</mo><mfrac><mrow><mi mathvariant="normal">∂</mi><mi>L</mi></mrow><mrow><mi mathvariant="normal">∂</mi><msub><mi>b</mi><mn>1</mn></msub></mrow></mfrac></mrow><annotation encoding="application/x-tex">\frac{\partial L}{\partial W_2},\frac{\partial L}{\partial b_2},\frac{\partial L}{\partial W_1},\frac{\partial L}{\partial b_1}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:2.2074em;vertical-align:-0.836em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3714em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord" style="margin-right:0.0556em;">∂</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1389em;">W</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord" style="margin-right:0.0556em;">∂</span><span class="mord mathnormal">L</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.836em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3714em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord" style="margin-right:0.0556em;">∂</span><span class="mord"><span class="mord mathnormal">b</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord" style="margin-right:0.0556em;">∂</span><span class="mord mathnormal">L</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.836em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3714em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord" style="margin-right:0.0556em;">∂</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1389em;">W</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord" style="margin-right:0.0556em;">∂</span><span class="mord mathnormal">L</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.836em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3714em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord" style="margin-right:0.0556em;">∂</span><span class="mord"><span class="mord mathnormal">b</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord" style="margin-right:0.0556em;">∂</span><span class="mord mathnormal">L</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.836em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span>
+<h2 id="torch-optim"><a href="#torch-optim" class="headerlink" title="torch.optim" aria-hidden="true" tabindex="-1"></a>torch.optim</h2><h3 id="创建-Optimizer"><a href="#创建-Optimizer" class="headerlink" title="创建 Optimizer" aria-hidden="true" tabindex="-1"></a>创建 Optimizer</h3><p>沿用上面的 <code>MyDataset</code> 和 <code>MyModel</code>，先构造一组演示数据。标签来自一个人为设定的关系，加上少量噪声；它用于跑通流程。将两个类定义与下面的训练、验证、预测和保存加载代码按顺序组合，就能组成一个完整例子。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">torch.manual_seed(<span class="number">0</span>)</span><br><span class="line">x_all = torch.randn(<span class="number">100</span>, <span class="number">10</span>)</span><br><span class="line">y_all = <span class="number">2</span> * x_all[:, :<span class="number">1</span>] - x_all[:, <span class="number">1</span>:<span class="number">2</span>] + <span class="number">0.1</span> * torch.randn(<span class="number">100</span>, <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">#训练集、验证集各自取不同的样本</span></span><br><span class="line">tr_set = DataLoader(MyDataset(x_all[:<span class="number">64</span>], y_all[:<span class="number">64</span>]), batch_size=<span class="number">16</span>, shuffle=<span class="literal">True</span>)</span><br><span class="line">dv_set = DataLoader(MyDataset(x_all[<span class="number">64</span>:<span class="number">80</span>], y_all[<span class="number">64</span>:<span class="number">80</span>]), batch_size=<span class="number">16</span>, shuffle=<span class="literal">False</span>)</span><br><span class="line"><span class="comment">#剩下 20 个样本只取特征，演示没有标签时的预测流程</span></span><br><span class="line">tt_set = DataLoader(x_all[<span class="number">80</span>:], batch_size=<span class="number">16</span>, shuffle=<span class="literal">False</span>)</span><br><span class="line"></span><br><span class="line">device = torch.device(<span class="string">&quot;cpu&quot;</span>) <span class="comment">#先在 CPU 上跑通，也可以按环境改用 GPU</span></span><br><span class="line">model = MyModel().to(device)</span><br><span class="line"></span><br><span class="line">criterion = nn.MSELoss()</span><br><span class="line"></span><br><span class="line">optimizer = torch.optim.SGD(</span><br><span class="line">    model.parameters(), <span class="comment">#把模型中需要训练的参数交给 optimizer</span></span><br><span class="line">    lr=<span class="number">0.1</span> <span class="comment">#learning rate</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<h3 id="完整-Training-Loop"><a href="#完整-Training-Loop" class="headerlink" title="完整 Training Loop" aria-hidden="true" tabindex="-1"></a>完整 Training Loop</h3><p>一个 epoch 表示遍历一轮训练数据；这里每一批执行一次参数更新。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">n_epochs = <span class="number">10</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> epoch <span class="keyword">in</span> <span class="built_in">range</span>(n_epochs):</span><br><span class="line"></span><br><span class="line">    model.train() <span class="comment">#把模型切换到“训练模式”</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> x, y <span class="keyword">in</span> tr_set:</span><br><span class="line"></span><br><span class="line">        optimizer.zero_grad()</span><br><span class="line"></span><br><span class="line">        x, y = x.to(device), y.to(device)</span><br><span class="line"></span><br><span class="line">        pred = model(x) <span class="comment">#x: (B, 10)，pred: (B, 1)</span></span><br><span class="line"></span><br><span class="line">        loss = criterion(pred, y) <span class="comment">#y: (B, 1)，loss 是标量</span></span><br><span class="line"></span><br><span class="line">        loss.backward()</span><br><span class="line"></span><br><span class="line">        optimizer.step()</span><br></pre></td></tr></table></figure>
+
+<h2 id="Validation、Testing"><a href="#Validation、Testing" class="headerlink" title="Validation、Testing" aria-hidden="true" tabindex="-1"></a>Validation、Testing</h2><h3 id="Validation-的完整代码"><a href="#Validation-的完整代码" class="headerlink" title="Validation 的完整代码" aria-hidden="true" tabindex="-1"></a>Validation 的完整代码</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">model.<span class="built_in">eval</span>() <span class="comment">#设置 evaluation mode</span></span><br><span class="line"></span><br><span class="line">total_loss = <span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> x, y <span class="keyword">in</span> dv_set:</span><br><span class="line"></span><br><span class="line">    x, y = x.to(device), y.to(device)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">with</span> torch.no_grad(): <span class="comment">#禁止梯度计算</span></span><br><span class="line"></span><br><span class="line">        pred = model(x)</span><br><span class="line"></span><br><span class="line">        loss = criterion(pred, y)</span><br><span class="line"></span><br><span class="line">        total_loss += loss.cpu().item() * <span class="built_in">len</span>(x) <span class="comment">#累积 loss</span></span><br><span class="line"></span><br><span class="line">avg_loss = total_loss / <span class="built_in">len</span>(dv_set.dataset) <span class="comment">#求平均 loss</span></span><br></pre></td></tr></table></figure>
+
+<p><code>model.eval()</code> 和 <code>torch.no_grad()</code> 分别处理两件事：</p>
+<ul>
+<li><code>model.eval()</code> 将模型切换到评估模式，影响 Dropout、BatchNorm 等层的行为。当前模型只有 Linear 和 Sigmoid，切换模式不会改变这些层的计算方式，但写清楚模式有助于后续扩展模型。</li>
+<li><code>torch.no_grad()</code> 关闭这一段运算的梯度记录，减少反向传播所需的开销。它不会自动切换模型模式；<code>eval()</code> 也不会自动关闭梯度记录。</li>
+</ul>
+<p>所以验证时通常一起使用它们，恢复训练时再调用 <code>model.train()</code>。</p>
+<p>对于 <code>total_loss += loss.cpu().item() * len(x)</code>，这里每个样本输出 1 个数，<code>nn.MSELoss()</code> 默认返回当前 batch 的平均平方误差。乘以 <code>len(x)</code>，也就是当前 batch 的实际样本数，得到这一批的误差总和；最后除以验证集样本数，得到整个验证集的平均 loss。这样最后一批不足 batch size 时，也会按实际样本数加权。</p>
+<p>这个写法依赖当前 loss 的归约方式和输出形状。如果改成 <code>reduction=&quot;sum&quot;</code>，就不需要再乘 batch 大小；如果每个样本包含不同数量的有效输出元素，也需要重新确定平均时的分母。</p>
+<p>而 <code>loss</code> 本身还是 Tensor，可能是 <code>tensor(0.5321, device=&#39;cuda:0&#39;)</code> 这样的形式，所以代码先用 <code>loss.cpu()</code> 把它放到 CPU，再用 <code>.item()</code> 取出普通数值。标量 Tensor 也可以直接调用 <code>loss.item()</code>。</p>
+<p>由<a href="/posts/deep-learning-basics/">深度学习基础</a>可知validation 是看看当前模型在没有参与这一轮参数更新的数据上表现如何。</p>
+<h3 id="Testing"><a href="#Testing" class="headerlink" title="Testing" aria-hidden="true" tabindex="-1"></a>Testing</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">model.<span class="built_in">eval</span>()</span><br><span class="line"></span><br><span class="line">preds = []</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> x <span class="keyword">in</span> tt_set:</span><br><span class="line"></span><br><span class="line">    x = x.to(device)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">with</span> torch.no_grad():</span><br><span class="line"></span><br><span class="line">        pred = model(x)</span><br><span class="line"></span><br><span class="line">        preds.append(pred.cpu())</span><br><span class="line"></span><br><span class="line">preds = torch.cat(preds, dim=<span class="number">0</span>) <span class="comment">#把各批预测拼起来，shape: (20, 1)</span></span><br></pre></td></tr></table></figure>
+
+<p>这里的 <code>tt_set</code> 只返回特征，所以用 <code>for x in tt_set:</code> 收集预测结果。如果测试集有标签，也可以计算 test loss，用于最终评估；测试结果应与用于调参、选择模型的验证结果区分开。</p>
+<h3 id="保存模型"><a href="#保存模型" class="headerlink" title="保存模型" aria-hidden="true" tabindex="-1"></a>保存模型</h3><p>保存：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">path = <span class="string">&quot;model.pt&quot;</span></span><br><span class="line">torch.save(</span><br><span class="line">    model.state_dict(), <span class="comment">#参数与持久缓冲区的状态</span></span><br><span class="line">    path</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>加载：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">loaded_model = MyModel().to(device)</span><br><span class="line">ckpt = torch.load(path, map_location=device, weights_only=<span class="literal">True</span>)</span><br><span class="line">loaded_model.load_state_dict(ckpt)</span><br><span class="line">loaded_model.<span class="built_in">eval</span>() <span class="comment">#用于预测前设置评估模式</span></span><br></pre></td></tr></table></figure>
+
+<p><code>state_dict()</code> 包含模型参数，以及 BatchNorm 的运行均值等持久缓冲区。它不包含定义模型结构的 Python 代码，所以加载前要先创建结构匹配的模型，再把状态填进去。<code>map_location</code> 指定把保存的 Tensor 加载到哪个 device。</p>
+<p>这里保存的状态足够用于恢复模型预测。如果要接着上一次训练继续跑，还需要保存 optimizer 状态、epoch 等训练信息。</p>
+<h3 id="PyTorch-训练流程"><a href="#PyTorch-训练流程" class="headerlink" title="PyTorch 训练流程" aria-hidden="true" tabindex="-1"></a>PyTorch 训练流程</h3><figure class="post-figure">
+<a href="/img/blogs/pytorch-training-workflow/pytorch-95a63f77.svg" title="训练期间验证并选择模型，训练结束后加载选定模型进行最终测试的流程" class="gallery-item" style="box-shadow: none;"> <img src="/img/blogs/pytorch-training-workflow/pytorch-95a63f77.svg" alt="训练期间验证并选择模型，训练结束后加载选定模型进行最终测试的流程"></a>
+<figcaption>训练、验证、模型选择与最终测试</figcaption></figure>
+<p>图中是推荐的完整流程：训练期间按验证结果选择并保存模型，训练结束后加载选定模型，再做最终测试。上面的简化代码只在训练结束后验证并保存最终模型，尚未实现每轮验证和择优保存。</p>
+<h2 id="常见报错"><a href="#常见报错" class="headerlink" title="常见报错" aria-hidden="true" tabindex="-1"></a>常见报错</h2><p>打开某个函数的文档以后，最重要的是看它的 <strong>signature</strong>。</p>
+<p>例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">torch.max(input, dim, keepdim=False, *, out=None)</span><br></pre></td></tr></table></figure>
+
+<h3 id="Positional-Argument"><a href="#Positional-Argument" class="headerlink" title="Positional Argument" aria-hidden="true" tabindex="-1"></a>Positional Argument</h3><p>Parameters 不一定需要写参数名字，可以通过位置传进去，也就是 positional arguments。</p>
+<p>比如<code>torch.max(x, 0)</code>等价于：<code>torch.max(input=x, dim=0)</code>。</p>
+<h3 id="Keyword-Argument"><a href="#Keyword-Argument" class="headerlink" title="Keyword Argument" aria-hidden="true" tabindex="-1"></a>Keyword Argument</h3><p>比如<code>torch.max(x, dim=0)</code>，这里<code>dim=0</code>就是keyword argument</p>
+<p>按照 Python 函数签名的含义，<code>*</code> 后面的参数需要使用参数名传递。</p>
+<p><code>keepdim=False</code>就是Default Argument。</p>
+<h3 id="四类常见错误"><a href="#四类常见错误" class="headerlink" title="四类常见错误" aria-hidden="true" tabindex="-1"></a>四类常见错误</h3><p>以后看到 Tensor 报错时先形成：</p>
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><menclose notation="box"><mstyle scriptlevel="0" displaystyle="false"><mstyle scriptlevel="0" displaystyle="false"><mstyle scriptlevel="0" displaystyle="true"><mrow><mi>d</mi><mi>e</mi><mi>v</mi><mi>i</mi><mi>c</mi><mi>e</mi><mo>→</mo><mi>s</mi><mi>h</mi><mi>a</mi><mi>p</mi><mi>e</mi><mo>→</mo><mi>d</mi><mi>t</mi><mi>y</mi><mi>p</mi><mi>e</mi><mo>→</mo><mi>m</mi><mi>e</mi><mi>m</mi><mi>o</mi><mi>r</mi><mi>y</mi></mrow></mstyle></mstyle></mstyle></menclose></mrow><annotation encoding="application/x-tex">\boxed{ device \rightarrow shape \rightarrow dtype \rightarrow memory }</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1.5689em;vertical-align:-0.5344em;"></span><span class="mord"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.0344em;"><span style="top:-3.5689em;"><span class="pstrut" style="height:3.5689em;"></span><span class="boxpad"><span class="mord"><span class="mord"><span class="mord mathnormal">d</span><span class="mord mathnormal">e</span><span class="mord mathnormal" style="margin-right:0.0359em;">v</span><span class="mord mathnormal">i</span><span class="mord mathnormal">ce</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mord mathnormal">s</span><span class="mord mathnormal">ha</span><span class="mord mathnormal">p</span><span class="mord mathnormal">e</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mord mathnormal">d</span><span class="mord mathnormal">t</span><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="mord mathnormal">p</span><span class="mord mathnormal">e</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mord mathnormal">m</span><span class="mord mathnormal">e</span><span class="mord mathnormal">m</span><span class="mord mathnormal" style="margin-right:0.0278em;">or</span><span class="mord mathnormal" style="margin-right:0.0359em;">y</span></span></span></span></span><span style="top:-3.0344em;"><span class="pstrut" style="height:3.5689em;"></span><span class="katex-stretchy fbox" style="height:1.5689em;border-style:solid;border-width:0.04em;"></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.5344em;"><span></span></span></span></span></span></span></span></span></span>
+<h4 id="Device-不一致"><a href="#Device-不一致" class="headerlink" title="Device 不一致" aria-hidden="true" tabindex="-1"></a>Device 不一致</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">model = torch.nn.Linear(5, 1).to(&quot;cuda:0&quot;)</span><br><span class="line"></span><br><span class="line">x = torch.Tensor([1,2,3,4,5]).to(&quot;cpu&quot;)</span><br><span class="line"></span><br><span class="line">y = model(x)</span><br></pre></td></tr></table></figure>
+
+<p>在有 CUDA 的环境中，这里会因为模型参数在 GPU、输入在 CPU 而报 device 不一致；具体报错文本可能随版本不同。可以用 <code>x = x.to(&quot;cuda:0&quot;)</code>，让输入与模型处在同一 device。</p>
+<p>检查时先打印模型参数和输入的 device。前向计算已经失败时，<code>y</code> 还没有生成，不能拿它来排查：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">print(next(model.parameters()).device)</span><br><span class="line">print(x.device)</span><br></pre></td></tr></table></figure>
+
+<h4 id="Shape-Dimension-不匹配"><a href="#Shape-Dimension-不匹配" class="headerlink" title="Shape &#x2F; Dimension 不匹配" aria-hidden="true" tabindex="-1"></a>Shape &#x2F; Dimension 不匹配</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">x = torch.randn(4, 5)</span><br><span class="line">y = torch.randn(5, 4)</span><br><span class="line"></span><br><span class="line">z = x + y</span><br></pre></td></tr></table></figure>
+
+<p>如果这里两个维度的含义确实互换，可以用 <code>y = y.transpose(0, 1)</code>。其他 shape 问题也可能需要用：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">transpose</span><br><span class="line">squeeze</span><br><span class="line">unsqueeze</span><br></pre></td></tr></table></figure>
+
+<p>来调整维度，具体选择取决于每一维的含义。</p>
+<p>但要特别注意：</p>
+<blockquote>
+<p><strong>不要一看到 shape 错误就随便 <code>squeeze</code> &#x2F; <code>transpose</code>。</strong></p>
+</blockquote>
+<p>先问：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">当前每一维代表什么？</span><br><span class="line">模型要求的每一维又是什么？</span><br></pre></td></tr></table></figure>
+
+<p>然后再修改。</p>
+<h4 id="CUDA-Out-of-Memory"><a href="#CUDA-Out-of-Memory" class="headerlink" title="CUDA Out of Memory" aria-hidden="true" tabindex="-1"></a>CUDA Out of Memory</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">from torchvision import models</span><br><span class="line"></span><br><span class="line">resnet18 = models.resnet18().to(&quot;cuda:0&quot;)</span><br><span class="line"></span><br><span class="line">data = torch.randn(512, 3, 244, 244)</span><br><span class="line"></span><br><span class="line">out = resnet18(data.to(&quot;cuda:0&quot;))</span><br></pre></td></tr></table></figure>
+
+<p>这段代码在有 CUDA 的环境中可能因为 batch size 太大而触发显存不足，是否发生取决于可用显存。遇到这种情况可以先减小 batch size。</p>
+<p>训练 QLoRA 遇到 OOM 时，首先会关注：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">batch size</span><br><span class="line">sequence length</span><br><span class="line">model size</span><br></pre></td></tr></table></figure>
+
+<h4 id="dtype-不匹配"><a href="#dtype-不匹配" class="headerlink" title="dtype 不匹配" aria-hidden="true" tabindex="-1"></a>dtype 不匹配</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">L = nn.CrossEntropyLoss()</span><br><span class="line"></span><br><span class="line">outs = torch.randn(5, 5)</span><br><span class="line"></span><br><span class="line">labels = torch.Tensor([1,2,3,4,0])</span><br><span class="line"></span><br><span class="line">lossval = L(outs, labels)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>报<code>expected scalar type Long but found Float</code>，应该<code>labels = labels.long()</code>。因为labels 表示类别。</p>
+</div>
+        <aside class="post-afterword" aria-label="文章余韵">
+  <span class="post-afterword-label">文章余韵</span>
+  <p>博学之，审问之，慎思之，明辨之，笃行之。</p>
+  <cite>—— 《礼记·中庸》</cite>
+</aside>
+    </div>
+
+    <div class="post-meta">
+        <i>
+        
+            <span>2026-10-01</span>
+            
+                <span>该篇文章被 Mau-Q</span>
+            
+            
+                <span>打上标签:
+                    
+                    
+                        <a href='/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/'>
+                            深度学习
+                        </a>
+                    
+                        <a href='/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/'>
+                            学习笔记
+                        </a>
+                    
+                        <a href='/tags/PyTorch/'>
+                            PyTorch
+                        </a>
+                    
+                </span>
+             
+             
+                <span>归为分类:
+                    
+                    
+                        <a href='/categories/%E6%8A%80%E6%9C%AF/'>
+                            技术
+                        </a>
+                    
+                </span>
+            
+        
+        </i>
+    </div>
+    <br>
+    
+    
+        
+            
+    
+            <div class="post-footer-pre-next">
+                
+
+                
+                    <span class="post-footer-pre-next-last-span-right">下一篇：<a href="/posts/prompt-engineering/">Prompt Engineering：从 Zero-shot、Few-shot 到 Prompt 结构</a>
+                    </span>
+                
+            </div>
+    
+        
+    
+
+    
+        
+
+     
+</div>
+
+
+
+
+                    
+
+                    <div class="footer">
+    
+        <span> 
+            © 2026 Mau-Q 
+
+            
+                
+
+            
+        </span>
+       
+    
+</div>
+
+
+
+<!--这是指一条线往下的内容-->
+<div class="footer-last">
+    
+            <span></span>
+            
+                <span class="footer-last-span-right"><i>本站由<a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/index.html">Hexo</a>驱动｜使用<a target="_blank" rel="noopener" href="https://github.com/HiNinoJay/hexo-theme-A4">Hexo-theme-A4</a>主题</i></span>
+            
+    
+</div>
+
+
+<!--目录-->
+
+    
+<script src="/js/toc.js?v=496cd1a37bc1"></script>
+
+
+
+
+<!--回到顶部按钮-->
+
+    
+<script src="/js/returnToTop.js"></script>
+
+
+
+
+    
+<script src="/js/returnToLastPage.js"></script>
+
+
+
+
+
+
+    
+<script src="/js/lightgallery/lightgallery.umd.min.js"></script>
+
+    
+<script src="/js/lightgallery/plugins/lg-thumbnail.umd.min.js"></script>
+
+    
+<script src="/js/lightgallery/plugins/lg-fullscreen.umd.min.js"></script>
+
+    
+<script src="/js/lightgallery/plugins/lg-autoplay.umd.min.js"></script>
+
+    
+<script src="/js/lightgallery/plugins/lg-zoom.umd.min.js"></script>
+
+    
+<script src="/js/lightgallery/plugins/lg-rotate.umd.min.js"></script>
+
+    
+<script src="/js/lightgallery/plugins/lg-paper.umd.min.js"></script>
+
+
+    <script type="text/javascript">
+        var galleryRoot = document.querySelector('[class~=".article-gallery"]') || document.querySelector('.post-md');
+        if (galleryRoot && galleryRoot.querySelector('.gallery-item') && typeof lightGallery !== 'undefined') {
+            lightGallery(galleryRoot, {
+                selector: '.gallery-item',
+                plugins: [lgThumbnail, lgFullscreen, lgAutoplay, lgZoom, lgRotate, lgPager],
+                thumbnail: true,
+                zoom: true,
+                rotate: true,
+                autoplay: true,
+                fullScreen: true,
+                pager: false,
+                zoomFromOrigin: true,
+                actualSize: true,
+                enableZoomAfter: 300
+            });
+        }
+    </script>
+
+
+
+
+                </div>
+            
+            
+                <!-- 回到顶部的按钮-->
+                <button class="progress-wrap shadow-drop-2-bottom" type="button" aria-label="回到页面顶部">
+                    <svg class="progress-circle svg-content" width="100%" height="100%" viewBox="-1 -1 102 102">
+                        <path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98"/>
+                    </svg>
+                </button>
+            
+            
+                <!-- 返回的按钮-->
+                <button class="return-to-last-progress-wrap shadow-drop-2-bottom" type="button" aria-label="返回上一页">
+                    <svg class="progress-circle svg-content" width="100%" height="100%" viewBox="-1 -1 102 102">
+                        <path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98"/>
+                    </svg>
+                </button>
+            
+        </main>
+    </body>
+</html>
+<script src="/js/emojiHandler.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        wrapEmojis('.paper');
+    });
+</script>
