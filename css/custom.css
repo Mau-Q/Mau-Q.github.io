@@ -32,7 +32,12 @@
     font-display: swap;
 }
 
-/* Override A4's generated inline font stack so the local WenKai files are used. */
+/* One font stack for ordinary text; code, math and poetry have distinct roles. */
+:root {
+    --site-font: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    --poetry-font: "LXGW WenKai", "Noto Serif SC", "Songti SC", serif;
+}
+
 html,
 body,
 .paper,
@@ -48,7 +53,13 @@ body,
 button,
 input,
 textarea {
-    font-family: "LXGW WenKai", "Noto Serif SC", "Songti SC", "STSong", "Microsoft YaHei", "Hiragino Sans GB", "WenQuanYi Micro Hei", serif !important;
+    font-family: var(--site-font) !important;
+}
+
+.index-header-line,
+.post-afterword p,
+.post-afterword cite {
+    font-family: var(--poetry-font);
 }
 
 /* Make Markdown **emphasis** clear without turning it into a highlight. */
@@ -61,7 +72,7 @@ textarea {
 /* Code block improvements */
 pre,
 code {
-    font-family: "JetBrains Mono", "Fira Code", "Cascadia Code", "SF Mono", "Menlo", "Monaco", "Consolas", "LXGW WenKai", monospace;
+    font-family: "JetBrains Mono", "Fira Code", "Cascadia Code", "SF Mono", "Menlo", "Monaco", "Consolas", "PingFang SC", "Microsoft YaHei", monospace;
 }
 
 pre {
@@ -413,7 +424,7 @@ input:focus-visible,
     text-underline-offset: 0.3em;
 }
 
-/* Homepage hierarchy inspired by AstroPaper, while preserving A4's paper feel. */
+/* Homepage introduction and navigation. */
 .home-hero {
     padding-bottom: 1.65rem;
     border-bottom: 1px solid var(--line-1);
@@ -560,14 +571,6 @@ input:focus-visible,
     list-style: none;
 }
 
-.recent-post-list li {
-    border-top: 1px solid var(--line-2);
-}
-
-.recent-post-list li:last-child {
-    border-bottom: 1px solid var(--line-2);
-}
-
 .recent-post-list article {
     display: grid;
     grid-template-columns: 4.5rem minmax(0, 1fr);
@@ -642,7 +645,7 @@ input:focus-visible,
     --pagefind-ui-tag: #f2efe5;
     --pagefind-ui-border-width: 1px;
     --pagefind-ui-border-radius: 5px;
-    --pagefind-ui-font: "LXGW WenKai", "Noto Serif SC", serif;
+    --pagefind-ui-font: var(--site-font);
     margin: 1.4rem 0 2.4rem;
 }
 
@@ -743,4 +746,203 @@ input:focus-visible,
     .return-to-last-progress-wrap {
         display: none !important;
     }
+}
+
+/* Reading-first layout, inspired by Lil'Log. */
+body,
+.paper {
+    background: #fff;
+}
+
+.paper {
+    box-sizing: border-box;
+    padding: 32px 24px;
+}
+
+.paper .index-main,
+.paper .paper-main {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 816px;
+    padding: 24px 48px 0;
+    box-shadow: none;
+    animation: none;
+}
+
+.home-hero .index-header-line {
+    margin: 0 0 1.2rem;
+    font-size: 0.82rem;
+    text-align: left;
+}
+
+.home-eyebrow { letter-spacing: 0.08em; }
+.home-hero .index-logo { font-size: clamp(2rem, 6vw, 2.7rem); }
+.home-introduction { margin-bottom: 2rem; }
+.home-introduction h2,
+.home-section h2 { font-size: 1.2rem; }
+
+.featured-post-card {
+    padding: 1.35rem 1.5rem;
+    border-color: #e1e5eb;
+    background: #f8f9fb;
+}
+
+.recent-post-list li,
+.recent-post-list li:last-child { border: 0; }
+
+.recent-post-list .reading-card {
+    display: block;
+    padding: 24px;
+    margin-bottom: 24px;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    background: #fff;
+}
+
+.reading-card h3,
+.recent-post-list .reading-card h3 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1.3;
+}
+
+.reading-card h3 a { color: var(--font-color-1); }
+.reading-card h3 a:hover { color: #315fb5; }
+.reading-card-summary {
+    margin: 8px 0 14px;
+    color: #606873;
+    font-size: 1rem;
+    line-height: 1.6;
+    white-space: normal;
+}
+
+.reading-card-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem 1rem;
+    color: #68707b;
+    font-size: 13px;
+}
+.recent-post-list .reading-card-meta time { color: inherit; font-size: inherit; }
+.reading-card-meta a { color: inherit; }
+
+.paper .header {
+    gap: 1rem;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 1rem;
+    margin-bottom: 2.4rem;
+}
+.paper .header-content { margin-left: 0; }
+.paper .site-title { margin: 0; font-size: inherit; line-height: 1.25; }
+.paper .header-content .logo {
+    margin-bottom: 0;
+    font-size: 24px;
+    font-weight: 650;
+    line-height: 1.25;
+    letter-spacing: -0.03em;
+}
+.paper .logo,
+.paper .nav,
+.home-hero .index-logo,
+.home-navigation {
+    font-family: var(--site-font) !important;
+}
+.paper .header-content .description { display: none; }
+.paper .nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1rem;
+    margin: 0;
+    padding: 0;
+}
+.paper .nav li { margin: 0; padding: 0; }
+.paper .nav a { font-size: 0.9rem; }
+
+/* The homepage navigation sits above a narrower introduction and article list. */
+.paper .index-main { max-width: 1120px; }
+.index-main > .header { border-bottom: 0; margin-bottom: 0; }
+.index-main .home-hero,
+.index-main .home-content {
+    max-width: 720px;
+    margin-right: auto;
+    margin-left: auto;
+}
+.index-main .home-hero {
+    margin-top: 40px;
+    padding-bottom: 0;
+    border-bottom: 0;
+}
+.index-main .home-summary {
+    max-width: none;
+    margin: 0;
+    font-size: 16px;
+    line-height: 1.8;
+}
+.index-main .home-hero .index-header-line {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.8;
+    font-style: normal;
+}
+.index-main .home-content { margin-top: 32px; }
+
+.post-main-title {
+    margin: 0 0 0.65rem;
+    font-size: clamp(1.9rem, 4vw, 2.35rem);
+    font-weight: 700;
+    line-height: 1.35;
+}
+.post-head-meta-left,
+.post-head-meta-center { color: #68707b; line-height: 1.8; }
+.post-main { min-width: 0; }
+.post-md { min-width: 0; width: 100%; }
+.post-md[data-pagefind-body] { font-size: 18px; line-height: 1.9; }
+.post-md[data-pagefind-body] p { margin: 1rem 0; white-space: normal; }
+.post-md[data-pagefind-body] li { line-height: 1.85; }
+.post-md[data-pagefind-body] h2 { margin-top: 2.6rem; color: var(--font-color-1); }
+.post-md[data-pagefind-body] h3,
+.post-md[data-pagefind-body] h4,
+.post-md[data-pagefind-body] h5,
+.post-md[data-pagefind-body] h6 { color: var(--font-color-1); }
+.post-md[data-pagefind-body] strong,
+.post-md[data-pagefind-body] b {
+    color: inherit;
+    background: none;
+    padding: 0;
+    font-weight: 700;
+}
+.post-md[data-pagefind-body] a { text-underline-offset: 0.2em; }
+.post-md[data-pagefind-body] pre { max-width: 100%; box-sizing: border-box; }
+
+@media (max-width: 1399px) {
+    .left-toc-container { display: none; }
+}
+@media (max-width: 600px) {
+    .paper { padding: 16px 0; }
+    .paper .index-main,
+    .paper .paper-main { padding: 16px 20px 0; }
+    .home-hero { padding-bottom: 1.3rem; }
+    .featured-post-card { padding: 1.1rem; }
+    .reading-card h3,
+    .recent-post-list .reading-card h3 { font-size: 1.25rem; }
+    .recent-post-list .reading-card { padding: 18px; margin-bottom: 18px; }
+    .paper .header { margin-bottom: 1.8rem; }
+    .paper .header > nav { flex-basis: 100%; }
+    .index-main > .header { margin-bottom: 0; }
+    .index-main .home-hero { margin-top: 28px; padding-bottom: 0; }
+    .index-main .home-summary { font-size: 16px; }
+    .post-md[data-pagefind-body] { font-size: 17px; }
+    .theme-toggle {
+        position: static !important;
+        display: block;
+        margin: 0 auto 24px;
+    }
+    .return-to-last-progress-wrap { display: none; }
+}
+@media print {
+    .paper { padding: 0; }
+    .paper .paper-main,
+    .paper .index-main { max-width: 100%; padding: 0; }
 }

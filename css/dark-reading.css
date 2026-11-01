@@ -1,0 +1,23 @@
+/* Injected into DarkReader's override sheet to preserve deliberate dark colors. */
+html[data-darkreader-mode="dynamic"] .recent-post-list li {
+    border: 0 !important;
+}
+html[data-darkreader-mode="dynamic"] .home-page,
+html[data-darkreader-mode="dynamic"] .home-page .paper,
+html[data-darkreader-mode="dynamic"] .home-page .index-main {
+    background: #1d1e20 !important;
+}
+html[data-darkreader-mode="dynamic"] .recent-post-list .reading-card {
+    background: #2e2e33 !important;
+    border-color: #333 !important;
+}
+html[data-darkreader-mode="dynamic"] .reading-card h3 a,
+html[data-darkreader-mode="dynamic"] .home-section h2 {
+    color: #dadadb !important;
+}
+html[data-darkreader-mode="dynamic"] .reading-card-summary,
+html[data-darkreader-mode="dynamic"] .reading-card-meta,
+html[data-darkreader-mode="dynamic"] .reading-card-meta a,
+html[data-darkreader-mode="dynamic"] .reading-card-meta time {
+    color: #9b9c9d !important;
+}

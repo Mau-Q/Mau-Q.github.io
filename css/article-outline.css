@@ -4,7 +4,7 @@
   top: 100px;
   bottom: 110px;
   left: 12px;
-  width: max(0px, calc((100vw - 880px) / 2 - 36px));
+  width: max(0px, calc((100vw - 816px) / 2 - 36px));
   max-width: 280px;
   overflow: auto;
   box-sizing: border-box;
@@ -41,11 +41,11 @@
   color: #4f7ddf;
   border-left-color: #4f7ddf;
 }
-@media (max-width: 1199px) {
+@media (max-width: 1399px) {
   .left-toc-container { display: none; }
 }
 
-@media (min-width: 1200px) {
+@media (min-width: 1400px) {
   body > .left-toc-container + #main-content .post-md > .post-toc {
     display: none;
   }

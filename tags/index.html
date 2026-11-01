@@ -3,7 +3,7 @@
     
     <style>
         body {
-            font-family: "LXGW WenKai", "notoserifsc-medium", "Noto Serif SC", "Songti SC", "STSong", "Microsoft YaHei", "Hiragino Sans GB", "WenQuanYi Micro Hei", serif !important;
+            font-family: var(--site-font, sans-serif) !important;
         }
     </style>
 
@@ -158,7 +158,7 @@
                 document.documentElement.style.backgroundColor = '#1e1e1e';
                 document.documentElement.style.colorScheme = 'dark';
                 return loadDarkReader().then(() => DarkReader.enable(drOptions, {
-                    css: "/* Code colors follow the site's light/dark mode, including DarkReader's toggle. */\nhtml:not([data-darkreader-mode]) {\n  --code-background: #e7ebf2;\n  --code-foreground: #343b48;\n  --code-border: #c2cbd9;\n  --code-gutter: #8792a2;\n  --code-comment: #6d7888;\n  --code-keyword: #8b3fa2;\n  --code-string: #2f7c57;\n  --code-number: #a15d25;\n  --code-function: #2865a8;\n  --code-variable: #b04452;\n  --inline-code-background: #f0f3f7;\n  --inline-code-border: #dce2ec;\n  --inline-code-foreground: #43576c;\n}\n\nhtml[data-darkreader-mode=\"dynamic\"] {\n  --code-background: #282c34;\n  --code-foreground: #abb2bf;\n  --code-border: #3e4451;\n  --code-gutter: #7f8794;\n  --code-comment: #9da5b4;\n  --code-keyword: #c678dd;\n  --code-string: #98c379;\n  --code-number: #d19a66;\n  --code-function: #61afef;\n  --code-variable: #e06c75;\n  --inline-code-background: #343a46;\n  --inline-code-border: #454c5a;\n  --inline-code-foreground: #d0d9e3;\n}\n\n.post-md pre,\n.post-md code {\n  font-family: \"JetBrains Mono\", \"Fira Code\", \"Cascadia Code\", \"SF Mono\", Menlo, Monaco, Consolas, \"PingFang SC\", \"Microsoft YaHei\", monospace !important;\n}\n.post-md :not(pre) > code {\n  padding: 0.07em 0.28em;\n  border: 1px solid var(--inline-code-border) !important;\n  border-radius: 4px;\n  background: var(--inline-code-background) !important;\n  color: var(--inline-code-foreground) !important;\n  font-size: 0.9em;\n  overflow-wrap: anywhere;\n  -webkit-box-decoration-break: clone;\n  box-decoration-break: clone;\n}\n.post-md .highlight,\n.post-md > pre {\n  background: var(--code-background) !important;\n  color: var(--code-foreground) !important;\n  border: 1px solid var(--code-border) !important;\n  border-radius: 6px;\n  padding: 0.7rem 0.95rem;\n  margin: 1.05rem 0;\n  max-width: 100%;\n  overflow-x: auto;\n}\n.post-md .highlight pre,\n.post-md pre code {\n  padding: 0;\n  background: transparent !important;\n  color: var(--code-foreground) !important;\n  border: 0 !important;\n  border-radius: 0;\n}\n.post-md .highlight .gutter pre { color: var(--code-gutter) !important; }\n.post-md .highlight .gutter pre { padding-right: 0.8rem; }\n.post-md .highlight:is(.json, .plaintext, .text, .prompt) .gutter { display: none; }\n.post-md .highlight:is(.json, .plaintext, .text, .prompt) .code { width: 100%; }\n.post-md pre .comment { color: var(--code-comment) !important; }\n.post-md pre .keyword,\n.post-md pre .selector-tag { color: var(--code-keyword) !important; }\n.post-md pre .string,\n.post-md pre .addition { color: var(--code-string) !important; }\n.post-md pre .number,\n.post-md pre .literal,\n.post-md pre .built_in { color: var(--code-number) !important; }\n.post-md pre .title,\n.post-md pre .function { color: var(--code-function) !important; }\n.post-md pre .variable,\n.post-md pre .attribute { color: var(--code-variable) !important; }\n"
+                    css: "/* Code colors follow the site's light/dark mode, including DarkReader's toggle. */\nhtml:not([data-darkreader-mode]) {\n  --code-background: #e7ebf2;\n  --code-foreground: #343b48;\n  --code-border: #c2cbd9;\n  --code-gutter: #8792a2;\n  --code-comment: #6d7888;\n  --code-keyword: #8b3fa2;\n  --code-string: #2f7c57;\n  --code-number: #a15d25;\n  --code-function: #2865a8;\n  --code-variable: #b04452;\n  --inline-code-background: #f0f3f7;\n  --inline-code-border: #dce2ec;\n  --inline-code-foreground: #43576c;\n}\n\nhtml[data-darkreader-mode=\"dynamic\"] {\n  --code-background: #282c34;\n  --code-foreground: #abb2bf;\n  --code-border: #3e4451;\n  --code-gutter: #7f8794;\n  --code-comment: #9da5b4;\n  --code-keyword: #c678dd;\n  --code-string: #98c379;\n  --code-number: #d19a66;\n  --code-function: #61afef;\n  --code-variable: #e06c75;\n  --inline-code-background: #343a46;\n  --inline-code-border: #454c5a;\n  --inline-code-foreground: #d0d9e3;\n}\n\n.post-md pre,\n.post-md code {\n  font-family: \"JetBrains Mono\", \"Fira Code\", \"Cascadia Code\", \"SF Mono\", Menlo, Monaco, Consolas, \"PingFang SC\", \"Microsoft YaHei\", monospace !important;\n}\n.post-md :not(pre) > code {\n  padding: 0.07em 0.28em;\n  border: 1px solid var(--inline-code-border) !important;\n  border-radius: 4px;\n  background: var(--inline-code-background) !important;\n  color: var(--inline-code-foreground) !important;\n  font-size: 0.9em;\n  overflow-wrap: anywhere;\n  -webkit-box-decoration-break: clone;\n  box-decoration-break: clone;\n}\n.post-md .highlight,\n.post-md > pre {\n  background: var(--code-background) !important;\n  color: var(--code-foreground) !important;\n  border: 1px solid var(--code-border) !important;\n  border-radius: 6px;\n  padding: 0.7rem 0.95rem;\n  margin: 1.05rem 0;\n  max-width: 100%;\n  overflow-x: auto;\n}\n.post-md .highlight pre,\n.post-md pre code {\n  padding: 0;\n  background: transparent !important;\n  color: var(--code-foreground) !important;\n  border: 0 !important;\n  border-radius: 0;\n}\n.post-md .highlight .gutter pre { color: var(--code-gutter) !important; }\n.post-md .highlight .gutter pre { padding-right: 0.8rem; }\n.post-md .highlight:is(.json, .plaintext, .text, .prompt) .gutter { display: none; }\n.post-md .highlight:is(.json, .plaintext, .text, .prompt) .code { width: 100%; }\n.post-md pre .comment { color: var(--code-comment) !important; }\n.post-md pre .keyword,\n.post-md pre .selector-tag { color: var(--code-keyword) !important; }\n.post-md pre .string,\n.post-md pre .addition { color: var(--code-string) !important; }\n.post-md pre .number,\n.post-md pre .literal,\n.post-md pre .built_in { color: var(--code-number) !important; }\n.post-md pre .title,\n.post-md pre .function { color: var(--code-function) !important; }\n.post-md pre .variable,\n.post-md pre .attribute { color: var(--code-variable) !important; }\n\n/* Injected into DarkReader's override sheet to preserve deliberate dark colors. */\nhtml[data-darkreader-mode=\"dynamic\"] .recent-post-list li {\n    border: 0 !important;\n}\nhtml[data-darkreader-mode=\"dynamic\"] .home-page,\nhtml[data-darkreader-mode=\"dynamic\"] .home-page .paper,\nhtml[data-darkreader-mode=\"dynamic\"] .home-page .index-main {\n    background: #1d1e20 !important;\n}\nhtml[data-darkreader-mode=\"dynamic\"] .recent-post-list .reading-card {\n    background: #2e2e33 !important;\n    border-color: #333 !important;\n}\nhtml[data-darkreader-mode=\"dynamic\"] .reading-card h3 a,\nhtml[data-darkreader-mode=\"dynamic\"] .home-section h2 {\n    color: #dadadb !important;\n}\nhtml[data-darkreader-mode=\"dynamic\"] .reading-card-summary,\nhtml[data-darkreader-mode=\"dynamic\"] .reading-card-meta,\nhtml[data-darkreader-mode=\"dynamic\"] .reading-card-meta a,\nhtml[data-darkreader-mode=\"dynamic\"] .reading-card-meta time {\n    color: #9b9c9d !important;\n}\n"
                 }));
             }
 
@@ -175,6 +175,7 @@
 
             window.addEventListener('DOMContentLoaded', () => {
                 const btn = document.createElement('button');
+                btn.className = 'theme-toggle';
                 btn.innerText = '🌓';
                 btn.type = 'button';
                 btn.setAttribute('aria-label', '切换深色模式');
@@ -234,15 +235,10 @@
 
 <header class="header">
     <div class="header-container">
-        <img
-            alt="Mau-Q"
-            class="header-img"
-            src="/img/favicon.svg"
-            width="56"
-            height="56"
-        />
         <div class="header-content">
-            <a class="logo" href="/">Mau-Q</a>
+            
+                <a class="logo" href="/">Mau-Q</a>
+            
             <span class="description">计算机学习、算法、C/C++、课程项目与排错复盘。</span>
         </div>
     </div>
@@ -307,13 +303,13 @@
   
       
         <li class="inline-li">
-            <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0">深度学习</a>
-            <span><i>3</i></span>
+            <a href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0">学习笔记</a>
+            <span><i>5</i></span>
         </li>
     
         <li class="inline-li">
-            <a href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0">学习笔记</a>
-            <span><i>5</i></span>
+            <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0">深度学习</a>
+            <span><i>3</i></span>
         </li>
     
         <li class="inline-li">
