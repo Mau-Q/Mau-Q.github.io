@@ -898,6 +898,8 @@ body,
 .post-head-meta-center { color: #68707b; line-height: 1.8; }
 .post-main { min-width: 0; }
 .post-md { min-width: 0; width: 100%; }
+.post-md :is(h1, h2, h3, h4, h5, h6),
+.post-md .post-toc * { overflow-wrap: anywhere; }
 .post-md[data-pagefind-body] { font-size: 18px; line-height: 1.9; }
 .post-md[data-pagefind-body] p { margin: 1rem 0; white-space: normal; }
 .post-md[data-pagefind-body] li { line-height: 1.85; }

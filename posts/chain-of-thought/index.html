@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    
+    <style>
+        body {
+            font-family: var(--site-font, sans-serif) !important;
+        }
+    </style>
+
+
+    <head>
+    
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport" />
+    <meta name="theme-color" content="#f7f5ed" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#1e1e1e" media="(prefers-color-scheme: dark)">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta name="hexo-theme-A4" content="v2.0.1" />
+    <link rel="icon" href="/img/favicon.svg">
+    <link rel="alternate" type="application/atom+xml" title="Mau-Q" href="https://mau-q.github.io/atom.xml">
+    <link rel="canonical" href="https://mau-q.github.io/posts/chain-of-thought/">
+    <meta name="description" content="持续修订 本文是持续更新的学习笔记，当前版本先行公开，后续会继续补充与校正。 Chain-of-Thought 是什么Chain-of-Thought（CoT），直译就是：思维链 。 最直接的生成方式是直接根据问题生成答案，也就是要求模型一次在隐藏状态也就是 Transfomer 中固定的神经网络层中完成所有的计算，根">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Chain-of-Thought：从思维链到推理时计算">
+<meta property="og:url" content="https://mau-q.github.io/posts/chain-of-thought/">
+<meta property="og:site_name" content="Mau-Q">
+<meta property="og:description" content="持续修订 本文是持续更新的学习笔记，当前版本先行公开，后续会继续补充与校正。 Chain-of-Thought 是什么Chain-of-Thought（CoT），直译就是：思维链 。 最直接的生成方式是直接根据问题生成答案，也就是要求模型一次在隐藏状态也就是 Transfomer 中固定的神经网络层中完成所有的计算，根">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://mau-q.github.io/img/og/posts--chain-of-thought.png">
+<meta property="article:published_time" content="2026-11-01T09:08:47.000Z">
+<meta property="article:modified_time" content="2026-11-01T09:08:47.000Z">
+<meta property="article:author" content="Mau-Q">
+<meta property="article:tag" content="大语言模型">
+<meta property="article:tag" content="学习笔记">
+<meta property="article:tag" content="推理">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://mau-q.github.io/img/og/posts--chain-of-thought.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="《Chain-of-Thought：从思维链到推理时计算》分享卡片">
+    
+        <meta data-pagefind-meta="title" content="Chain-of-Thought：从思维链到推理时计算">
+        <meta data-pagefind-meta="image" content="/img/og/posts--chain-of-thought.png">
+        <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Chain-of-Thought：从思维链到推理时计算","description":"持续修订 本文是持续更新的学习笔记，当前版本先行公开，后续会继续补充与校正。 Chain-of-Thought 是什么Chain-of-Thought（CoT），直译就是：思维链 。 最直接的生成方式是直接根据问题生成答案，也就是要求模型一次在隐藏状态也就是 Transfomer 中固定的神经网络层中完成所有的计算，根","image":"https://mau-q.github.io/img/og/posts--chain-of-thought.png","datePublished":"2026-11-01T09:08:47.000Z","dateModified":"2026-11-01T09:08:47.000Z","author":{"@type":"Person","name":"Mau-Q"},"publisher":{"@type":"Person","name":"Mau-Q"},"mainEntityOfPage":"https://mau-q.github.io/posts/chain-of-thought/","inLanguage":"zh-CN"}</script>
+    
+    <title>Chain-of-Thought：从思维链到推理时计算 | Mau-Q | 学习 · 记录 · 成长</title>
+
+    
+    
+        <script src="/js/pagefind-highlight.js" type="module"></script>
+    
+
+    
+        
+<link rel="stylesheet" href="/css/highlight/style1.css">
+
+        
+<link rel="stylesheet" href="/css/reset.css">
+
+        
+<link rel="stylesheet" href="/css/markdown.css">
+
+        
+<link rel="stylesheet" href="/css/fonts.css">
+
+         <!--注意：首页既不是post也不是page-->
+        
+
+        
+<link rel="stylesheet" href="/css/ui.css">
+
+        
+<link rel="stylesheet" href="/css/style.css">
+
+
+        
+            <!--返回顶部css-->
+            
+<link rel="stylesheet" href="/css/returnToTop.css">
+
+            
+<link rel="stylesheet" href="/css/unicons.css">
+
+        
+        
+            <!--目录-->
+            
+<link rel="stylesheet" href="/css/toc.css">
+
+        
+    
+
+    
+        
+<link rel="stylesheet" href="/css/returnToLastPage.css">
+
+    
+
+    
+
+    
+        
+<link rel="stylesheet" href="/css/custom.css">
+
+    
+
+    
+
+    <!-- Local LXGW WenKai font, CDN removed for stability -->
+<link rel="stylesheet" href="/css/article-outline.css?v=afc8dff20091"><link rel="stylesheet" href="/css/code-theme.css?v=2028f33b2cd2"><link rel="stylesheet" href="/lib/katex/katex.min.css"></head>
+
+    
+    
+
+    
+    
+
+
+
+    
+
+    
+    
+
+
+
+
+    <style>
+        .archive-main a:hover {
+            text-decoration: none; 
+        }
+    </style>
+
+    
+    
+
+
+    <body>
+        <a class="skip-link" href="#main-content">跳到正文</a>
+        
+        <script>
+        (function () {
+            // darkreader.min.js（88K）按需加载：浅色模式用户完全不下载
+            const drOptions = {
+                brightness: 100,
+                contrast: 95,
+                sepia: 10,
+                darkSchemeTextColor: '#e0e0e0',  // 粉笔白文字
+                darkSchemeBackgroundColor: '#1e1e1e', // 黑板灰背景
+                scrollbarStyle: 'native'
+            };
+
+            let loading = null;
+            function loadDarkReader() {
+                if (window.DarkReader) return Promise.resolve();
+                if (!loading) {
+                    loading = new Promise((resolve, reject) => {
+                        const script = document.createElement('script');
+                        script.src = '/js/darkreader.min.js';
+                        script.onload = resolve;
+                        script.onerror = reject;
+                        document.head.appendChild(script);
+                    });
+                }
+                return loading;
+            }
+
+            function enableDark() {
+                document.documentElement.style.backgroundColor = '#1e1e1e';
+                document.documentElement.style.colorScheme = 'dark';
+                return loadDarkReader().then(() => DarkReader.enable(drOptions, {
+                    css: "/* Code colors follow the site's light/dark mode, including DarkReader's toggle. */\nhtml:not([data-darkreader-mode]) {\n  --code-background: #e7ebf2;\n  --code-foreground: #343b48;\n  --code-border: #c2cbd9;\n  --code-gutter: #8792a2;\n  --code-comment: #6d7888;\n  --code-keyword: #8b3fa2;\n  --code-string: #2f7c57;\n  --code-number: #a15d25;\n  --code-function: #2865a8;\n  --code-variable: #b04452;\n  --inline-code-background: #f0f3f7;\n  --inline-code-border: #dce2ec;\n  --inline-code-foreground: #43576c;\n}\n\nhtml[data-darkreader-mode=\"dynamic\"] {\n  --code-background: #282c34;\n  --code-foreground: #abb2bf;\n  --code-border: #3e4451;\n  --code-gutter: #7f8794;\n  --code-comment: #9da5b4;\n  --code-keyword: #c678dd;\n  --code-string: #98c379;\n  --code-number: #d19a66;\n  --code-function: #61afef;\n  --code-variable: #e06c75;\n  --inline-code-background: #343a46;\n  --inline-code-border: #454c5a;\n  --inline-code-foreground: #d0d9e3;\n}\n\n.post-md pre,\n.post-md code {\n  font-family: \"JetBrains Mono\", \"Fira Code\", \"Cascadia Code\", \"SF Mono\", Menlo, Monaco, Consolas, \"PingFang SC\", \"Microsoft YaHei\", monospace !important;\n}\n.post-md :not(pre) > code {\n  padding: 0.07em 0.28em;\n  border: 1px solid var(--inline-code-border) !important;\n  border-radius: 4px;\n  background: var(--inline-code-background) !important;\n  color: var(--inline-code-foreground) !important;\n  font-size: 0.9em;\n  overflow-wrap: anywhere;\n  -webkit-box-decoration-break: clone;\n  box-decoration-break: clone;\n}\n.post-md .highlight,\n.post-md > pre {\n  background: var(--code-background) !important;\n  color: var(--code-foreground) !important;\n  border: 1px solid var(--code-border) !important;\n  border-radius: 6px;\n  padding: 0.7rem 0.95rem;\n  margin: 1.05rem 0;\n  max-width: 100%;\n  overflow-x: auto;\n}\n.post-md .highlight pre,\n.post-md pre code {\n  padding: 0;\n  background: transparent !important;\n  color: var(--code-foreground) !important;\n  border: 0 !important;\n  border-radius: 0;\n}\n.post-md .highlight .gutter pre { color: var(--code-gutter) !important; }\n.post-md .highlight .gutter pre { padding-right: 0.8rem; }\n.post-md .highlight:is(.json, .plaintext, .text, .prompt) .gutter { display: none; }\n.post-md .highlight:is(.json, .plaintext, .text, .prompt) .code { width: 100%; }\n.post-md pre .comment { color: var(--code-comment) !important; }\n.post-md pre .keyword,\n.post-md pre .selector-tag { color: var(--code-keyword) !important; }\n.post-md pre .string,\n.post-md pre .addition { color: var(--code-string) !important; }\n.post-md pre .number,\n.post-md pre .literal,\n.post-md pre .built_in { color: var(--code-number) !important; }\n.post-md pre .title,\n.post-md pre .function { color: var(--code-function) !important; }\n.post-md pre .variable,\n.post-md pre .attribute { color: var(--code-variable) !important; }\n\n/* Injected into DarkReader's override sheet to preserve deliberate dark colors. */\nhtml[data-darkreader-mode=\"dynamic\"] .recent-post-list li {\n    border: 0 !important;\n}\nhtml[data-darkreader-mode=\"dynamic\"] .home-page,\nhtml[data-darkreader-mode=\"dynamic\"] .home-page .paper,\nhtml[data-darkreader-mode=\"dynamic\"] .home-page .index-main {\n    background: #1d1e20 !important;\n}\nhtml[data-darkreader-mode=\"dynamic\"] .recent-post-list .reading-card {\n    background: #2e2e33 !important;\n    border-color: #333 !important;\n}\nhtml[data-darkreader-mode=\"dynamic\"] .reading-card h3 a,\nhtml[data-darkreader-mode=\"dynamic\"] .home-section h2 {\n    color: #dadadb !important;\n}\nhtml[data-darkreader-mode=\"dynamic\"] .reading-card-summary,\nhtml[data-darkreader-mode=\"dynamic\"] .reading-card-meta,\nhtml[data-darkreader-mode=\"dynamic\"] .reading-card-meta a,\nhtml[data-darkreader-mode=\"dynamic\"] .reading-card-meta time {\n    color: #9b9c9d !important;\n}\n"
+                }));
+            }
+
+            function disableDark() {
+                document.documentElement.style.backgroundColor = '';
+                document.documentElement.style.colorScheme = '';
+                if (window.DarkReader) DarkReader.disable();
+            }
+
+            const savedTheme = localStorage.getItem('theme');
+            const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const startDark = savedTheme === 'dark' || (!savedTheme && systemDark);
+            if (startDark) enableDark();
+
+            window.addEventListener('DOMContentLoaded', () => {
+                const btn = document.createElement('button');
+                btn.className = 'theme-toggle';
+                btn.innerText = '🌓';
+                btn.type = 'button';
+                btn.setAttribute('aria-label', '切换深色模式');
+                btn.title = '切换深色模式';
+                // 按钮样式：仿照你之前的布局，放在右下角
+                btn.style.cssText = `
+                    position: fixed; 
+                    bottom: 40px; 
+                    left: 42px; 
+                    z-index: 9999;
+                    width: 44px; 
+                    height: 44px; 
+                    border-radius: 50%; 
+                    border: 1px solid #ccc;
+                    background: #f7f5ed; 
+                    color: #000;
+                    font-size: 22px; 
+                    cursor: pointer;
+                    box-shadow: 0 4px 10px rgba(0,0,0,0.1); 
+                    transition: transform 0.2s, background-color 0.3s;
+                `;
+                let isDark = startDark;
+                function paintButton() {
+                    btn.style.backgroundColor = isDark ? '#1e1e1e' : '#f7f5ed';
+                    btn.style.color = isDark ? '#fff' : '#000';
+                }
+                paintButton();
+                btn.onmouseover = () => btn.style.transform = 'scale(1.1)';
+                btn.onmouseout = () => btn.style.transform = 'scale(1)';
+                document.body.appendChild(btn);
+                // 点击切换逻辑
+                btn.addEventListener('click', () => {
+                    isDark = !isDark;
+                    if (isDark) {
+                        enableDark();
+                        localStorage.setItem('theme', 'dark');
+                    } else {
+                        disableDark();
+                        localStorage.setItem('theme', 'light');
+                    }
+                    paintButton();
+                });
+            });
+        })();
+        </script>
+        
+        
+            
+                <div class="left-toc-container">
+                    <nav id="toc" class="bs-docs-sidebar"></nav>
+                </div>
+            
+        
+        <main id="main-content" class="paper" tabindex="-1">
+
+            
+
+            
+                <div class="shadow-drop-2-bottom paper-main">
+                    
+
+<header class="header">
+    <div class="header-container">
+        <div class="header-content">
+            
+                <a class="logo" href="/">Mau-Q</a>
+            
+            <span class="description">计算机学习、算法、C/C++、课程项目与排错复盘。</span>
+        </div>
+    </div>
+
+    <nav aria-label="主要导航">
+        <ul class="nav">
+            
+                
+                <li>
+                    <a href="/">首页</a>
+                </li>
+            
+                
+                <li>
+                    <a href="/list/">文章</a>
+                </li>
+            
+                
+                <li>
+                    <a href="/categories/">分类</a>
+                </li>
+            
+                
+                <li>
+                    <a href="/about/">关于</a>
+                </li>
+            
+                
+                <li>
+                    <a href="/now/">Now</a>
+                </li>
+            
+                
+                <li>
+                    <a href="/tags/">标签</a>
+                </li>
+            
+                
+                <li>
+                    <a href="/search/">搜索</a>
+                </li>
+            
+        </ul>
+    </nav>
+</header>
+
+
+                    
+                    
+
+                    
+                    
+
+                    <!--说明是文章post页面-->
+                    
+                        <div class="post-main">
+    
+
+    
+        
+            
+                <h1 class="post-main-title">
+                    Chain-of-Thought：从思维链到推理时计算
+                </h1>
+            
+        
+      
+    
+
+    
+
+        
+            <div class="post-head-meta-left">
+        
+                
+                    <span>最近更新：2026-11-01</span> 
+                
+                
+                    
+                        &nbsp; | &nbsp;
+                    
+                     <span>字数总计：2k</span>
+                
+                
+                    
+                        &nbsp; | &nbsp;
+                    
+                    <span>阅读估时：7分钟</span>
+                
+                
+            </div>
+    
+
+    <div class="post-md" data-pagefind-body>
+        
+            
+                <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Chain-of-Thought-%E6%98%AF%E4%BB%80%E4%B9%88"><span class="post-toc-text">Chain-of-Thought 是什么</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#%E4%BB%8E%E4%B8%80%E6%9D%A1-CoT-%E5%88%B0%E5%A4%9A%E8%B7%AF%E5%BE%84%E6%8E%A8%E7%90%86"><span class="post-toc-text">从一条 CoT 到多路径推理</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Self-Consistency"><span class="post-toc-text">Self-Consistency</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Best-of-N"><span class="post-toc-text">Best-of-N</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Tree-of-Thought-ToT"><span class="post-toc-text">Tree-of-Thought (ToT)</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Inference-time-Scaling"><span class="post-toc-text">Inference-time Scaling</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Verifier"><span class="post-toc-text">Verifier</span></a></li></ol></li></ol>
+            
+        
+        <div class=".article-gallery"><!-- Generated from Obsidian: Blogs/Chain-of-Thought.md. Edit the source note, then run npm run blog:sync. -->
+
+<aside class="post-callout post-callout-note" aria-label="持续修订">
+<p class="post-callout-title">持续修订</p>
+<p>本文是持续更新的学习笔记，当前版本先行公开，后续会继续补充与校正。</p>
+</aside>
+<h2 id="Chain-of-Thought-是什么"><a href="#Chain-of-Thought-是什么" class="headerlink" title="Chain-of-Thought 是什么" aria-hidden="true" tabindex="-1"></a>Chain-of-Thought 是什么</h2><p>Chain-of-Thought（CoT），直译就是：思维链 。</p>
+<p>最直接的生成方式是直接根据问题生成答案，也就是要求模型一次在隐藏状态也就是 Transfomer 中固定的神经网络层中完成所有的计算，根据 LLM原理也就是$$</p>
+<p>P(\text{Answer}\mid \text{Question})$$</p>
+<p>假设问题是：</p>
+<blockquote>
+<p>一本书 24 元，一支笔的价格是书的 1&#x2F;3。<br>买 2 本书和 3 支笔一共多少钱？</p>
+</blockquote>
+<p>那直接的生成方式就是：</p>
+<blockquote>
+<p>答案：72 元.</p>
+</blockquote>
+<p>这对于简单的问题比如加减可能没什么问题，但是如果问题需要连续十几步数学推导，那模型在一次在隐藏状态生成正确答案就会很困难。</p>
+<p>CoT 让模型在生成最终答案之前生成一系列中间推理步骤，使得前一步的结果不再只能存在于神经网络内部的 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>h</mi></mrow><annotation encoding="application/x-tex">h</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6944em;"></span><span class="mord mathnormal">h</span></span></span></span> 里，而是直接成为新的 token，后面的 Transformer 又可以读取这些 token 继续算。这样就能完成更复杂的任务。</p>
+<p>模型的 CoT 例如：</p>
+<blockquote>
+<p>一本书 24 元。</p>
+<p>一支笔：<br>24 &#x2F; 3 &#x3D; 8 元</p>
+<p>两本书：<br>24 × 2 &#x3D; 48 元</p>
+<p>三支笔：<br>8 × 3 &#x3D; 24 元</p>
+<p>总价：<br>48 + 24 &#x3D; 72 元</p>
+<p>答案：72 元</p>
+</blockquote>
+<p>于是模型在预测的过程中，不止看到的是原问题，而是问题 + 推理过程，比如在第二步推理时，看到的是：</p>
+<blockquote>
+<p>原问题</p>
+<ul>
+<li></li>
+</ul>
+<p>一支笔 &#x3D; 8 元</p>
+</blockquote>
+<p>这些推理过程生成的 tokens 就相当于草稿纸的作用，能让模型能完成更复杂的任务。</p>
+<p>于是模型不再学习：<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>Q</mi><mi>u</mi><mi>e</mi><mi>s</mi><mi>t</mi><mi>i</mi><mi>o</mi><mi>n</mi><mo>→</mo><mi>A</mi><mi>n</mi><mi>s</mi><mi>w</mi><mi>e</mi><mi>r</mi></mrow><annotation encoding="application/x-tex">Question \rightarrow Answer</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8778em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">Q</span><span class="mord mathnormal">u</span><span class="mord mathnormal">es</span><span class="mord mathnormal">t</span><span class="mord mathnormal">i</span><span class="mord mathnormal">o</span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal">A</span><span class="mord mathnormal">n</span><span class="mord mathnormal">s</span><span class="mord mathnormal" style="margin-right:0.0269em;">w</span><span class="mord mathnormal" style="margin-right:0.0278em;">er</span></span></span></span></span><br>而是学习：<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>Q</mi><mi>u</mi><mi>e</mi><mi>s</mi><mi>t</mi><mi>i</mi><mi>o</mi><mi>n</mi><mo>→</mo><msub><mi>z</mi><mn>1</mn></msub><mo>→</mo><msub><mi>z</mi><mn>2</mn></msub><mo>→</mo><msub><mi>z</mi><mn>3</mn></msub><mo>→</mo><mi>A</mi><mi>n</mi><mi>s</mi><mi>w</mi><mi>e</mi><mi>r</mi></mrow><annotation encoding="application/x-tex">Question \rightarrow z_1 \rightarrow z_2 \rightarrow z_3 \rightarrow Answer</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8778em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">Q</span><span class="mord mathnormal">u</span><span class="mord mathnormal">es</span><span class="mord mathnormal">t</span><span class="mord mathnormal">i</span><span class="mord mathnormal">o</span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.044em;">z</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.044em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.044em;">z</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.044em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.044em;">z</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.044em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">3</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal">A</span><span class="mord mathnormal">n</span><span class="mord mathnormal">s</span><span class="mord mathnormal" style="margin-right:0.0269em;">w</span><span class="mord mathnormal" style="margin-right:0.0278em;">er</span></span></span></span></span><br>其中的 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>z</mi></mrow><annotation encoding="application/x-tex">z</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.044em;">z</span></span></span></span> 就是在 CoT 中的 reasoning tokens。</p>
+<p>可以理解为 CoT 是“用 token 换计算”，中间的 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>z</mi></mrow><annotation encoding="application/x-tex">z</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.044em;">z</span></span></span></span> 都是额外生成的 token。 CoT 也是后来所谓的 Inference-time Scaling 的基础思想。</p>
+<p>其实最开始的 CoT 是 Few-shot 的，人为地让模型看到：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Question</span><br><span class="line">→ reasoning</span><br><span class="line">→ answer</span><br></pre></td></tr></table></figure>
+<p>这就是经典的Few-shot CoT。</p>
+<p>而后来人们发现甚至不需要给模型提供示例，只需要在问题后面提供一句类似<code>Let&#39;s think step by step.</code>，模型就更容易自己生成中间推理。所以模型其实本来就有<code>reasoning capability</code>，只需要把它“引出来”（Elicit）。</p>
+<p>但是注意 CoT 并没有改变模型的参数，我们看到的模型输出的中间过程也不等同于模型内部真实的思想，而是模型生成出来的 token 序列。可以把 CoT 理解为一种<code>外部可表示的中间计算轨迹</code>。</p>
+<p>经过训练，在解决复杂问题时，模型的 CoT可能会非常长，这就是<code>Long CoT</code>。但是主要“想得越长”不等于“一定越聪明”。</p>
+<h2 id="从一条-CoT-到多路径推理"><a href="#从一条-CoT-到多路径推理" class="headerlink" title="从一条 CoT 到多路径推理" aria-hidden="true" tabindex="-1"></a>从一条 CoT 到多路径推理</h2><p>我们有这个模型：<br><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>Q</mi><mi>u</mi><mi>e</mi><mi>s</mi><mi>t</mi><mi>i</mi><mi>o</mi><mi>n</mi><mo>→</mo><msub><mi>z</mi><mn>1</mn></msub><mo>→</mo><msub><mi>z</mi><mn>2</mn></msub><mo>→</mo><msub><mi>z</mi><mn>3</mn></msub><mo>→</mo><mi>A</mi><mi>n</mi><mi>s</mi><mi>w</mi><mi>e</mi><mi>r</mi></mrow><annotation encoding="application/x-tex">Question \rightarrow z_1 \rightarrow z_2 \rightarrow z_3 \rightarrow Answer</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8778em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">Q</span><span class="mord mathnormal">u</span><span class="mord mathnormal">es</span><span class="mord mathnormal">t</span><span class="mord mathnormal">i</span><span class="mord mathnormal">o</span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.044em;">z</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.044em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.044em;">z</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.044em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.044em;">z</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.044em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">3</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal">A</span><span class="mord mathnormal">n</span><span class="mord mathnormal">s</span><span class="mord mathnormal" style="margin-right:0.0269em;">w</span><span class="mord mathnormal" style="margin-right:0.0278em;">er</span></span></span></span></span><br>但如果在 CoT 中某一部走错了怎么办？自回归模型会将上次生成的结果作为上下文，那可能会将早期的错误一路传播下去。所以有一个自然的想法就是：<strong>不要让模型只想一遍</strong>。</p>
+<h3 id="Self-Consistency"><a href="#Self-Consistency" class="headerlink" title="Self-Consistency" aria-hidden="true" tabindex="-1"></a>Self-Consistency</h3><p>假设模型需要进行下一步推理，有<code>P(A) = 70%</code>，<code>P(B) = 30%</code>，如果是 Greedy CoT，那就会选择 A。于是<br>Greedy CoT每次只会选择概率最大的路径，最后只会生成一条推理轨迹。</p>
+<p>可是概率最大的路径不一定是正确的路径，所以这就需要 Sampling 方式来抽样选择路径。于是同一个问题就得到了多种推理路径。</p>
+<p><code>Self-Consistency</code>就是根据不同路径最后的结果进行多数投票，票数最高的结果就是最后输出。<br>例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">                    Path 1 → 42</span><br><span class="line">                    Path 2 → 42</span><br><span class="line">Question ────────── Path 3 → 38</span><br><span class="line">                    Path 4 → 42</span><br><span class="line">                    Path 5 → 41</span><br></pre></td></tr></table></figure>
+<p>最后就会输出<code>42</code>。</p>
+<p>那为什么是多数投票呢？因为问题有不同的解法，而正确的解法殊途同归，错误的解法答案可能都不一样，于是选择出现次数最多的答案。</p>
+<p>本质是：<br><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>S</mi><mi>a</mi><mi>m</mi><mi>p</mi><mi>l</mi><mi>i</mi><mi>n</mi><mi>g</mi><mo>+</mo><mi>A</mi><mi>g</mi><mi>g</mi><mi>r</mi><mi>e</mi><mi>g</mi><mi>a</mi><mi>t</mi><mi>i</mi><mi>o</mi><mi>n</mi></mrow><annotation encoding="application/x-tex">Sampling + Aggregation</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="mord mathnormal">am</span><span class="mord mathnormal" style="margin-right:0.0197em;">pl</span><span class="mord mathnormal">in</span><span class="mord mathnormal" style="margin-right:0.0359em;">g</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.8778em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">A</span><span class="mord mathnormal" style="margin-right:0.0359em;">g</span><span class="mord mathnormal" style="margin-right:0.0359em;">g</span><span class="mord mathnormal" style="margin-right:0.0278em;">r</span><span class="mord mathnormal">e</span><span class="mord mathnormal" style="margin-right:0.0359em;">g</span><span class="mord mathnormal">a</span><span class="mord mathnormal">t</span><span class="mord mathnormal">i</span><span class="mord mathnormal">o</span><span class="mord mathnormal">n</span></span></span></span></span></p>
+<h3 id="Best-of-N"><a href="#Best-of-N" class="headerlink" title="Best-of-N" aria-hidden="true" tabindex="-1"></a>Best-of-N</h3><p>第一步和<code>Self-Consistency</code>一样，都是一个问题生成多条回答，但不一样的是<code>Best-of-N</code>给每一个回答用<code>verifier</code>进行评分，选择评分最高的回答。</p>
+<h3 id="Tree-of-Thought-ToT"><a href="#Tree-of-Thought-ToT" class="headerlink" title="Tree-of-Thought (ToT)" aria-hidden="true" tabindex="-1"></a>Tree-of-Thought (ToT)</h3><p>前面 2 种方法都是 CoT 结束才判断，而<code>Tree-of-Thought</code>是在模型推理过程中进行判断，在进行下一步推理时，模型可能会生成多条路径，并对这些路径进行评价、保留、展开，必要时还可以回溯：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">                  ┌→ Thought A1 → A2</span><br><span class="line">Question → Thought</span><br><span class="line">                  ├→ Thought B1 → B2 → B3</span><br><span class="line">                  │</span><br><span class="line">                  └→ Thought C1 → C2</span><br></pre></td></tr></table></figure>
+
+<p>也就是:$$<br>Tree$$<br>这和算法中的 BFS &#x2F; DFS类似。</p>
+<p>现在总结以上方法，让模型想的更久是增加深度，也就是<code>Long CoT</code>；让模型尝试更多答案是增加广度，是<code> </code>Self-Consistency<code>和</code>Best-of-N<code>，把计算用在搜索上是</code>Tree-of-Thought&#96;。</p>
+<p>把模型训练完以后，为了回答一道题，在推理阶段花多少计算资源称作<code>Test-time compute（测试时计算量）</code>，可以先用一个非常直观的框架理解：<br><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><menclose notation="box"><mstyle scriptlevel="0" displaystyle="false"><mstyle scriptlevel="0" displaystyle="false"><mstyle scriptlevel="0" displaystyle="true"><mrow><mtext>Test-time Compute</mtext><mo>=</mo><mtext>Depth</mtext><mo>+</mo><mtext>Breadth</mtext><mo>+</mo><mtext>Search</mtext></mrow></mstyle></mstyle></mstyle></menclose></mrow><annotation encoding="application/x-tex">\boxed{ \text{Test-time Compute} = \text{Depth} + \text{Breadth} + \text{Search} }</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1.5689em;vertical-align:-0.5344em;"></span><span class="mord"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.0344em;"><span style="top:-3.5689em;"><span class="pstrut" style="height:3.5689em;"></span><span class="boxpad"><span class="mord"><span class="mord"><span class="mord text"><span class="mord">Test-time Compute</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mord text"><span class="mord">Depth</span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord text"><span class="mord">Breadth</span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord text"><span class="mord">Search</span></span></span></span></span></span><span style="top:-3.0344em;"><span class="pstrut" style="height:3.5689em;"></span><span class="katex-stretchy fbox" style="height:1.5689em;border-style:solid;border-width:0.04em;"></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.5344em;"><span></span></span></span></span></span></span></span></span></span></p>
+<h2 id="Inference-time-Scaling"><a href="#Inference-time-Scaling" class="headerlink" title="Inference-time Scaling" aria-hidden="true" tabindex="-1"></a>Inference-time Scaling</h2><p><code>Inference-time Scaling</code>是<code>Test-time compute</code>更上一层概念：随着 <code>test-time compute</code> 增加，模型性能能否继续提高，以及应该怎样增加这些计算。也称作<code>Test-time Scaling</code>。</p>
+<p>和训练阶段 scaling不同，训练阶段是投入更多参数 &#x2F; 更多训练数据 &#x2F; 更多训练 FLOPs来得到能力更强的模型，而<code>Inference-time scaling</code>是对训练完的模型投入更多推理 FLOPs 来生成更好的答案。</p>
+<p>现在在<strong>相同的推理预算</strong>的情况下讨论这几种方法的适用方式。</p>
+<p>比如非常难的数学证明需要深度的连续推理，那<code>Long CoT</code>就很适合，这时候把预算分散到其他路径可能就无法完成推理。</p>
+<p>如果模型生成正确答案的概率较低，推理路径没那么长，就可以用<code>Self-Consistency</code>或者<code>Best-of-N</code>来提高最后生成正确答案的概率。</p>
+<p>所以说，不同难度的问题，最佳策略不同。但是注意，小模型 + 无限思考不一定能超过大模型。因为如果问题包含着模型没有学习过的知识，那不论怎么思考都不可能回答正确。所以说模型得具备一定的潜力，<code>Inference-time Scaling</code>才能进一步挖掘。也就是：</p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><menclose notation="box"><mstyle scriptlevel="0" displaystyle="false"><mstyle scriptlevel="0" displaystyle="false"><mstyle scriptlevel="0" displaystyle="true"><mrow><mtext>Performance</mtext><mo>=</mo><mtext>Trained Capability</mtext><mo>+</mo><mtext>Inference Strategy</mtext><mo>+</mo><mtext>Inference Compute</mtext></mrow></mstyle></mstyle></mstyle></menclose></mrow><annotation encoding="application/x-tex">\boxed{ \text{Performance} = \text{Trained Capability} + \text{Inference Strategy} + \text{Inference Compute} }</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1.5689em;vertical-align:-0.5344em;"></span><span class="mord"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.0344em;"><span style="top:-3.5689em;"><span class="pstrut" style="height:3.5689em;"></span><span class="boxpad"><span class="mord"><span class="mord"><span class="mord text"><span class="mord">Performance</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mord text"><span class="mord">Trained Capability</span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord text"><span class="mord">Inference Strategy</span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord text"><span class="mord">Inference Compute</span></span></span></span></span></span><span style="top:-3.0344em;"><span class="pstrut" style="height:3.5689em;"></span><span class="katex-stretchy fbox" style="height:1.5689em;border-style:solid;border-width:0.04em;"></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.5344em;"><span></span></span></span></span></span></span></span></span></span></p>
+<h3 id="Verifier"><a href="#Verifier" class="headerlink" title="Verifier" aria-hidden="true" tabindex="-1"></a>Verifier</h3><p>前面提到<code>Self-Consistency</code>和<code>Best-of-N</code>，<code>Tree-of-Thought</code>通常包含 2 个组件<code>Proposer</code> 和 <code>Verifier</code>。</p>
+<p><code>Proposer</code>来提出候选解，<code>Verifier</code>判断候选解有多好。这也是很多<code>inference-time scaling</code>通常包含的组件。</p>
+<p>所以现在关键的是<code>Proposer</code>能提出正确的答案，那怎么选选出来呢？这就是为什么<code>Verifier</code>非常重要。<code>Verifier</code>又分成两个非常重要的方向：</p>
+<h4 id="1-Outcome-Reward-Model：ORM"><a href="#1-Outcome-Reward-Model：ORM" class="headerlink" title="1.Outcome Reward Model：ORM" aria-hidden="true" tabindex="-1"></a>1.Outcome Reward Model：ORM</h4><p>只关心最后答案是否正确，最最后答案评分，而不关心 CoT 是否正确。</p>
+<h4 id="2-Process-Reward-Model：PRM"><a href="#2-Process-Reward-Model：PRM" class="headerlink" title="2.Process Reward Model：PRM" aria-hidden="true" tabindex="-1"></a>2.Process Reward Model：PRM</h4><p>和前者相反，评价每一步推理。这样通常能进行更精确的控制。</p>
+<p>同时由于我们能监控每一步推理过程，能在错误出现时进行及时控制，而不是像 ORM 一样只能等到最后生成答案再进行判断。于是PRM更<code>compute-efficient</code>。</p>
+</div>
+        <aside class="post-afterword" aria-label="文章余韵">
+  <span class="post-afterword-label">文章余韵</span>
+  <p>少年辛苦终身事，莫向光阴惰寸功。</p>
+  <cite>—— 杜荀鹤《题弟侄书堂》</cite>
+</aside>
+    </div>
+
+    
+        
+            
+    
+            <div class="post-footer-pre-next">
+                
+
+                
+                    <span class="post-footer-pre-next-last-span-right">下一篇：<a href="/posts/dataflex-lego/">DataFlex Lego：组合与调度数据策略</a>
+                    </span>
+                
+            </div>
+    
+        
+    
+
+    
+        
+
+     
+</div>
+
+
+
+
+                    
+
+                    <div class="footer">
+    
+        <span> 
+            © 2026 Mau-Q 
+
+            
+                
+
+            
+        </span>
+       
+    
+</div>
+
+
+
+<!--这是指一条线往下的内容-->
+<div class="footer-last">
+    
+            <span></span>
+            
+                <span class="footer-last-span-right"><i>本站由<a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/index.html">Hexo</a>驱动｜使用<a target="_blank" rel="noopener" href="https://github.com/HiNinoJay/hexo-theme-A4">Hexo-theme-A4</a>主题</i></span>
+            
+    
+</div>
+
+
+<!--目录-->
+
+    
+<script src="/js/toc.js?v=496cd1a37bc1"></script>
+
+
+
+
+<!--回到顶部按钮-->
+
+    
+<script src="/js/returnToTop.js"></script>
+
+
+
+
+    
+<script src="/js/returnToLastPage.js"></script>
+
+
+
+
+
+
+
+
+
+                </div>
+            
+            
+                <!-- 回到顶部的按钮-->
+                <button class="progress-wrap shadow-drop-2-bottom" type="button" aria-label="回到页面顶部">
+                    <svg class="progress-circle svg-content" width="100%" height="100%" viewBox="-1 -1 102 102">
+                        <path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98"/>
+                    </svg>
+                </button>
+            
+            
+                <!-- 返回的按钮-->
+                <button class="return-to-last-progress-wrap shadow-drop-2-bottom" type="button" aria-label="返回上一页">
+                    <svg class="progress-circle svg-content" width="100%" height="100%" viewBox="-1 -1 102 102">
+                        <path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98"/>
+                    </svg>
+                </button>
+            
+        </main>
+    </body>
+</html>
+<script src="/js/emojiHandler.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        wrapEmojis('.paper');
+    });
+</script>

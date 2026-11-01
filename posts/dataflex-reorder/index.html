@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    
+    <style>
+        body {
+            font-family: var(--site-font, sans-serif) !important;
+        }
+    </style>
+
+
+    <head>
+    
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport" />
+    <meta name="theme-color" content="#f7f5ed" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#1e1e1e" media="(prefers-color-scheme: dark)">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta name="hexo-theme-A4" content="v2.0.1" />
+    <link rel="icon" href="/img/favicon.svg">
+    <link rel="alternate" type="application/atom+xml" title="Mau-Q" href="https://mau-q.github.io/atom.xml">
+    <link rel="canonical" href="https://mau-q.github.io/posts/dataflex-reorder/">
+    <meta name="description" content="持续修订 本文是持续更新的学习笔记，当前版本先行公开，后续会继续补充与校正。 ← DataFlex 总览 本篇目录 整体框架 排序原则 算法对比 评分信号 静态与动态重排 Reorder 不改变训练数据的集合和权重，而是改变样本进入模型训练的顺序。由于模型参数不断更新，不同训练顺序可能产生不同的优化轨迹。这也是课程学习">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DataFlex Reorder：安排训练数据的顺序">
+<meta property="og:url" content="https://mau-q.github.io/posts/dataflex-reorder/">
+<meta property="og:site_name" content="Mau-Q">
+<meta property="og:description" content="持续修订 本文是持续更新的学习笔记，当前版本先行公开，后续会继续补充与校正。 ← DataFlex 总览 本篇目录 整体框架 排序原则 算法对比 评分信号 静态与动态重排 Reorder 不改变训练数据的集合和权重，而是改变样本进入模型训练的顺序。由于模型参数不断更新，不同训练顺序可能产生不同的优化轨迹。这也是课程学习">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://mau-q.github.io/img/og/posts--dataflex-reorder.png">
+<meta property="article:published_time" content="2026-11-01T09:08:47.000Z">
+<meta property="article:modified_time" content="2026-11-01T09:08:47.000Z">
+<meta property="article:author" content="Mau-Q">
+<meta property="article:tag" content="DataFlex">
+<meta property="article:tag" content="学习笔记">
+<meta property="article:tag" content="课程学习">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://mau-q.github.io/img/og/posts--dataflex-reorder.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="《DataFlex Reorder：安排训练数据的顺序》分享卡片">
+    
+        <meta data-pagefind-meta="title" content="DataFlex Reorder：安排训练数据的顺序">
+        <meta data-pagefind-meta="image" content="/img/og/posts--dataflex-reorder.png">
+        <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"DataFlex Reorder：安排训练数据的顺序","description":"持续修订 本文是持续更新的学习笔记，当前版本先行公开，后续会继续补充与校正。 ← DataFlex 总览 本篇目录 整体框架 排序原则 算法对比 评分信号 静态与动态重排 Reorder 不改变训练数据的集合和权重，而是改变样本进入模型训练的顺序。由于模型参数不断更新，不同训练顺序可能产生不同的优化轨迹。这也是课程学习","image":"https://mau-q.github.io/img/og/posts--dataflex-reorder.png","datePublished":"2026-11-01T09:08:47.000Z","dateModified":"2026-11-01T09:08:47.000Z","author":{"@type":"Person","name":"Mau-Q"},"publisher":{"@type":"Person","name":"Mau-Q"},"mainEntityOfPage":"https://mau-q.github.io/posts/dataflex-reorder/","inLanguage":"zh-CN"}</script>
+    
+    <title>DataFlex Reorder：安排训练数据的顺序 | Mau-Q | 学习 · 记录 · 成长</title>
+
+    
+    
+        <script src="/js/pagefind-highlight.js" type="module"></script>
+    
+
+    
+        
+<link rel="stylesheet" href="/css/highlight/style1.css">
+
+        
+<link rel="stylesheet" href="/css/reset.css">
+
+        
+<link rel="stylesheet" href="/css/markdown.css">
+
+        
+<link rel="stylesheet" href="/css/fonts.css">
+
+         <!--注意：首页既不是post也不是page-->
+        
+
+        
+<link rel="stylesheet" href="/css/ui.css">
+
+        
+<link rel="stylesheet" href="/css/style.css">
+
+
+        
+            <!--返回顶部css-->
+            
+<link rel="stylesheet" href="/css/returnToTop.css">
+
+            
+<link rel="stylesheet" href="/css/unicons.css">
+
+        
+        
+            <!--目录-->
+            
+<link rel="stylesheet" href="/css/toc.css">
+
+        
+    
+
+    
+        
+<link rel="stylesheet" href="/css/returnToLastPage.css">
+
+    
+
+    
+
+    
+        
+<link rel="stylesheet" href="/css/custom.css">
+
+    
+
+    
+
+    <!-- Local LXGW WenKai font, CDN removed for stability -->
+<link rel="stylesheet" href="/css/article-outline.css?v=afc8dff20091"><link rel="stylesheet" href="/css/code-theme.css?v=2028f33b2cd2"><link rel="stylesheet" href="/lib/katex/katex.min.css"></head>
+
+    
+    
+
+    
+    
+
+
+
+    
+
+    
+    
+
+
+
+
+    <style>
+        .archive-main a:hover {
+            text-decoration: none; 
+        }
+    </style>
+
+    
+    
+
+
+    <body>
+        <a class="skip-link" href="#main-content">跳到正文</a>
+        
+        <script>
+        (function () {
+            // darkreader.min.js（88K）按需加载：浅色模式用户完全不下载
+            const drOptions = {
+                brightness: 100,
+                contrast: 95,
+                sepia: 10,
+                darkSchemeTextColor: '#e0e0e0',  // 粉笔白文字
+                darkSchemeBackgroundColor: '#1e1e1e', // 黑板灰背景
+                scrollbarStyle: 'native'
+            };
+
+            let loading = null;
+            function loadDarkReader() {
+                if (window.DarkReader) return Promise.resolve();
+                if (!loading) {
+                    loading = new Promise((resolve, reject) => {
+                        const script = document.createElement('script');
+                        script.src = '/js/darkreader.min.js';
+                        script.onload = resolve;
+                        script.onerror = reject;
+                        document.head.appendChild(script);
+                    });
+                }
+                return loading;
+            }
+
+            function enableDark() {
+                document.documentElement.style.backgroundColor = '#1e1e1e';
+                document.documentElement.style.colorScheme = 'dark';
+                return loadDarkReader().then(() => DarkReader.enable(drOptions, {
+                    css: "/* Code colors follow the site's light/dark mode, including DarkReader's toggle. */\nhtml:not([data-darkreader-mode]) {\n  --code-background: #e7ebf2;\n  --code-foreground: #343b48;\n  --code-border: #c2cbd9;\n  --code-gutter: #8792a2;\n  --code-comment: #6d7888;\n  --code-keyword: #8b3fa2;\n  --code-string: #2f7c57;\n  --code-number: #a15d25;\n  --code-function: #2865a8;\n  --code-variable: #b04452;\n  --inline-code-background: #f0f3f7;\n  --inline-code-border: #dce2ec;\n  --inline-code-foreground: #43576c;\n}\n\nhtml[data-darkreader-mode=\"dynamic\"] {\n  --code-background: #282c34;\n  --code-foreground: #abb2bf;\n  --code-border: #3e4451;\n  --code-gutter: #7f8794;\n  --code-comment: #9da5b4;\n  --code-keyword: #c678dd;\n  --code-string: #98c379;\n  --code-number: #d19a66;\n  --code-function: #61afef;\n  --code-variable: #e06c75;\n  --inline-code-background: #343a46;\n  --inline-code-border: #454c5a;\n  --inline-code-foreground: #d0d9e3;\n}\n\n.post-md pre,\n.post-md code {\n  font-family: \"JetBrains Mono\", \"Fira Code\", \"Cascadia Code\", \"SF Mono\", Menlo, Monaco, Consolas, \"PingFang SC\", \"Microsoft YaHei\", monospace !important;\n}\n.post-md :not(pre) > code {\n  padding: 0.07em 0.28em;\n  border: 1px solid var(--inline-code-border) !important;\n  border-radius: 4px;\n  background: var(--inline-code-background) !important;\n  color: var(--inline-code-foreground) !important;\n  font-size: 0.9em;\n  overflow-wrap: anywhere;\n  -webkit-box-decoration-break: clone;\n  box-decoration-break: clone;\n}\n.post-md .highlight,\n.post-md > pre {\n  background: var(--code-background) !important;\n  color: var(--code-foreground) !important;\n  border: 1px solid var(--code-border) !important;\n  border-radius: 6px;\n  padding: 0.7rem 0.95rem;\n  margin: 1.05rem 0;\n  max-width: 100%;\n  overflow-x: auto;\n}\n.post-md .highlight pre,\n.post-md pre code {\n  padding: 0;\n  background: transparent !important;\n  color: var(--code-foreground) !important;\n  border: 0 !important;\n  border-radius: 0;\n}\n.post-md .highlight .gutter pre { color: var(--code-gutter) !important; }\n.post-md .highlight .gutter pre { padding-right: 0.8rem; }\n.post-md .highlight:is(.json, .plaintext, .text, .prompt) .gutter { display: none; }\n.post-md .highlight:is(.json, .plaintext, .text, .prompt) .code { width: 100%; }\n.post-md pre .comment { color: var(--code-comment) !important; }\n.post-md pre .keyword,\n.post-md pre .selector-tag { color: var(--code-keyword) !important; }\n.post-md pre .string,\n.post-md pre .addition { color: var(--code-string) !important; }\n.post-md pre .number,\n.post-md pre .literal,\n.post-md pre .built_in { color: var(--code-number) !important; }\n.post-md pre .title,\n.post-md pre .function { color: var(--code-function) !important; }\n.post-md pre .variable,\n.post-md pre .attribute { color: var(--code-variable) !important; }\n\n/* Injected into DarkReader's override sheet to preserve deliberate dark colors. */\nhtml[data-darkreader-mode=\"dynamic\"] .recent-post-list li {\n    border: 0 !important;\n}\nhtml[data-darkreader-mode=\"dynamic\"] .home-page,\nhtml[data-darkreader-mode=\"dynamic\"] .home-page .paper,\nhtml[data-darkreader-mode=\"dynamic\"] .home-page .index-main {\n    background: #1d1e20 !important;\n}\nhtml[data-darkreader-mode=\"dynamic\"] .recent-post-list .reading-card {\n    background: #2e2e33 !important;\n    border-color: #333 !important;\n}\nhtml[data-darkreader-mode=\"dynamic\"] .reading-card h3 a,\nhtml[data-darkreader-mode=\"dynamic\"] .home-section h2 {\n    color: #dadadb !important;\n}\nhtml[data-darkreader-mode=\"dynamic\"] .reading-card-summary,\nhtml[data-darkreader-mode=\"dynamic\"] .reading-card-meta,\nhtml[data-darkreader-mode=\"dynamic\"] .reading-card-meta a,\nhtml[data-darkreader-mode=\"dynamic\"] .reading-card-meta time {\n    color: #9b9c9d !important;\n}\n"
+                }));
+            }
+
+            function disableDark() {
+                document.documentElement.style.backgroundColor = '';
+                document.documentElement.style.colorScheme = '';
+                if (window.DarkReader) DarkReader.disable();
+            }
+
+            const savedTheme = localStorage.getItem('theme');
+            const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const startDark = savedTheme === 'dark' || (!savedTheme && systemDark);
+            if (startDark) enableDark();
+
+            window.addEventListener('DOMContentLoaded', () => {
+                const btn = document.createElement('button');
+                btn.className = 'theme-toggle';
+                btn.innerText = '🌓';
+                btn.type = 'button';
+                btn.setAttribute('aria-label', '切换深色模式');
+                btn.title = '切换深色模式';
+                // 按钮样式：仿照你之前的布局，放在右下角
+                btn.style.cssText = `
+                    position: fixed; 
+                    bottom: 40px; 
+                    left: 42px; 
+                    z-index: 9999;
+                    width: 44px; 
+                    height: 44px; 
+                    border-radius: 50%; 
+                    border: 1px solid #ccc;
+                    background: #f7f5ed; 
+                    color: #000;
+                    font-size: 22px; 
+                    cursor: pointer;
+                    box-shadow: 0 4px 10px rgba(0,0,0,0.1); 
+                    transition: transform 0.2s, background-color 0.3s;
+                `;
+                let isDark = startDark;
+                function paintButton() {
+                    btn.style.backgroundColor = isDark ? '#1e1e1e' : '#f7f5ed';
+                    btn.style.color = isDark ? '#fff' : '#000';
+                }
+                paintButton();
+                btn.onmouseover = () => btn.style.transform = 'scale(1.1)';
+                btn.onmouseout = () => btn.style.transform = 'scale(1)';
+                document.body.appendChild(btn);
+                // 点击切换逻辑
+                btn.addEventListener('click', () => {
+                    isDark = !isDark;
+                    if (isDark) {
+                        enableDark();
+                        localStorage.setItem('theme', 'dark');
+                    } else {
+                        disableDark();
+                        localStorage.setItem('theme', 'light');
+                    }
+                    paintButton();
+                });
+            });
+        })();
+        </script>
+        
+        
+            
+                <div class="left-toc-container">
+                    <nav id="toc" class="bs-docs-sidebar"></nav>
+                </div>
+            
+        
+        <main id="main-content" class="paper" tabindex="-1">
+
+            
+
+            
+                <div class="shadow-drop-2-bottom paper-main">
+                    
+
+<header class="header">
+    <div class="header-container">
+        <div class="header-content">
+            
+                <a class="logo" href="/">Mau-Q</a>
+            
+            <span class="description">计算机学习、算法、C/C++、课程项目与排错复盘。</span>
+        </div>
+    </div>
+
+    <nav aria-label="主要导航">
+        <ul class="nav">
+            
+                
+                <li>
+                    <a href="/">首页</a>
+                </li>
+            
+                
+                <li>
+                    <a href="/list/">文章</a>
+                </li>
+            
+                
+                <li>
+                    <a href="/categories/">分类</a>
+                </li>
+            
+                
+                <li>
+                    <a href="/about/">关于</a>
+                </li>
+            
+                
+                <li>
+                    <a href="/now/">Now</a>
+                </li>
+            
+                
+                <li>
+                    <a href="/tags/">标签</a>
+                </li>
+            
+                
+                <li>
+                    <a href="/search/">搜索</a>
+                </li>
+            
+        </ul>
+    </nav>
+</header>
+
+
+                    
+                    
+
+                    
+                    
+
+                    <!--说明是文章post页面-->
+                    
+                        <div class="post-main">
+    
+
+    
+        
+            
+                <h1 class="post-main-title">
+                    DataFlex Reorder：安排训练数据的顺序
+                </h1>
+            
+        
+      
+    
+
+    
+
+        
+            <div class="post-head-meta-left">
+        
+                
+                    <span>最近更新：2026-11-01</span> 
+                
+                
+                    
+                        &nbsp; | &nbsp;
+                    
+                     <span>字数总计：1.1k</span>
+                
+                
+                    
+                        &nbsp; | &nbsp;
+                    
+                    <span>阅读估时：4分钟</span>
+                
+                
+            </div>
+    
+
+    <div class="post-md" data-pagefind-body>
+        
+            
+                <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#%E6%9C%AC%E7%AF%87%E7%9B%AE%E5%BD%95"><span class="post-toc-text">本篇目录</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#1-Reorder-%E7%9A%84%E6%95%B4%E4%BD%93%E6%A1%86%E6%9E%B6"><span class="post-toc-text">1. Reorder 的整体框架</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#2-%E5%9B%9B%E7%A7%8D%E6%95%B0%E6%8D%AE%E6%8E%92%E5%BA%8F%E5%8E%9F%E5%88%99"><span class="post-toc-text">2. 四种数据排序原则</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#3-%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95%E5%AF%B9%E6%AF%94"><span class="post-toc-text">3. 排序算法对比</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#%E5%85%B3%E9%94%AE%E5%85%B3%E7%B3%BB"><span class="post-toc-text">关键关系</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#4-%E8%AF%84%E5%88%86%E4%BF%A1%E5%8F%B7"><span class="post-toc-text">4. 评分信号</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#5-Static-%E4%B8%8E-Dynamic-Reorder"><span class="post-toc-text">5. Static 与 Dynamic Reorder</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Dynamic-Reorder-%E6%B5%81%E7%A8%8B"><span class="post-toc-text">Dynamic Reorder 流程</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#%E7%9B%B8%E5%85%B3%E7%AC%94%E8%AE%B0"><span class="post-toc-text">相关笔记</span></a></li></ol>
+            
+        
+        <div class=".article-gallery"><!-- Generated from Obsidian: Blogs/DataFlex/Reorder.md. Edit the source note, then run npm run blog:sync. -->
+
+<aside class="post-callout post-callout-note" aria-label="持续修订">
+<p class="post-callout-title">持续修订</p>
+<p>本文是持续更新的学习笔记，当前版本先行公开，后续会继续补充与校正。</p>
+</aside>
+<p><a href="/posts/dataflex/">← DataFlex 总览</a></p>
+<h2 id="本篇目录"><a href="#本篇目录" class="headerlink" title="本篇目录" aria-hidden="true" tabindex="-1"></a>本篇目录</h2><ul>
+<li><a href="/posts/dataflex-reorder/#1-Reorder-%E7%9A%84%E6%95%B4%E4%BD%93%E6%A1%86%E6%9E%B6">整体框架</a></li>
+<li><a href="/posts/dataflex-reorder/#2-%E5%9B%9B%E7%A7%8D%E6%95%B0%E6%8D%AE%E6%8E%92%E5%BA%8F%E5%8E%9F%E5%88%99">排序原则</a></li>
+<li><a href="/posts/dataflex-reorder/#3-%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95%E5%AF%B9%E6%AF%94">算法对比</a></li>
+<li><a href="/posts/dataflex-reorder/#4-%E8%AF%84%E5%88%86%E4%BF%A1%E5%8F%B7">评分信号</a></li>
+<li><a href="/posts/dataflex-reorder/#5-Static-%E4%B8%8E-Dynamic-Reorder">静态与动态重排</a></li>
+</ul>
+<p>Reorder 不改变训练数据的集合和权重，而是改变样本进入模型训练的顺序。由于模型参数不断更新，不同训练顺序可能产生不同的优化轨迹。这也是课程学习（Curriculum Learning）的基础。</p>
+<h2 id="1-Reorder-的整体框架"><a href="#1-Reorder-的整体框架" class="headerlink" title="1. Reorder 的整体框架" aria-hidden="true" tabindex="-1"></a>1. Reorder 的整体框架</h2><p>Reorder 可以拆分为三个独立部分：</p>
+<div class="table-scroll" role="region" tabindex="0" aria-label="可横向滚动的表格">
+<table>
+<thead>
+<tr>
+<th>层次</th>
+<th>核心问题</th>
+<th>具体方法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Score</td>
+<td>根据什么评价数据？</td>
+<td>Loss、PPL、质量评分等</td>
+</tr>
+<tr>
+<td>Pattern</td>
+<td>按什么规律组织训练顺序？</td>
+<td>Sorting、Folding、SAW 等</td>
+</tr>
+<tr>
+<td>Schedule</td>
+<td>什么时候重新评分、排序？</td>
+<td>Static、Dynamic</td>
+</tr>
+</tbody></table>
+</div>
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><menclose notation="box"><mstyle scriptlevel="0" displaystyle="false"><mstyle scriptlevel="0" displaystyle="false"><mstyle scriptlevel="0" displaystyle="true"><mrow><mtext>Score</mtext><mo>→</mo><mtext>Pattern</mtext><mo>→</mo><mtext>Schedule</mtext></mrow></mstyle></mstyle></mstyle></menclose></mrow><annotation encoding="application/x-tex">\boxed{
+\text{Score} \rightarrow \text{Pattern} \rightarrow \text{Schedule}
+}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1.3744em;vertical-align:-0.34em;"></span><span class="mord"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.0344em;"><span style="top:-3.3744em;"><span class="pstrut" style="height:3.3744em;"></span><span class="boxpad"><span class="mord"><span class="mord"><span class="mord text"><span class="mord">Score</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mord text"><span class="mord">Pattern</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mord text"><span class="mord">Schedule</span></span></span></span></span></span><span style="top:-3.0344em;"><span class="pstrut" style="height:3.3744em;"></span><span class="katex-stretchy fbox" style="height:1.3744em;border-style:solid;border-width:0.04em;"></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.34em;"><span></span></span></span></span></span></span></span></span></span>
+<p>例如：<code>Model Loss + SAW + Dynamic</code> 表示根据模型当前 Loss 评分，使用 SAW 组织课程，并在训练过程中动态重排。</p>
+<h2 id="2-四种数据排序原则"><a href="#2-四种数据排序原则" class="headerlink" title="2. 四种数据排序原则" aria-hidden="true" tabindex="-1"></a>2. 四种数据排序原则</h2><div class="table-scroll" role="region" tabindex="0" aria-label="可横向滚动的表格">
+<table>
+<thead>
+<tr>
+<th>原则</th>
+<th>名称</th>
+<th>核心思想</th>
+<th>对应机制</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>G1</td>
+<td>Boundary Sharpening</td>
+<td>单独设计训练开头和结尾的数据</td>
+<td>Segment</td>
+</tr>
+<tr>
+<td>G2</td>
+<td>Cyclic Scheduling</td>
+<td>周期性覆盖不同分数区间，缓解遗忘</td>
+<td>Folding</td>
+</tr>
+<tr>
+<td>G3</td>
+<td>Curriculum Continuity</td>
+<td>减少不同课程阶段之间的突变</td>
+<td>Zigzag</td>
+</tr>
+<tr>
+<td>G4</td>
+<td>Local Diversity</td>
+<td>增加相邻样本的局部多样性</td>
+<td>JIT</td>
+</tr>
+</tbody></table>
+</div>
+<p>其中 STR 主要整合 G1、G2；SAW 在此基础上进一步考虑 G3；两者均可叠加 JIT 实现 G4。</p>
+<h2 id="3-排序算法对比"><a href="#3-排序算法对比" class="headerlink" title="3. 排序算法对比" aria-hidden="true" tabindex="-1"></a>3. 排序算法对比</h2><p>假设数据按照分数从低到高排列为：</p>
+<p><code>1, 2, 3, 4, 5, 6, 7, 8</code></p>
+<div class="table-scroll" role="region" tabindex="0" aria-label="可横向滚动的表格">
+<table>
+<thead>
+<tr>
+<th>算法</th>
+<th>核心机制</th>
+<th>主要目的</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Shuffle</td>
+<td>全局随机打乱</td>
+<td>随机基线</td>
+</tr>
+<tr>
+<td>Sorting</td>
+<td>严格按照分数排序</td>
+<td>单调课程学习</td>
+</tr>
+<tr>
+<td>Segment（SEG）</td>
+<td>单独控制首尾分数区间，中间随机</td>
+<td>边界强化</td>
+</tr>
+<tr>
+<td>Folding（FO）</td>
+<td>多个从低到高的周期</td>
+<td>周期性覆盖不同分数区间</td>
+</tr>
+<tr>
+<td>Zigzag（ZIG）</td>
+<td>相邻周期交替反向</td>
+<td>减少周期边界跳变</td>
+</tr>
+<tr>
+<td>Stair（STR）</td>
+<td>全局递进 + 局部 Folding</td>
+<td>兼顾整体课程与局部回顾</td>
+</tr>
+<tr>
+<td>SAW</td>
+<td>全局递进 + 局部 Zigzag</td>
+<td>进一步改善局部连续性</td>
+</tr>
+<tr>
+<td>JIT</td>
+<td>小窗口内随机打乱</td>
+<td>增加局部多样性</td>
+</tr>
+</tbody></table>
+</div>
+<h3 id="关键关系"><a href="#关键关系" class="headerlink" title="关键关系" aria-hidden="true" tabindex="-1"></a>关键关系</h3><ul>
+<li>Folding → Zigzag：通过反转相邻周期，改善课程连续性。</li>
+<li>STR → SAW：把局部 Folding 替换为 Zigzag。</li>
+<li>JIT：不是独立的主排序方法，而是可叠加的局部随机扰动。</li>
+</ul>
+<p>例如，12 条已排序样本，<code>layers=3</code>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Folding:</span><br><span class="line">1 4 7 10 | 2 5 8 11 | 3 6 9 12</span><br><span class="line"></span><br><span class="line">Zigzag:</span><br><span class="line">1 4 7 10 | 11 8 5 2 | 3 6 9 12</span><br></pre></td></tr></table></figure>
+
+<p>Zigzag 减少了 Folding 在周期边界处的大幅回跳。</p>
+<h2 id="4-评分信号"><a href="#4-评分信号" class="headerlink" title="4. 评分信号" aria-hidden="true" tabindex="-1"></a>4. 评分信号</h2><div class="table-scroll" role="region" tabindex="0" aria-label="可横向滚动的表格">
+<table>
+<thead>
+<tr>
+<th>ScoreProvider</th>
+<th>评分依据</th>
+<th>是否支持动态变化</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>precomputed</code></td>
+<td>预计算的质量、难度等分数</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>cached_selection</code></td>
+<td>Selector 保存的评分缓存</td>
+<td>默认不自动刷新</td>
+</tr>
+<tr>
+<td><code>model_loss</code></td>
+<td>当前模型逐样本 Loss</td>
+<td>是</td>
+</tr>
+<tr>
+<td><code>model_perplexity</code></td>
+<td>当前模型逐样本 PPL</td>
+<td>是</td>
+</tr>
+</tbody></table>
+</div>
+<p>重要区别：</p>
+<ul>
+<li>质量评分高 ≠ Loss 高。</li>
+<li>Loss 高 ≠ 数据质量高。</li>
+<li>如果使用相同的有效 Token 定义，且只考虑样本排名，PPL 与 Loss 的排序一致，因为 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mi>P</mi><mi>L</mi><mo>=</mo><mi>exp</mi><mo>⁡</mo><mo stretchy="false">(</mo><mi>L</mi><mi>o</mi><mi>s</mi><mi>s</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">PPL=\exp(Loss)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="mord mathnormal">L</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mop">exp</span><span class="mopen">(</span><span class="mord mathnormal">L</span><span class="mord mathnormal">oss</span><span class="mclose">)</span></span></span></span>。</li>
+</ul>
+<p>排序方向由 <code>polarity</code> 等配置控制：</p>
+<ul>
+<li><code>higher_later</code>：高分样本后置。</li>
+<li><code>higher_earlier</code>：高分样本前置。</li>
+</ul>
+<p>因此，必须先明确分数代表质量、难度还是其他属性。</p>
+<h2 id="5-Static-与-Dynamic-Reorder"><a href="#5-Static-与-Dynamic-Reorder" class="headerlink" title="5. Static 与 Dynamic Reorder" aria-hidden="true" tabindex="-1"></a>5. Static 与 Dynamic Reorder</h2><div class="table-scroll" role="region" tabindex="0" aria-label="可横向滚动的表格">
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>Static Reorder</th>
+<th>Dynamic Reorder</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>评分时机</td>
+<td>训练前评分</td>
+<td>训练过程中定期重新评分</td>
+</tr>
+<tr>
+<td>排序方式</td>
+<td>固定排列</td>
+<td>根据当前分数重新排序</td>
+</tr>
+<tr>
+<td>能否反映模型变化</td>
+<td>不能</td>
+<td>可以</td>
+</tr>
+<tr>
+<td>额外计算成本</td>
+<td>通常较低</td>
+<td>可能较高</td>
+</tr>
+<tr>
+<td>主要问题</td>
+<td>评分可能逐渐过时</td>
+<td>评分开销与排序波动</td>
+</tr>
+</tbody></table>
+</div>
+<h3 id="Dynamic-Reorder-流程"><a href="#Dynamic-Reorder-流程" class="headerlink" title="Dynamic Reorder 流程" aria-hidden="true" tabindex="-1"></a>Dynamic Reorder 流程</h3><ol>
+<li>Warmup：先进行初始训练。</li>
+<li>使用当前模型计算候选样本的 Loss&#x2F;PPL。</li>
+<li>根据评分和 Pattern 生成排序。</li>
+<li>按排序取出下一阶段训练样本。</li>
+<li>定期重新评分、重排剩余样本。</li>
+</ol>
+<p>关键参数：</p>
+<div class="table-scroll" role="region" tabindex="0" aria-label="可横向滚动的表格">
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>reorder_every</code></td>
+<td>每隔多少次 Reorder 调用重新评分</td>
+</tr>
+<tr>
+<td><code>consume_once</code></td>
+<td>当前候选池耗尽前避免重复消费样本</td>
+</tr>
+<tr>
+<td><code>max_samples</code></td>
+<td>限制每轮重新评分的样本数量</td>
+</tr>
+<tr>
+<td><code>window_size</code></td>
+<td>JIT 的局部随机打乱窗口</td>
+</tr>
+</tbody></table>
+</div>
+<p>注意：当前 DataFlex 的 Dynamic SAW 主要是动态评分 + 固定 SAW 结构参数，并不是自动学习最佳课程结构的算法。</p>
+<h2 id="相关笔记"><a href="#相关笔记" class="headerlink" title="相关笔记" aria-hidden="true" tabindex="-1"></a>相关笔记</h2><ul>
+<li><a href="/posts/dataflex-selection/">Selection：评分与候选样本</a></li>
+<li><a href="/posts/dataflex-lego/#3-2-ScoreBoard%EF%BC%9A%E5%85%B1%E4%BA%AB%E8%AF%84%E5%88%86%E7%BC%93%E5%AD%98">Lego：ScoreBoard 评分缓存</a></li>
+<li><a href="/posts/dataflex-lego/#3-%E6%A0%B8%E5%BF%83%E8%B0%83%E5%BA%A6%E6%9C%BA%E5%88%B6">Lego：组合后的重排调度</a></li>
+<li>PPL 与 Loss 的关系</li>
+</ul>
+</div>
+        <aside class="post-afterword" aria-label="文章余韵">
+  <span class="post-afterword-label">文章余韵</span>
+  <p>问渠那得清如许？为有源头活水来。</p>
+  <cite>—— 朱熹《观书有感·其一》</cite>
+</aside>
+    </div>
+
+    
+        
+            
+    
+            <div class="post-footer-pre-next">
+                
+                    <span>上一篇：<a href='/posts/dataflex-lego/'>DataFlex Lego：组合与调度数据策略</a></span>
+                
+
+                
+                    <span class="post-footer-pre-next-last-span-right">下一篇：<a href="/posts/dataflex-mixture/">DataFlex Mixture：分配不同领域的训练预算</a>
+                    </span>
+                
+            </div>
+    
+        
+    
+
+    
+        
+
+     
+</div>
+
+
+
+
+                    
+
+                    <div class="footer">
+    
+        <span> 
+            © 2026 Mau-Q 
+
+            
+                
+
+            
+        </span>
+       
+    
+</div>
+
+
+
+<!--这是指一条线往下的内容-->
+<div class="footer-last">
+    
+            <span></span>
+            
+                <span class="footer-last-span-right"><i>本站由<a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/index.html">Hexo</a>驱动｜使用<a target="_blank" rel="noopener" href="https://github.com/HiNinoJay/hexo-theme-A4">Hexo-theme-A4</a>主题</i></span>
+            
+    
+</div>
+
+
+<!--目录-->
+
+    
+<script src="/js/toc.js?v=496cd1a37bc1"></script>
+
+
+
+
+<!--回到顶部按钮-->
+
+    
+<script src="/js/returnToTop.js"></script>
+
+
+
+
+    
+<script src="/js/returnToLastPage.js"></script>
+
+
+
+
+
+
+
+
+
+                </div>
+            
+            
+                <!-- 回到顶部的按钮-->
+                <button class="progress-wrap shadow-drop-2-bottom" type="button" aria-label="回到页面顶部">
+                    <svg class="progress-circle svg-content" width="100%" height="100%" viewBox="-1 -1 102 102">
+                        <path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98"/>
+                    </svg>
+                </button>
+            
+            
+                <!-- 返回的按钮-->
+                <button class="return-to-last-progress-wrap shadow-drop-2-bottom" type="button" aria-label="返回上一页">
+                    <svg class="progress-circle svg-content" width="100%" height="100%" viewBox="-1 -1 102 102">
+                        <path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98"/>
+                    </svg>
+                </button>
+            
+        </main>
+    </body>
+</html>
+<script src="/js/emojiHandler.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        wrapEmojis('.paper');
+    });
+</script>
