@@ -1,5 +1,8 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+    <head>
+    
+    <meta charset="utf-8">
     
     <style>
         body {
@@ -8,14 +11,11 @@
     </style>
 
 
-    <head>
-    
-    <meta charset="utf-8">
-    <meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport" />
+    <meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport">
     <meta name="theme-color" content="#f7f5ed" media="(prefers-color-scheme: light)">
     <meta name="theme-color" content="#1e1e1e" media="(prefers-color-scheme: dark)">
     <meta name="referrer" content="strict-origin-when-cross-origin">
-    <meta name="hexo-theme-A4" content="v2.0.1" />
+    <meta name="hexo-theme-A4" content="v2.0.1">
     <link rel="icon" href="/img/favicon.svg">
     <link rel="alternate" type="application/atom+xml" title="Mau-Q" href="https://mau-q.github.io/atom.xml">
     <link rel="canonical" href="https://mau-q.github.io/posts/pytorch-training-workflow/">
@@ -39,8 +39,8 @@
     <meta property="og:image:height" content="630">
     <meta property="og:image:alt" content="《PyTorch：从 Tensor 到完整训练流程》分享卡片">
     
-        <meta data-pagefind-meta="title" content="PyTorch：从 Tensor 到完整训练流程">
-        <meta data-pagefind-meta="image" content="/img/og/posts--pytorch-training-workflow.png">
+        <meta name="pagefind:title" data-pagefind-meta="title" content="PyTorch：从 Tensor 到完整训练流程">
+        <meta name="pagefind:image" data-pagefind-meta="image" content="/img/og/posts--pytorch-training-workflow.png">
         <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"PyTorch：从 Tensor 到完整训练流程","description":"PyTorch 是什么可以理解为： 用 Tensor 表示数据，用神经网络做计算，用 Autograd 自动求梯度，再用 Optimizer 更新参数。 一个训练 step 内的数据、梯度与参数关系 用伪代码表示全局： 12345678910111213141516171819202122232425262728# 数","image":"https://mau-q.github.io/img/og/posts--pytorch-training-workflow.png","datePublished":"2026-10-01T15:15:00.000Z","dateModified":"2026-10-01T07:13:14.000Z","author":{"@type":"Person","name":"Mau-Q"},"publisher":{"@type":"Person","name":"Mau-Q"},"mainEntityOfPage":"https://mau-q.github.io/posts/pytorch-training-workflow/","inLanguage":"zh-CN"}</script>
     
     <title>PyTorch：从 Tensor 到完整训练流程 | Mau-Q | 学习 · 记录 · 成长</title>
@@ -111,8 +111,6 @@
     
 
     <!-- Local LXGW WenKai font, CDN removed for stability -->
-<link rel="stylesheet" href="/css/article-outline.css?v=afc8dff20091"><link rel="stylesheet" href="/css/code-theme.css?v=2028f33b2cd2"><link rel="stylesheet" href="/lib/katex/katex.min.css"></head>
-
     
     
 
@@ -137,6 +135,8 @@
 
     
     
+
+<link rel="stylesheet" href="/css/article-outline.css?v=afc8dff20091"><link rel="stylesheet" href="/css/code-theme.css?v=2028f33b2cd2"><link rel="stylesheet" href="/lib/katex/katex.min.css"></head>
 
 
     <body>
@@ -665,7 +665,7 @@ M347 1759 V0 H263 V1759 v0 v1759 h84z"/></svg></span></span></span><span class="
     
             <div class="post-footer-pre-next">
                 
-                    <span>上一篇：<a href='/posts/transformer/'>Transformer：从 Seq2seq 到 Encoder 与 Decoder</a></span>
+                    <span>上一篇：<a href='/posts/self-attention/'>Self-attention：从 Q、K、V 到上下文表示</a></span>
                 
 
                 
@@ -761,7 +761,7 @@ M347 1759 V0 H263 V1759 v0 v1759 h84z"/></svg></span></span></span><span class="
 <script src="/js/lightgallery/plugins/lg-paper.umd.min.js"></script>
 
 
-    <script type="text/javascript">
+    <script>
         var galleryRoot = document.querySelector('[class~=".article-gallery"]') || document.querySelector('.post-md');
         if (galleryRoot && galleryRoot.querySelector('.gallery-item') && typeof lightGallery !== 'undefined') {
             lightGallery(galleryRoot, {
@@ -802,11 +802,11 @@ M347 1759 V0 H263 V1759 v0 v1759 h84z"/></svg></span></span></span><span class="
                 </button>
             
         </main>
+        <script src="/js/emojiHandler.js"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                wrapEmojis('.paper');
+            });
+        </script>
     </body>
 </html>
-<script src="/js/emojiHandler.js"></script>
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        wrapEmojis('.paper');
-    });
-</script>

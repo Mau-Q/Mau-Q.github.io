@@ -1,5 +1,8 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+    <head>
+    
+    <meta charset="utf-8">
     
     <style>
         body {
@@ -8,14 +11,11 @@
     </style>
 
 
-    <head>
-    
-    <meta charset="utf-8">
-    <meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport" />
+    <meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport">
     <meta name="theme-color" content="#f7f5ed" media="(prefers-color-scheme: light)">
     <meta name="theme-color" content="#1e1e1e" media="(prefers-color-scheme: dark)">
     <meta name="referrer" content="strict-origin-when-cross-origin">
-    <meta name="hexo-theme-A4" content="v2.0.1" />
+    <meta name="hexo-theme-A4" content="v2.0.1">
     <link rel="icon" href="/img/favicon.svg">
     <link rel="alternate" type="application/atom+xml" title="Mau-Q" href="https://mau-q.github.io/atom.xml">
     <link rel="canonical" href="https://mau-q.github.io/posts/self-attention/">
@@ -39,8 +39,8 @@
     <meta property="og:image:height" content="630">
     <meta property="og:image:alt" content="《Self-attention：从 Q、K、V 到上下文表示》分享卡片">
     
-        <meta data-pagefind-meta="title" content="Self-attention：从 Q、K、V 到上下文表示">
-        <meta data-pagefind-meta="image" content="/img/og/posts--self-attention.png">
+        <meta name="pagefind:title" data-pagefind-meta="title" content="Self-attention：从 Q、K、V 到上下文表示">
+        <meta name="pagefind:image" data-pagefind-meta="image" content="/img/og/posts--self-attention.png">
         <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Self-attention：从 Q、K、V 到上下文表示","description":"持续修订 本文是持续更新的学习笔记，当前版本先行公开，后续会继续补充与校正。 为什么需要 Self-attention在处理“向量序列”时，一个位置的表示往往需要结合其他位置的信息，比如： I saw a saw 第二个 saw 的含义需要结合上下文判断。把相邻几个向量拼接后输入 FC（Fully Connected ","image":"https://mau-q.github.io/img/og/posts--self-attention.png","datePublished":"2026-11-01T09:08:47.000Z","dateModified":"2026-11-01T09:08:47.000Z","author":{"@type":"Person","name":"Mau-Q"},"publisher":{"@type":"Person","name":"Mau-Q"},"mainEntityOfPage":"https://mau-q.github.io/posts/self-attention/","inLanguage":"zh-CN"}</script>
     
     <title>Self-attention：从 Q、K、V 到上下文表示 | Mau-Q | 学习 · 记录 · 成长</title>
@@ -111,8 +111,6 @@
     
 
     <!-- Local LXGW WenKai font, CDN removed for stability -->
-<link rel="stylesheet" href="/css/article-outline.css?v=afc8dff20091"><link rel="stylesheet" href="/css/code-theme.css?v=2028f33b2cd2"><link rel="stylesheet" href="/lib/katex/katex.min.css"></head>
-
     
     
 
@@ -137,6 +135,8 @@
 
     
     
+
+<link rel="stylesheet" href="/css/article-outline.css?v=afc8dff20091"><link rel="stylesheet" href="/css/code-theme.css?v=2028f33b2cd2"><link rel="stylesheet" href="/lib/katex/katex.min.css"></head>
 
 
     <body>
@@ -475,11 +475,11 @@ O=VA&#x27;
     
             <div class="post-footer-pre-next">
                 
-                    <span>上一篇：<a href='/posts/optimization-algorithms/'>优化算法与数学基础</a></span>
+                    <span>上一篇：<a href='/posts/transformer/'>Transformer：从 Seq2seq 到 Encoder 与 Decoder</a></span>
                 
 
                 
-                    <span class="post-footer-pre-next-last-span-right">下一篇：<a href="/posts/semi-supervised-learning/">半监督学习：无标签样本的约束</a>
+                    <span class="post-footer-pre-next-last-span-right">下一篇：<a href="/posts/pytorch-training-workflow/">PyTorch：从 Tensor 到完整训练流程</a>
                     </span>
                 
             </div>
@@ -571,7 +571,7 @@ O=VA&#x27;
 <script src="/js/lightgallery/plugins/lg-paper.umd.min.js"></script>
 
 
-    <script type="text/javascript">
+    <script>
         var galleryRoot = document.querySelector('[class~=".article-gallery"]') || document.querySelector('.post-md');
         if (galleryRoot && galleryRoot.querySelector('.gallery-item') && typeof lightGallery !== 'undefined') {
             lightGallery(galleryRoot, {
@@ -612,11 +612,11 @@ O=VA&#x27;
                 </button>
             
         </main>
+        <script src="/js/emojiHandler.js"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                wrapEmojis('.paper');
+            });
+        </script>
     </body>
 </html>
-<script src="/js/emojiHandler.js"></script>
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        wrapEmojis('.paper');
-    });
-</script>

@@ -1,5 +1,8 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+    <head>
+    
+    <meta charset="utf-8">
     
     <style>
         body {
@@ -8,14 +11,11 @@
     </style>
 
 
-    <head>
-    
-    <meta charset="utf-8">
-    <meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport" />
+    <meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport">
     <meta name="theme-color" content="#f7f5ed" media="(prefers-color-scheme: light)">
     <meta name="theme-color" content="#1e1e1e" media="(prefers-color-scheme: dark)">
     <meta name="referrer" content="strict-origin-when-cross-origin">
-    <meta name="hexo-theme-A4" content="v2.0.1" />
+    <meta name="hexo-theme-A4" content="v2.0.1">
     <link rel="icon" href="/img/favicon.svg">
     <link rel="alternate" type="application/atom+xml" title="Mau-Q" href="https://mau-q.github.io/atom.xml">
     <link rel="canonical" href="https://mau-q.github.io/posts/dataflex-reweighting/">
@@ -39,8 +39,8 @@
     <meta property="og:image:height" content="630">
     <meta property="og:image:alt" content="《DataFlex Reweighting：调整样本的梯度贡献》分享卡片">
     
-        <meta data-pagefind-meta="title" content="DataFlex Reweighting：调整样本的梯度贡献">
-        <meta data-pagefind-meta="image" content="/img/og/posts--dataflex-reweighting.png">
+        <meta name="pagefind:title" data-pagefind-meta="title" content="DataFlex Reweighting：调整样本的梯度贡献">
+        <meta name="pagefind:image" data-pagefind-meta="image" content="/img/og/posts--dataflex-reweighting.png">
         <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"DataFlex Reweighting：调整样本的梯度贡献","description":"持续修订 本文是持续更新的学习笔记，当前版本先行公开，后续会继续补充与校正。 ← DataFlex 总览 本篇目录 加权目标 逐样本 Loss 与训练接入 Loss Reweighting ADAPT Joint-Update-Aware 多模态 Weighter 七种 Weighter 对比 权重尺度与 Loss 归","image":"https://mau-q.github.io/img/og/posts--dataflex-reweighting.png","datePublished":"2026-11-01T09:08:47.000Z","dateModified":"2026-11-01T09:08:47.000Z","author":{"@type":"Person","name":"Mau-Q"},"publisher":{"@type":"Person","name":"Mau-Q"},"mainEntityOfPage":"https://mau-q.github.io/posts/dataflex-reweighting/","inLanguage":"zh-CN"}</script>
     
     <title>DataFlex Reweighting：调整样本的梯度贡献 | Mau-Q | 学习 · 记录 · 成长</title>
@@ -111,8 +111,6 @@
     
 
     <!-- Local LXGW WenKai font, CDN removed for stability -->
-<link rel="stylesheet" href="/css/article-outline.css?v=afc8dff20091"><link rel="stylesheet" href="/css/code-theme.css?v=2028f33b2cd2"><link rel="stylesheet" href="/lib/katex/katex.min.css"></head>
-
     
     
 
@@ -137,6 +135,8 @@
 
     
     
+
+<link rel="stylesheet" href="/css/article-outline.css?v=afc8dff20091"><link rel="stylesheet" href="/css/code-theme.css?v=2028f33b2cd2"><link rel="stylesheet" href="/lib/katex/katex.min.css"></head>
 
 
     <body>
@@ -822,7 +822,7 @@ w^\top Sw=w_A^2+w_B^2+2w_Aw_B+w_C^2
     
             <div class="post-footer-pre-next">
                 
-                    <span>上一篇：<a href='/posts/dataflex-mixture/'>DataFlex Mixture：分配不同领域的训练预算</a></span>
+                    <span>上一篇：<a href='/posts/dataflex-reorder/'>DataFlex Reorder：安排训练数据的顺序</a></span>
                 
 
                 
@@ -918,7 +918,7 @@ w^\top Sw=w_A^2+w_B^2+2w_Aw_B+w_C^2
 <script src="/js/lightgallery/plugins/lg-paper.umd.min.js"></script>
 
 
-    <script type="text/javascript">
+    <script>
         var galleryRoot = document.querySelector('[class~=".article-gallery"]') || document.querySelector('.post-md');
         if (galleryRoot && galleryRoot.querySelector('.gallery-item') && typeof lightGallery !== 'undefined') {
             lightGallery(galleryRoot, {
@@ -959,11 +959,11 @@ w^\top Sw=w_A^2+w_B^2+2w_Aw_B+w_C^2
                 </button>
             
         </main>
+        <script src="/js/emojiHandler.js"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                wrapEmojis('.paper');
+            });
+        </script>
     </body>
 </html>
-<script src="/js/emojiHandler.js"></script>
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        wrapEmojis('.paper');
-    });
-</script>
