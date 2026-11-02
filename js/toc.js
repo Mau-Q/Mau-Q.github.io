@@ -8,16 +8,8 @@
     var content = document.querySelector('.post-md');
     if (!content) return;
 
-    var levels = [];
-    for (var level = 1; level <= 3; level++) {
-      if (content.querySelectorAll('h' + level).length > 1) {
-        levels.push('h' + level);
-      }
-    }
-    if (levels.length === 0) return;
-
     var headings = Array.prototype.slice.call(
-      content.querySelectorAll(levels.join(','))
+      content.querySelectorAll('h1, h2, h3')
     );
     if (headings.length === 0) return;
 
@@ -49,7 +41,14 @@
 
       var item = document.createElement('li');
       var link = document.createElement('a');
-      link.textContent = heading.textContent;
+      var label = heading.cloneNode(true);
+      label.querySelectorAll('.katex').forEach(function (math) {
+        var source = math.querySelector('annotation[encoding="application/x-tex"]');
+        var visual = math.querySelector('.katex-html');
+        math.replaceWith(document.createTextNode((source || visual || math).textContent));
+      });
+      label.querySelectorAll('.headerlink').forEach(function (anchor) { anchor.remove(); });
+      link.textContent = label.textContent;
       link.href = heading.id ? '#' + encodeURIComponent(heading.id) : '#';
       link.addEventListener('click', function (event) {
         event.preventDefault();

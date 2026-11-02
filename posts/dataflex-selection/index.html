@@ -19,12 +19,12 @@
     <link rel="icon" href="/img/favicon.svg">
     <link rel="alternate" type="application/atom+xml" title="Mau-Q" href="https://mau-q.github.io/atom.xml">
     <link rel="canonical" href="https://mau-q.github.io/posts/dataflex-selection/">
-    <meta name="description" content="持续修订 本文是持续更新的学习笔记，当前版本先行公开，后续会继续补充与校正。 ← DataFlex 总览 本篇目录 选择目标 损失与学习变化 梯度与影响估计 表征与分布 多指标自适应 随机基线 15 种算法对比 训练接入 Selection 究竟在优化什么？假设你有： 10,000 条 SFT 训练数据； 一个正在微调">
+    <meta name="description" content="持续修订 本文是持续更新的学习笔记，当前版本先行公开，后续会继续补充与校正。 ← DataFlex 总览 Selection 究竟在优化什么？假设你有： 10,000 条 SFT 训练数据； 一个正在微调的 Base 模型； 1,000 个优化步的训练预算； 一个希望提高的目标能力，例如数学推理。 普通训练通常预先确定">
 <meta property="og:type" content="article">
 <meta property="og:title" content="DataFlex Selection：选择哪些训练样本">
 <meta property="og:url" content="https://mau-q.github.io/posts/dataflex-selection/">
 <meta property="og:site_name" content="Mau-Q">
-<meta property="og:description" content="持续修订 本文是持续更新的学习笔记，当前版本先行公开，后续会继续补充与校正。 ← DataFlex 总览 本篇目录 选择目标 损失与学习变化 梯度与影响估计 表征与分布 多指标自适应 随机基线 15 种算法对比 训练接入 Selection 究竟在优化什么？假设你有： 10,000 条 SFT 训练数据； 一个正在微调">
+<meta property="og:description" content="持续修订 本文是持续更新的学习笔记，当前版本先行公开，后续会继续补充与校正。 ← DataFlex 总览 Selection 究竟在优化什么？假设你有： 10,000 条 SFT 训练数据； 一个正在微调的 Base 模型； 1,000 个优化步的训练预算； 一个希望提高的目标能力，例如数学推理。 普通训练通常预先确定">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://mau-q.github.io/img/og/posts--dataflex-selection.png">
 <meta property="article:published_time" content="2026-11-01T09:08:47.000Z">
@@ -41,7 +41,7 @@
     
         <meta name="pagefind:title" data-pagefind-meta="title" content="DataFlex Selection：选择哪些训练样本">
         <meta name="pagefind:image" data-pagefind-meta="image" content="/img/og/posts--dataflex-selection.png">
-        <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"DataFlex Selection：选择哪些训练样本","description":"持续修订 本文是持续更新的学习笔记，当前版本先行公开，后续会继续补充与校正。 ← DataFlex 总览 本篇目录 选择目标 损失与学习变化 梯度与影响估计 表征与分布 多指标自适应 随机基线 15 种算法对比 训练接入 Selection 究竟在优化什么？假设你有： 10,000 条 SFT 训练数据； 一个正在微调","image":"https://mau-q.github.io/img/og/posts--dataflex-selection.png","datePublished":"2026-11-01T09:08:47.000Z","dateModified":"2026-11-01T09:08:47.000Z","author":{"@type":"Person","name":"Mau-Q"},"publisher":{"@type":"Person","name":"Mau-Q"},"mainEntityOfPage":"https://mau-q.github.io/posts/dataflex-selection/","inLanguage":"zh-CN"}</script>
+        <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"DataFlex Selection：选择哪些训练样本","description":"持续修订 本文是持续更新的学习笔记，当前版本先行公开，后续会继续补充与校正。 ← DataFlex 总览 Selection 究竟在优化什么？假设你有： 10,000 条 SFT 训练数据； 一个正在微调的 Base 模型； 1,000 个优化步的训练预算； 一个希望提高的目标能力，例如数学推理。 普通训练通常预先确定","image":"https://mau-q.github.io/img/og/posts--dataflex-selection.png","datePublished":"2026-11-01T09:08:47.000Z","dateModified":"2026-11-01T09:08:47.000Z","author":{"@type":"Person","name":"Mau-Q"},"publisher":{"@type":"Person","name":"Mau-Q"},"mainEntityOfPage":"https://mau-q.github.io/posts/dataflex-selection/","inLanguage":"zh-CN"}</script>
     
     <title>DataFlex Selection：选择哪些训练样本 | Mau-Q | 学习 · 记录 · 成长</title>
 
@@ -104,7 +104,7 @@
 
     
         
-<link rel="stylesheet" href="/css/custom.css">
+<link rel="stylesheet" href="/css/custom.css?v=b9942a3d1111">
 
     
 
@@ -136,7 +136,7 @@
     
     
 
-<link rel="stylesheet" href="/css/article-outline.css?v=afc8dff20091"><link rel="stylesheet" href="/css/code-theme.css?v=2028f33b2cd2"><link rel="stylesheet" href="/lib/katex/katex.min.css"></head>
+<link rel="stylesheet" href="/css/code-theme.css?v=2028f33b2cd2"><link rel="stylesheet" href="/css/article-outline.css?v=afc8dff20091"><link rel="stylesheet" href="/lib/katex/katex.min.css"></head>
 
 
     <body>
@@ -320,7 +320,7 @@
         
             
                 <h1 class="post-main-title">
-                    DataFlex Selection：选择哪些训练样本
+                    <span class="post-title-part">DataFlex Selection：</span><wbr><span class="post-title-part">选择哪些训练样本</span>
                 </h1>
             
         
@@ -339,7 +339,7 @@
                     
                         &nbsp; | &nbsp;
                     
-                     <span>字数总计：7.3k</span>
+                     <span>字数总计：7.2k</span>
                 
                 
                     
@@ -354,7 +354,7 @@
     <div class="post-md" data-pagefind-body>
         
             
-                <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#%E6%9C%AC%E7%AF%87%E7%9B%AE%E5%BD%95"><span class="post-toc-text">本篇目录</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Selection-%E7%A9%B6%E7%AB%9F%E5%9C%A8%E4%BC%98%E5%8C%96%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="post-toc-text">Selection 究竟在优化什么？</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#%E6%8D%9F%E5%A4%B1%E4%B8%8E%E5%AD%A6%E4%B9%A0%E5%8F%98%E5%8C%96"><span class="post-toc-text">损失与学习变化</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Loss-Selection%EF%BC%9A%E5%BD%93%E5%89%8D%E5%93%AA%E4%BA%9B%E6%A0%B7%E6%9C%AC%E6%AF%94%E8%BE%83%E9%9A%BE%EF%BC%9F"><span class="post-toc-text">Loss Selection：当前哪些样本比较难？</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Delta-Loss%EF%BC%9A%E5%93%AA%E4%BA%9B%E6%A0%B7%E6%9C%AC%E5%8F%91%E7%94%9F%E4%BA%86%E5%AD%A6%E4%B9%A0%E5%8F%98%E5%8C%96%EF%BC%9F"><span class="post-toc-text">Delta-Loss：哪些样本发生了学习变化？</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Cluster-Loss%EF%BC%9A%E8%83%BD%E4%B8%8D%E8%83%BD%E5%8F%AA%E8%AF%84%E4%BB%B7%E4%B8%80%E5%B0%8F%E9%83%A8%E5%88%86%E4%BB%A3%E8%A1%A8%E6%A0%B7%E6%9C%AC%EF%BC%9F"><span class="post-toc-text">Cluster-Loss：能不能只评价一小部分代表样本？</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#%E6%A2%AF%E5%BA%A6%E4%B8%8E%E5%BD%B1%E5%93%8D%E7%B1%BB%EF%BC%9A%E8%AE%AD%E7%BB%83%E8%BF%99%E6%9D%A1%E6%95%B0%E6%8D%AE%EF%BC%8C%E7%A9%B6%E7%AB%9F%E5%AF%B9%E7%9B%AE%E6%A0%87%E6%9C%89%E6%B2%A1%E6%9C%89%E5%B8%AE%E5%8A%A9%EF%BC%9F"><span class="post-toc-text">梯度与影响类：训练这条数据，究竟对目标有没有帮助？</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#LESS%EF%BC%88Low-cost-and-Efficient-SFT-Data-Selection%EF%BC%89%EF%BC%9A%E7%94%A8%E6%A2%AF%E5%BA%A6%E7%9B%B8%E4%BC%BC%E6%80%A7%E4%BC%B0%E8%AE%A1%E7%9B%AE%E6%A0%87%E5%BD%B1%E5%93%8D"><span class="post-toc-text">LESS（Low-cost and Efficient SFT Data Selection）：用梯度相似性估计目标影响</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#NICE%EF%BC%9A%E4%B8%BA%E4%BB%80%E4%B9%88%E7%9B%AE%E6%A0%87-Loss-%E8%BF%98%E4%B8%8D%E5%A4%9F%EF%BC%9F"><span class="post-toc-text">NICE：为什么目标 Loss 还不够？</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#TracIn%EF%BC%9A%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E7%9C%8B%E5%A4%9A%E4%B8%AA%E8%AE%AD%E7%BB%83%E9%98%B6%E6%AE%B5%EF%BC%9F"><span class="post-toc-text">TracIn：为什么不看多个训练阶段？</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Cluster-LESS%EF%BC%9A%E7%94%A8%E7%B0%87%E7%BA%A7%E6%A2%AF%E5%BA%A6%E8%BF%91%E4%BC%BC%E5%85%A8%E9%87%8F%E6%A2%AF%E5%BA%A6"><span class="post-toc-text">Cluster-LESS：用簇级梯度近似全量梯度</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Cluster-TracIn%EF%BC%9A%E5%90%8C%E6%97%B6%E8%80%83%E8%99%91%E7%B0%87%E4%B8%8E%E8%AE%AD%E7%BB%83%E5%8E%86%E5%8F%B2"><span class="post-toc-text">Cluster-TracIn：同时考虑簇与训练历史</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#ICONS%EF%BC%9A%E4%B8%80%E4%B8%AA%E7%9B%AE%E6%A0%87%E5%A5%BD%EF%BC%8C%E4%B8%8D%E7%AD%89%E4%BA%8E%E6%89%80%E6%9C%89%E7%9B%AE%E6%A0%87%E9%83%BD%E5%A5%BD"><span class="post-toc-text">ICONS：一个目标好，不等于所有目标都好</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#%E8%A1%A8%E5%BE%81%E4%B8%8E%E5%88%86%E5%B8%83%E7%B1%BB%EF%BC%9A%E9%80%89%E5%87%BA%E7%9A%84%E6%95%B0%E6%8D%AE%E5%BA%94%E8%AF%A5%E9%95%BF%E4%BB%80%E4%B9%88%E6%A0%B7%EF%BC%9F"><span class="post-toc-text">表征与分布类：选出的数据应该长什么样？</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#NEAR%EF%BC%9A%E9%80%89%E6%8B%A9%E4%B8%8E%E7%9B%AE%E6%A0%87%E4%BB%BB%E5%8A%A1%E6%9C%80%E6%8E%A5%E8%BF%91%E7%9A%84%E6%95%B0%E6%8D%AE"><span class="post-toc-text">NEAR：选择与目标任务最接近的数据</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#TSDS%EF%BC%9A%E4%B8%BA%E4%BB%80%E4%B9%88%E5%8F%AA%E9%80%89%E6%9C%80%E8%BF%91%E9%82%BB%E5%8F%AF%E8%83%BD%E4%B8%8D%E5%A4%9F%EF%BC%9F"><span class="post-toc-text">TSDS：为什么只选最近邻可能不够？</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#COINCIDE%EF%BC%9A%E4%BB%8E%E6%95%B0%E6%8D%AE%E7%9A%84%E6%A6%82%E5%BF%B5%E3%80%81%E6%8A%80%E8%83%BD%E7%BB%93%E6%9E%84%E5%87%BA%E5%8F%91"><span class="post-toc-text">COINCIDE：从数据的概念、技能结构出发</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#%E5%A4%9A%E6%8C%87%E6%A0%87%E8%87%AA%E9%80%82%E5%BA%94"><span class="post-toc-text">多指标自适应</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Adapt-%E2%88%9E%EF%BC%9A%E4%B8%8D%E5%90%8C%E6%8A%80%E8%83%BD%E7%9A%84%E6%95%B0%E6%8D%AE%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E4%BD%BF%E7%94%A8%E4%B8%8D%E5%90%8C%E6%8C%87%E6%A0%87%EF%BC%9F"><span class="post-toc-text">Adapt-∞：不同技能的数据为什么要使用不同指标？</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#%E5%9F%BA%E7%BA%BF%E4%B8%8E%E6%89%A9%E5%B1%95"><span class="post-toc-text">基线与扩展</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Random%EF%BC%9A%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9A%8F%E6%9C%BA%E9%80%89%E6%8B%A9%E4%B8%8D%E8%83%BD%E7%9C%81%EF%BC%9F"><span class="post-toc-text">Random：为什么随机选择不能省？</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#DataFlex-Selection%EF%BC%9A15-%E7%A7%8D%E7%AE%97%E6%B3%95%E6%80%BB%E8%A7%88"><span class="post-toc-text">DataFlex Selection：15 种算法总览</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#DataFlex-%E7%9A%84-Selection-%E6%A8%A1%E5%9D%97%E5%88%B0%E5%BA%95%E6%80%8E%E6%A0%B7%E6%8E%A5%E5%85%A5%E8%AE%AD%E7%BB%83%EF%BC%9F"><span class="post-toc-text">DataFlex 的 Selection 模块到底怎样接入训练？</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#%E7%9B%B8%E5%85%B3%E7%AC%94%E8%AE%B0"><span class="post-toc-text">相关笔记</span></a></li></ol>
+                <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Selection-%E7%A9%B6%E7%AB%9F%E5%9C%A8%E4%BC%98%E5%8C%96%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="post-toc-text">Selection 究竟在优化什么？</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#%E6%8D%9F%E5%A4%B1%E4%B8%8E%E5%AD%A6%E4%B9%A0%E5%8F%98%E5%8C%96"><span class="post-toc-text">损失与学习变化</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Loss-Selection%EF%BC%9A%E5%BD%93%E5%89%8D%E5%93%AA%E4%BA%9B%E6%A0%B7%E6%9C%AC%E6%AF%94%E8%BE%83%E9%9A%BE%EF%BC%9F"><span class="post-toc-text">Loss Selection：当前哪些样本比较难？</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Delta-Loss%EF%BC%9A%E5%93%AA%E4%BA%9B%E6%A0%B7%E6%9C%AC%E5%8F%91%E7%94%9F%E4%BA%86%E5%AD%A6%E4%B9%A0%E5%8F%98%E5%8C%96%EF%BC%9F"><span class="post-toc-text">Delta-Loss：哪些样本发生了学习变化？</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Cluster-Loss%EF%BC%9A%E8%83%BD%E4%B8%8D%E8%83%BD%E5%8F%AA%E8%AF%84%E4%BB%B7%E4%B8%80%E5%B0%8F%E9%83%A8%E5%88%86%E4%BB%A3%E8%A1%A8%E6%A0%B7%E6%9C%AC%EF%BC%9F"><span class="post-toc-text">Cluster-Loss：能不能只评价一小部分代表样本？</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#%E6%A2%AF%E5%BA%A6%E4%B8%8E%E5%BD%B1%E5%93%8D%E7%B1%BB%EF%BC%9A%E8%AE%AD%E7%BB%83%E8%BF%99%E6%9D%A1%E6%95%B0%E6%8D%AE%EF%BC%8C%E7%A9%B6%E7%AB%9F%E5%AF%B9%E7%9B%AE%E6%A0%87%E6%9C%89%E6%B2%A1%E6%9C%89%E5%B8%AE%E5%8A%A9%EF%BC%9F"><span class="post-toc-text">梯度与影响类：训练这条数据，究竟对目标有没有帮助？</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#LESS%EF%BC%88Low-cost-and-Efficient-SFT-Data-Selection%EF%BC%89%EF%BC%9A%E7%94%A8%E6%A2%AF%E5%BA%A6%E7%9B%B8%E4%BC%BC%E6%80%A7%E4%BC%B0%E8%AE%A1%E7%9B%AE%E6%A0%87%E5%BD%B1%E5%93%8D"><span class="post-toc-text">LESS（Low-cost and Efficient SFT Data Selection）：用梯度相似性估计目标影响</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#NICE%EF%BC%9A%E4%B8%BA%E4%BB%80%E4%B9%88%E7%9B%AE%E6%A0%87-Loss-%E8%BF%98%E4%B8%8D%E5%A4%9F%EF%BC%9F"><span class="post-toc-text">NICE：为什么目标 Loss 还不够？</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#TracIn%EF%BC%9A%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E7%9C%8B%E5%A4%9A%E4%B8%AA%E8%AE%AD%E7%BB%83%E9%98%B6%E6%AE%B5%EF%BC%9F"><span class="post-toc-text">TracIn：为什么不看多个训练阶段？</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Cluster-LESS%EF%BC%9A%E7%94%A8%E7%B0%87%E7%BA%A7%E6%A2%AF%E5%BA%A6%E8%BF%91%E4%BC%BC%E5%85%A8%E9%87%8F%E6%A2%AF%E5%BA%A6"><span class="post-toc-text">Cluster-LESS：用簇级梯度近似全量梯度</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Cluster-TracIn%EF%BC%9A%E5%90%8C%E6%97%B6%E8%80%83%E8%99%91%E7%B0%87%E4%B8%8E%E8%AE%AD%E7%BB%83%E5%8E%86%E5%8F%B2"><span class="post-toc-text">Cluster-TracIn：同时考虑簇与训练历史</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#ICONS%EF%BC%9A%E4%B8%80%E4%B8%AA%E7%9B%AE%E6%A0%87%E5%A5%BD%EF%BC%8C%E4%B8%8D%E7%AD%89%E4%BA%8E%E6%89%80%E6%9C%89%E7%9B%AE%E6%A0%87%E9%83%BD%E5%A5%BD"><span class="post-toc-text">ICONS：一个目标好，不等于所有目标都好</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#%E8%A1%A8%E5%BE%81%E4%B8%8E%E5%88%86%E5%B8%83%E7%B1%BB%EF%BC%9A%E9%80%89%E5%87%BA%E7%9A%84%E6%95%B0%E6%8D%AE%E5%BA%94%E8%AF%A5%E9%95%BF%E4%BB%80%E4%B9%88%E6%A0%B7%EF%BC%9F"><span class="post-toc-text">表征与分布类：选出的数据应该长什么样？</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#NEAR%EF%BC%9A%E9%80%89%E6%8B%A9%E4%B8%8E%E7%9B%AE%E6%A0%87%E4%BB%BB%E5%8A%A1%E6%9C%80%E6%8E%A5%E8%BF%91%E7%9A%84%E6%95%B0%E6%8D%AE"><span class="post-toc-text">NEAR：选择与目标任务最接近的数据</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#TSDS%EF%BC%9A%E4%B8%BA%E4%BB%80%E4%B9%88%E5%8F%AA%E9%80%89%E6%9C%80%E8%BF%91%E9%82%BB%E5%8F%AF%E8%83%BD%E4%B8%8D%E5%A4%9F%EF%BC%9F"><span class="post-toc-text">TSDS：为什么只选最近邻可能不够？</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#COINCIDE%EF%BC%9A%E4%BB%8E%E6%95%B0%E6%8D%AE%E7%9A%84%E6%A6%82%E5%BF%B5%E3%80%81%E6%8A%80%E8%83%BD%E7%BB%93%E6%9E%84%E5%87%BA%E5%8F%91"><span class="post-toc-text">COINCIDE：从数据的概念、技能结构出发</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#%E5%A4%9A%E6%8C%87%E6%A0%87%E8%87%AA%E9%80%82%E5%BA%94"><span class="post-toc-text">多指标自适应</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Adapt-%E2%88%9E%EF%BC%9A%E4%B8%8D%E5%90%8C%E6%8A%80%E8%83%BD%E7%9A%84%E6%95%B0%E6%8D%AE%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E4%BD%BF%E7%94%A8%E4%B8%8D%E5%90%8C%E6%8C%87%E6%A0%87%EF%BC%9F"><span class="post-toc-text">Adapt-∞：不同技能的数据为什么要使用不同指标？</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#%E5%9F%BA%E7%BA%BF%E4%B8%8E%E6%89%A9%E5%B1%95"><span class="post-toc-text">基线与扩展</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Random%EF%BC%9A%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9A%8F%E6%9C%BA%E9%80%89%E6%8B%A9%E4%B8%8D%E8%83%BD%E7%9C%81%EF%BC%9F"><span class="post-toc-text">Random：为什么随机选择不能省？</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#DataFlex-Selection%EF%BC%9A15-%E7%A7%8D%E7%AE%97%E6%B3%95%E6%80%BB%E8%A7%88"><span class="post-toc-text">DataFlex Selection：15 种算法总览</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#DataFlex-%E7%9A%84-Selection-%E6%A8%A1%E5%9D%97%E5%88%B0%E5%BA%95%E6%80%8E%E6%A0%B7%E6%8E%A5%E5%85%A5%E8%AE%AD%E7%BB%83%EF%BC%9F"><span class="post-toc-text">DataFlex 的 Selection 模块到底怎样接入训练？</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#%E7%9B%B8%E5%85%B3%E7%AC%94%E8%AE%B0"><span class="post-toc-text">相关笔记</span></a></li></ol>
             
         
         <div class=".article-gallery"><!-- Generated from Obsidian: Blogs/DataFlex/Selection.md. Edit the source note, then run npm run blog:sync. -->
@@ -364,16 +364,6 @@
 <p>本文是持续更新的学习笔记，当前版本先行公开，后续会继续补充与校正。</p>
 </aside>
 <p><a href="/posts/dataflex/">← DataFlex 总览</a></p>
-<h2 id="本篇目录"><a href="#本篇目录" class="headerlink" title="本篇目录" aria-hidden="true" tabindex="-1"></a>本篇目录</h2><ul>
-<li><a href="/posts/dataflex-selection/#Selection-%E7%A9%B6%E7%AB%9F%E5%9C%A8%E4%BC%98%E5%8C%96%E4%BB%80%E4%B9%88%EF%BC%9F">选择目标</a></li>
-<li><a href="/posts/dataflex-selection/#%E6%8D%9F%E5%A4%B1%E4%B8%8E%E5%AD%A6%E4%B9%A0%E5%8F%98%E5%8C%96">损失与学习变化</a></li>
-<li><a href="/posts/dataflex-selection/#%E6%A2%AF%E5%BA%A6%E4%B8%8E%E5%BD%B1%E5%93%8D%E7%B1%BB%EF%BC%9A%E8%AE%AD%E7%BB%83%E8%BF%99%E6%9D%A1%E6%95%B0%E6%8D%AE%EF%BC%8C%E7%A9%B6%E7%AB%9F%E5%AF%B9%E7%9B%AE%E6%A0%87%E6%9C%89%E6%B2%A1%E6%9C%89%E5%B8%AE%E5%8A%A9%EF%BC%9F">梯度与影响估计</a></li>
-<li><a href="/posts/dataflex-selection/#%E8%A1%A8%E5%BE%81%E4%B8%8E%E5%88%86%E5%B8%83%E7%B1%BB%EF%BC%9A%E9%80%89%E5%87%BA%E7%9A%84%E6%95%B0%E6%8D%AE%E5%BA%94%E8%AF%A5%E9%95%BF%E4%BB%80%E4%B9%88%E6%A0%B7%EF%BC%9F">表征与分布</a></li>
-<li><a href="/posts/dataflex-selection/#%E5%A4%9A%E6%8C%87%E6%A0%87%E8%87%AA%E9%80%82%E5%BA%94">多指标自适应</a></li>
-<li><a href="/posts/dataflex-selection/#%E5%9F%BA%E7%BA%BF%E4%B8%8E%E6%89%A9%E5%B1%95">随机基线</a></li>
-<li><a href="/posts/dataflex-selection/#DataFlex-Selection%EF%BC%9A15-%E7%A7%8D%E7%AE%97%E6%B3%95%E6%80%BB%E8%A7%88">15 种算法对比</a></li>
-<li><a href="/posts/dataflex-selection/#DataFlex-%E7%9A%84-Selection-%E6%A8%A1%E5%9D%97%E5%88%B0%E5%BA%95%E6%80%8E%E6%A0%B7%E6%8E%A5%E5%85%A5%E8%AE%AD%E7%BB%83%EF%BC%9F">训练接入</a></li>
-</ul>
 <h2 id="Selection-究竟在优化什么？"><a href="#Selection-究竟在优化什么？" class="headerlink" title="Selection 究竟在优化什么？" aria-hidden="true" tabindex="-1"></a>Selection 究竟在优化什么？</h2><p>假设你有：</p>
 <ul>
 <li>10,000 条 SFT 训练数据；</li>
@@ -972,11 +962,11 @@ I_i \approx \sum_{t \in T} \eta_t
     
             <div class="post-footer-pre-next">
                 
-                    <span>上一篇：<a href='/posts/semi-supervised-learning/'>半监督学习：无标签样本的约束</a></span>
+                    <span>上一篇：<a href='/posts/dataflex/'>DataFlex：训练数据策略总览</a></span>
                 
 
                 
-                    <span class="post-footer-pre-next-last-span-right">下一篇：<a href="/posts/transformer/">Transformer：从 Seq2seq 到 Encoder 与 Decoder</a>
+                    <span class="post-footer-pre-next-last-span-right">下一篇：<a href="/posts/llm-post-training/">后训练方式：SFT、DPO、PPO 与 GRPO</a>
                     </span>
                 
             </div>
@@ -1025,7 +1015,7 @@ I_i \approx \sum_{t \in T} \eta_t
 <!--目录-->
 
     
-<script src="/js/toc.js?v=496cd1a37bc1"></script>
+<script src="/js/toc.js?v=bc6341ec3310"></script>
 
 
 

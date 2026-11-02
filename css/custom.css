@@ -258,19 +258,18 @@ html[data-darkreader-mode="dynamic"] .post-md[data-pagefind-body] {
 }
 
 .post-md .table-scroll table {
-    width: max-content;
-    min-width: 100%;
+    width: 100%;
     margin: 0;
     border-collapse: collapse;
     text-align: left;
 }
 
-.post-md .table-scroll th,
-.post-md .table-scroll td {
+.post-md[data-pagefind-body] .table-scroll th,
+.post-md[data-pagefind-body] .table-scroll td {
     padding: 0.68rem 0.85rem;
     border-bottom: 1px solid var(--line-2);
     vertical-align: top;
-    overflow-wrap: anywhere;
+    overflow-wrap: break-word;
 }
 
 .post-md .table-scroll th + th,
@@ -282,7 +281,7 @@ html[data-darkreader-mode="dynamic"] .post-md[data-pagefind-body] {
     background: rgba(49, 95, 181, 0.075);
     color: var(--font-color-1);
     font-weight: 700;
-    white-space: nowrap;
+    white-space: normal;
 }
 
 .post-md .table-scroll tbody tr:nth-child(even) td {
@@ -698,8 +697,8 @@ input:focus-visible,
         margin: 1rem 0 1.3rem;
     }
 
-    .post-md .table-scroll th,
-    .post-md .table-scroll td {
+    .post-md[data-pagefind-body] .table-scroll th,
+    .post-md[data-pagefind-body] .table-scroll td {
         padding: 0.55rem 0.65rem;
     }
 
@@ -893,6 +892,13 @@ body,
     font-size: clamp(1.9rem, 4vw, 2.35rem);
     font-weight: 700;
     line-height: 1.35;
+    text-wrap: balance;
+}
+.post-title-part {
+    display: inline-block;
+    max-width: 100%;
+    vertical-align: top;
+    overflow-wrap: anywhere;
 }
 .post-head-meta-left,
 .post-head-meta-center { color: #68707b; line-height: 1.8; }
